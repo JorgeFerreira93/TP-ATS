@@ -1,0 +1,56 @@
+module gram.i
+imports int String
+abstract syntax
+
+Instrucao = Atribuicao(c1:LComentarios,Id:String,c2:LComentarios,op:OpAtribuicao,c3:LComentarios,Expressao:Expressao,c4:LComentarios)
+	| Declaracao(c1:LComentarios,DefTipo:DefTipo,c2:LComentarios,Declaracoes:Declaracoes,c3:LComentarios,c4:LComentarios)
+	| If(c1:LComentarios,c2:LComentarios,c3:LComentarios,Condicao:Expressao,c4:LComentarios,c5:LComentarios,Instrucao1:Instrucao,Instrucao2:Instrucao)
+	| While(c1:LComentarios,c2:LComentarios,c3:LComentarios,Condicao:Expressao,c4:LComentarios,c5:LComentarios,Instrucao:Instrucao,c6:LComentarios)
+	| For(c1:LComentarios,c2:LComentarios,Declaracao:Instrucao,c3:LComentarios,Condicao:Expressao,c4:LComentarios,c5:LComentarios,Expressao:Expressao,c6:LComentarios,c7:LComentarios,Instrucao:Instrucao,c8:LComentarios)
+	| Return(c1:LComentarios,c2:LComentarios,Expressao:Expressao,c3:LComentarios)
+	| Funcao(c1:LComentarios,DefTipo:DefTipo,c2:LComentarios,Nome:String,c3:LComentarios,c4:LComentarios,Argumentos:Argumentos,c5:LComentarios,c6:LComentarios,Instrucao:Instrucao,c7:LComentarios)
+	| Exp(Expressao:Expressao)
+	| SeqInstrucao(Instrucao*)
+
+Expressao = ExpNum(Exp1:Expressao,c1:LComentarios,op:OpNum,c2:LComentarios,Exp2:Expressao)
+	| Id(Id:String)
+	| Pos(Expressao:Expressao)
+	| Neg(Expressao:Expressao)
+	| Nao(Expressao:Expressao)
+	| Call(c1:LComentarios,Id:String,c2:LComentarios,c3:LComentarios,Parametros:Parametros,c4:LComentarios,c5:LComentarios)
+	| IncAntes(OpInc:OpInc,Id:String)
+	| IncDepois(OpInc:OpInc,Id:String)
+	| Condicional(Condicao:Expressao,c1:LComentarios,c2:LComentarios,Exp1:Expressao,c3:LComentarios,c4:LComentarios,Exp2:Expressao)
+	| Int(Int:int) | Char(Char:String) | True() | False() | Float(num:int)
+	| Ou(Cond1:Expressao,c1:LComentarios,c2:LComentarios,Cond2:Expressao)
+	| E(Cond1:Expressao,c1:LComentarios,c2:LComentarios,Cond2:Expressao)
+	| Comp(Exp1:Expressao,c1:LComentarios,OpComp:OpComp,c2:LComentarios,Exp2:Expressao)
+	| Input(c1:LComentarios,c2:LComentarios,c3:LComentarios,Tipo:DefTipo,c4:LComentarios,c5:LComentarios)
+	| Print(c1:LComentarios,c2:LComentarios,c3:LComentarios,Expressao:Expressao,c4:LComentarios,c5:LComentarios)
+	| Expressoes(Expressao*)
+	| Empty()
+
+DefTipo = DInt() | DChar() | DBoolean() | DFloat() | DVoid()
+
+Argumentos = ListaArgumentos(Argumentos*)
+	| Argumento(c1:LComentarios,DefTipo:DefTipo,c2:LComentarios,Id:String,c3:LComentarios)
+
+Parametros = ListaParametros(Parametros*)
+	| Parametro(c1:LComentarios,Expressao:Expressao,c2:LComentarios)
+
+Declaracoes = ListaDecl(Declaracoes*)
+	| Decl(Id:String,c1:LComentarios,c2:LComentarios,Expressao:Expressao,c3:LComentarios)
+
+OpAtribuicao =  Atrib() | Mult() | Div() | Soma() | Sub()
+
+OpNum = Mais() | Vezes() | Divide() | Menos() | Mod()
+
+OpComp = Maior() | Menor() | MaiorQ() | MenorQ() | Dif() | Igual()
+
+OpInc = Inc() | Dec()
+
+LComentarios = Comentarios(LComentarios*)
+	| Comentario(comentario:String)
+	| Vazio()
+
+IntWrapper = IntWrap(Value:int)

@@ -1,0 +1,47 @@
+module maqv.msp
+imports int String
+abstract syntax
+
+Instrucoes = Instrucoes(Instrucao*)
+
+Instrucao = ALabel(id:String)
+	| Call(id:String)
+	| Ret()		
+	| Add()		
+	| Sub()
+	| Div()
+	| Mul()
+	| Mod()
+	| Inc()
+	| Dec()
+	| Eq()
+	| Neq()
+	| Gt()
+	| GoEq()
+	| Lt()
+	| LoEq()
+	| Nott()
+	| Or()
+	| And()
+	| Halt()	
+	| IIn(tipo:DefTipo)	
+	| IOut()
+	| Jump(id:String)	
+	| Jumpf(id:String) 
+	| Push(t:Termo)
+	| Pusha(t:Termo)
+	| Load()
+	| Store()
+	| Decl(id:String,initMemAddress:int, size:int)
+	
+DefTipo = DInt() | DChar() | DBoolean() | DFloat()
+
+Boool = True() | False()
+
+Stackk = Stackk(Termo*)
+
+Termo = I(i:int)
+	| S(id:String)
+	| B(b:Boool)
+	| F(f:int)
+	| Vazio()
