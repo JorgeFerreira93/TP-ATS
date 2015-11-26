@@ -103,7 +103,46 @@ public class Main {
 		functionsDeclarations = new StringBuilder();
 		memAdress = 0;
 	}
+// Inicio Pedro Jorge
 
+	%strategy countInstruct(counter: int){
+		visit(Instrucao){
+			_ -> {`counter++;}
+		}
+	}
+
+
+	%strategy countFunct(counter: int)extends Identity(){
+		visit(Funcao){
+			_ -> {counter++;}
+		}
+		}
+
+
+		%strategy countComments(counter:int)extends Identity(){
+			visit(LComentarios){
+				_ -> {counter++;}
+			}
+		}
+
+
+		%strategy getFunctionAndArguments(mapa:HashMap) extends Identity(){ 
+			visit (Funcao) {
+				Funcao(_,_,_,Nome,_,_,Argumentos,_,_,_,_) -> {
+					 `TopDown(contaArgumentos)
+				}
+				}
+		}
+
+		%strategy contaArgumentos(args:Argumentos) extends Identity(){ 
+				visit (args) {
+					ListaArgumentos(Argumento,ArgumTail*) -> { }
+					Argumento(_,_,_,_,_) ->{result= 1;} 
+				} 
+		}
+ 
+
+// Fim Pedro Jorge
 	public static Argumentos removeArgumentosNaoUtilizados(Argumentos args, TreeSet<String> idsUtilizados) {
 		%match(args) {
 			ListaArgumentos(arg1,tailArg*) -> {
