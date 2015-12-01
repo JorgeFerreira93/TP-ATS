@@ -114,6 +114,12 @@ public class Main {
 			}
 		}
 
+		visit Expressao{
+			Call(_,_,_,_,_,_,_) -> {
+				funcao.incLines(1);
+			}
+		}
+
 		visit LComentarios{
 			Comentario(_) -> {
 				funcao.incComentarios();
@@ -198,6 +204,21 @@ class ContaFunc{
 	public void incComentarios(){
 		this.nComentarios++;
 	}
+
+	public String toString(){
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("----------------------------------------\n");
+		sb.append(this.nome + "\n\tNúmero de argumentos: " + this.nArgs + "\n");
+		sb.append("\tNúmero de linhas: " + this.nLinhas + "\n");
+		sb.append("\tNúmero de ifs: " + this.nIfs + "\n");
+		sb.append("\tNúmero de whiles: " + this.nWhiles + "\n");
+		sb.append("\tNúmero de fors: " + this.nFors + "\n");
+		sb.append("\tNúmero de comentários: " + this.nComentarios + "\n");
+
+		return sb.toString();
+	}
 }
 
 class ContaTudo{
@@ -211,8 +232,6 @@ class ContaTudo{
 
 	public void addFunc(ContaFunc func){
 		this.funcs.put(func.getNome(), func);
-		/*this.lines += func.getLines();
-		System.out.println("Inseri " + func.getLines() + " linhas!");*/
 	}
 
 	public int totLinhas(){
@@ -232,13 +251,7 @@ class ContaTudo{
 		sb.append("Número total de funções: " + this.funcs.size() + "\n");
 
 		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
-			sb.append("----------------------------------------\n");
-			sb.append(entry.getKey() + "\n\tNúmero de argumentos: " + entry.getValue().getArgs() + "\n");
-			sb.append("\tNúmero de linhas: " + entry.getValue().getLines() + "\n");
-			sb.append("\tNúmero de ifs: " + entry.getValue().getIfs() + "\n");
-			sb.append("\tNúmero de whiles: " + entry.getValue().getWhiles() + "\n");
-			sb.append("\tNúmero de fors: " + entry.getValue().getFors() + "\n");
-			sb.append("\tNúmero de comentários: " + entry.getValue().getComentarios() + "\n");
+			sb.append(entry.getValue().toString());
 		}
 
 		return sb.toString();
