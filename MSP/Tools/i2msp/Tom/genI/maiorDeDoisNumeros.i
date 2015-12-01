@@ -2,6 +2,7 @@ void main(int b, int c, int d) {
     int a;
     b = 2;
     int b;
+    /*Teste*/
     int res;
     a = input(int);
     b = input(int);

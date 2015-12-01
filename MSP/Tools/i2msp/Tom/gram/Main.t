@@ -97,18 +97,27 @@ public class Main {
 
 			If(_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(3);
+				funcao.incIfs();
 			}
 			
 			While(_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				funcao.incWhiles();
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				funcao.incFors();
 			}
 
 			SeqInstrucao() -> {
 				counter.addFunc(funcao);
+			}
+		}
+
+		visit LComentarios{
+			Comentario(_) -> {
+				funcao.incComentarios();
 			}
 		}
 	}
@@ -131,13 +140,16 @@ public class Main {
 class ContaFunc{
 
 	private String nome;
-	private int nLinhas;
-	private int nArgs;
+	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;
 
 	public ContaFunc(String nome, int nArgs){
 		this.nome = nome;
 		this.nLinhas = 0;
 		this.nArgs = nArgs;
+		this.nIfs = 0;
+		this.nWhiles = 0;
+		this.nFors = 0;
+		this.nComentarios = 0;
 	}
 
 	public String getNome(){
@@ -152,8 +164,40 @@ class ContaFunc{
 		return this.nArgs;
 	}
 
+	public int getIfs(){
+		return this.nIfs;
+	}
+
+	public int getWhiles(){
+		return this.nWhiles;
+	}
+
+	public int getFors(){
+		return this.nFors;
+	}
+
+	public int getComentarios(){
+		return this.nComentarios;
+	}
+
 	public void incLines(int n){
 		this.nLinhas += n;
+	}
+
+	public void incIfs(){
+		this.nIfs++;
+	}
+
+	public void incWhiles(){
+		this.nWhiles++;
+	}
+
+	public void incFors(){
+		this.nFors++;
+	}
+
+	public void incComentarios(){
+		this.nComentarios++;
 	}
 }
 
@@ -181,6 +225,10 @@ class ContaTudo{
 			sb.append("----------------------------------------\n");
 			sb.append(entry.getKey() + "\n\tNúmero de argumentos: " + entry.getValue().getArgs() + "\n");
 			sb.append("\tNúmero de linhas: " + entry.getValue().getLines() + "\n");
+			sb.append("\tNúmero de ifs: " + entry.getValue().getIfs() + "\n");
+			sb.append("\tNúmero de whiles: " + entry.getValue().getWhiles() + "\n");
+			sb.append("\tNúmero de fors: " + entry.getValue().getFors() + "\n");
+			sb.append("\tNúmero de comentários: " + entry.getValue().getComentarios() + "\n");
 		}
 
 		return sb.toString();
