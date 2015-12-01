@@ -1,0 +1,15 @@
+Número total de linhas: 17
+Número total de funções: 3
+----------------------------------------
+max
+	Número de argumentos: 2
+	Número de linhas: 8
+----------------------------------------
+teste
+	Número de argumentos: 1
+	Número de linhas: 1
+----------------------------------------
+main
+	Número de argumentos: 3
+	Número de linhas: 8
+

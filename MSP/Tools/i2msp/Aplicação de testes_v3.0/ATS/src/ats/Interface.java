@@ -1,6 +1,6 @@
 package ats;
 
-import com.itextpdf.text.DocumentException;
+//import com.itextpdf.text.DocumentException;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.FileNotFoundException;
@@ -315,7 +315,7 @@ public class Interface extends javax.swing.JFrame{
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void relatoriosPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_relatoriosPDFActionPerformed
-        JFileChooser fc = new JFileChooser();
+        /*JFileChooser fc = new JFileChooser();
         int returnVal =  fc.showSaveDialog(this);;
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -327,7 +327,7 @@ public class Interface extends javax.swing.JFrame{
                 }
                 relatorio.gerarRelatorio(cam);
             } catch (FileNotFoundException | DocumentException ex) {}
-        }
+        }*/
     }//GEN-LAST:event_relatoriosPDFActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed

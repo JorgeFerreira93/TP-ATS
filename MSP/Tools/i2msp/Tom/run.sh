@@ -1,5 +1,5 @@
 #/bin/bash
-EXMAPLE_DIR=exemplos/
+EXAMPLE_DIR=exemplos/
 EXAMPLE_FILE=maiorDeDoisNumeros.i
 RES_FILE=res.msp
 

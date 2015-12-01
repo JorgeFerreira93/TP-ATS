@@ -1,0 +1,308 @@
+
+%include { string.tom }
+
+%include { int.tom }
+
+%typeterm Stackk {
+  implement { maqv.msp.types.Stackk }
+  is_sort(t) { ($t instanceof maqv.msp.types.Stackk) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+
+%typeterm Termo {
+  implement { maqv.msp.types.Termo }
+  is_sort(t) { ($t instanceof maqv.msp.types.Termo) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+
+%typeterm DefTipo {
+  implement { maqv.msp.types.DefTipo }
+  is_sort(t) { ($t instanceof maqv.msp.types.DefTipo) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+
+%typeterm Boool {
+  implement { maqv.msp.types.Boool }
+  is_sort(t) { ($t instanceof maqv.msp.types.Boool) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+
+%typeterm Instrucao {
+  implement { maqv.msp.types.Instrucao }
+  is_sort(t) { ($t instanceof maqv.msp.types.Instrucao) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+
+%typeterm Instrucoes {
+  implement { maqv.msp.types.Instrucoes }
+  is_sort(t) { ($t instanceof maqv.msp.types.Instrucoes) }
+
+  equals(t1,t2) { ($t1==$t2) }
+
+}
+%op Stackk EmptyStackk() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.stackk.EmptyStackk) }
+  make() { maqv.msp.types.stackk.EmptyStackk.make() }
+}
+
+%op Stackk ConsStackk(HeadStackk:Termo, TailStackk:Stackk) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.stackk.ConsStackk) }
+  get_slot(HeadStackk, t) { $t.getHeadStackk() }
+  get_slot(TailStackk, t) { $t.getTailStackk() }
+  make(t0, t1) { maqv.msp.types.stackk.ConsStackk.make($t0, $t1) }
+}
+
+%op Termo I(i:int) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.termo.I) }
+  get_slot(i, t) { $t.geti() }
+  make(t0) { maqv.msp.types.termo.I.make($t0) }
+}
+
+%op Termo S(id:String) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.termo.S) }
+  get_slot(id, t) { $t.getid() }
+  make(t0) { maqv.msp.types.termo.S.make($t0) }
+}
+
+%op Termo B(b:Boool) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.termo.B) }
+  get_slot(b, t) { $t.getb() }
+  make(t0) { maqv.msp.types.termo.B.make($t0) }
+}
+
+%op Termo F(f:int) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.termo.F) }
+  get_slot(f, t) { $t.getf() }
+  make(t0) { maqv.msp.types.termo.F.make($t0) }
+}
+
+%op Termo Vazio() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.termo.Vazio) }
+  make() { maqv.msp.types.termo.Vazio.make() }
+}
+
+%op DefTipo DInt() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.deftipo.DInt) }
+  make() { maqv.msp.types.deftipo.DInt.make() }
+}
+
+%op DefTipo DChar() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.deftipo.DChar) }
+  make() { maqv.msp.types.deftipo.DChar.make() }
+}
+
+%op DefTipo DBoolean() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.deftipo.DBoolean) }
+  make() { maqv.msp.types.deftipo.DBoolean.make() }
+}
+
+%op DefTipo DFloat() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.deftipo.DFloat) }
+  make() { maqv.msp.types.deftipo.DFloat.make() }
+}
+
+%op Boool True() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.boool.True) }
+  make() { maqv.msp.types.boool.True.make() }
+}
+
+%op Boool False() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.boool.False) }
+  make() { maqv.msp.types.boool.False.make() }
+}
+
+%op Instrucao ALabel(id:String) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.ALabel) }
+  get_slot(id, t) { $t.getid() }
+  make(t0) { maqv.msp.types.instrucao.ALabel.make($t0) }
+}
+
+%op Instrucao Call(id:String) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Call) }
+  get_slot(id, t) { $t.getid() }
+  make(t0) { maqv.msp.types.instrucao.Call.make($t0) }
+}
+
+%op Instrucao Ret() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Ret) }
+  make() { maqv.msp.types.instrucao.Ret.make() }
+}
+
+%op Instrucao Add() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Add) }
+  make() { maqv.msp.types.instrucao.Add.make() }
+}
+
+%op Instrucao Sub() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Sub) }
+  make() { maqv.msp.types.instrucao.Sub.make() }
+}
+
+%op Instrucao Div() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Div) }
+  make() { maqv.msp.types.instrucao.Div.make() }
+}
+
+%op Instrucao Mul() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Mul) }
+  make() { maqv.msp.types.instrucao.Mul.make() }
+}
+
+%op Instrucao Mod() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Mod) }
+  make() { maqv.msp.types.instrucao.Mod.make() }
+}
+
+%op Instrucao Inc() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Inc) }
+  make() { maqv.msp.types.instrucao.Inc.make() }
+}
+
+%op Instrucao Dec() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Dec) }
+  make() { maqv.msp.types.instrucao.Dec.make() }
+}
+
+%op Instrucao Eq() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Eq) }
+  make() { maqv.msp.types.instrucao.Eq.make() }
+}
+
+%op Instrucao Neq() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Neq) }
+  make() { maqv.msp.types.instrucao.Neq.make() }
+}
+
+%op Instrucao Gt() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Gt) }
+  make() { maqv.msp.types.instrucao.Gt.make() }
+}
+
+%op Instrucao GoEq() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.GoEq) }
+  make() { maqv.msp.types.instrucao.GoEq.make() }
+}
+
+%op Instrucao Lt() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Lt) }
+  make() { maqv.msp.types.instrucao.Lt.make() }
+}
+
+%op Instrucao LoEq() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.LoEq) }
+  make() { maqv.msp.types.instrucao.LoEq.make() }
+}
+
+%op Instrucao Nott() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Nott) }
+  make() { maqv.msp.types.instrucao.Nott.make() }
+}
+
+%op Instrucao Or() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Or) }
+  make() { maqv.msp.types.instrucao.Or.make() }
+}
+
+%op Instrucao And() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.And) }
+  make() { maqv.msp.types.instrucao.And.make() }
+}
+
+%op Instrucao Halt() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Halt) }
+  make() { maqv.msp.types.instrucao.Halt.make() }
+}
+
+%op Instrucao IIn(tipo:DefTipo) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.IIn) }
+  get_slot(tipo, t) { $t.gettipo() }
+  make(t0) { maqv.msp.types.instrucao.IIn.make($t0) }
+}
+
+%op Instrucao IOut() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.IOut) }
+  make() { maqv.msp.types.instrucao.IOut.make() }
+}
+
+%op Instrucao Jump(id:String) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Jump) }
+  get_slot(id, t) { $t.getid() }
+  make(t0) { maqv.msp.types.instrucao.Jump.make($t0) }
+}
+
+%op Instrucao Jumpf(id:String) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Jumpf) }
+  get_slot(id, t) { $t.getid() }
+  make(t0) { maqv.msp.types.instrucao.Jumpf.make($t0) }
+}
+
+%op Instrucao Push(t:Termo) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Push) }
+  get_slot(t, t) { $t.gett() }
+  make(t0) { maqv.msp.types.instrucao.Push.make($t0) }
+}
+
+%op Instrucao Pusha(t:Termo) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Pusha) }
+  get_slot(t, t) { $t.gett() }
+  make(t0) { maqv.msp.types.instrucao.Pusha.make($t0) }
+}
+
+%op Instrucao Load() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Load) }
+  make() { maqv.msp.types.instrucao.Load.make() }
+}
+
+%op Instrucao Store() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Store) }
+  make() { maqv.msp.types.instrucao.Store.make() }
+}
+
+%op Instrucao Decl(id:String, initMemAddress:int, size:int) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucao.Decl) }
+  get_slot(id, t) { $t.getid() }
+  get_slot(initMemAddress, t) { $t.getinitMemAddress() }
+  get_slot(size, t) { $t.getsize() }
+  make(t0, t1, t2) { maqv.msp.types.instrucao.Decl.make($t0, $t1, $t2) }
+}
+
+%op Instrucoes EmptyInstrucoes() {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucoes.EmptyInstrucoes) }
+  make() { maqv.msp.types.instrucoes.EmptyInstrucoes.make() }
+}
+
+%op Instrucoes ConsInstrucoes(HeadInstrucoes:Instrucao, TailInstrucoes:Instrucoes) {
+  is_fsym(t) { ($t instanceof maqv.msp.types.instrucoes.ConsInstrucoes) }
+  get_slot(HeadInstrucoes, t) { $t.getHeadInstrucoes() }
+  get_slot(TailInstrucoes, t) { $t.getTailInstrucoes() }
+  make(t0, t1) { maqv.msp.types.instrucoes.ConsInstrucoes.make($t0, $t1) }
+}
+
+
+%oplist Stackk Stackk(Termo*) {
+  is_fsym(t) { (($t instanceof maqv.msp.types.stackk.ConsStackk) || ($t instanceof maqv.msp.types.stackk.EmptyStackk)) }
+  make_empty() { maqv.msp.types.stackk.EmptyStackk.make() }
+  make_insert(e,l) { maqv.msp.types.stackk.ConsStackk.make($e,$l) }
+  get_head(l) { $l.getHeadStackk() }
+  get_tail(l) { $l.getTailStackk() }
+  is_empty(l) { $l.isEmptyStackk() }
+}
+
+%oplist Instrucoes Instrucoes(Instrucao*) {
+  is_fsym(t) { (($t instanceof maqv.msp.types.instrucoes.ConsInstrucoes) || ($t instanceof maqv.msp.types.instrucoes.EmptyInstrucoes)) }
+  make_empty() { maqv.msp.types.instrucoes.EmptyInstrucoes.make() }
+  make_insert(e,l) { maqv.msp.types.instrucoes.ConsInstrucoes.make($e,$l) }
+  get_head(l) { $l.getHeadInstrucoes() }
+  get_tail(l) { $l.getTailInstrucoes() }
+  is_empty(l) { $l.isEmptyInstrucoes() }
+}
