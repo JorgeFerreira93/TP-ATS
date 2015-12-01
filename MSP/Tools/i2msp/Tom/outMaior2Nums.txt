@@ -4,12 +4,24 @@ Número total de funções: 3
 max
 	Número de argumentos: 2
 	Número de linhas: 8
+	Número de ifs: 1
+	Número de whiles: 0
+	Número de fors: 0
+	Número de comentários: 0
 ----------------------------------------
 teste
 	Número de argumentos: 1
 	Número de linhas: 1
+	Número de ifs: 0
+	Número de whiles: 0
+	Número de fors: 0
+	Número de comentários: 0
 ----------------------------------------
 main
 	Número de argumentos: 3
 	Número de linhas: 8
+	Número de ifs: 0
+	Número de whiles: 0
+	Número de fors: 0
+	Número de comentários: 1
 
