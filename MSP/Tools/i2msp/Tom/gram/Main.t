@@ -14,17 +14,8 @@ import java.io.*;
 
 public class Main {
 	%include{sl.tom}
-	%include{util/HashMap.tom}
-	%include{util/ArrayList.tom}
-	%include{util/types/Collection.tom}
-	%include{util/types/Set.tom}
 	%include{../genI/gram/i/i.tom}
 
-	private String actualFunctionName;
-	HashMap<String, Argumentos> functionSignatures;
-	private boolean callReturnNeeded;
-	private int memAdress;
-	StringBuilder functionsDeclarations;
 	static ContaTudo counter;
 	static ContaFunc funcao;
 
@@ -42,7 +33,6 @@ public class Main {
 			main.start(p);
 
 			System.out.println(counter.toString());
-				//System.out.println("Funcs: " + counterMap.get("Func") + "\nVars: " + counterMap.get("Var"));
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -50,34 +40,22 @@ public class Main {
 	}
 
 	public Main() {
-		actualFunctionName = "";
-		functionSignatures = new HashMap<String, Argumentos>();
-		callReturnNeeded = true;
-		functionsDeclarations = new StringBuilder();
-		memAdress = 0;
 		counter = new ContaTudo();
 	}
 
 	private void start(Instrucao p){
 
 		try {
-				`TopDown(countFunct()).visit(p);
-				//System.out.println("Funcs: " + counterMap.get("Func") + "\nVars: " + counterMap.get("Var"));
-
-			} catch(Exception e) {
-				System.out.println("the strategy failed");
-			}
+			`TopDown(countFunct()).visit(p);
+		} catch(Exception e) {
+			System.out.println("the strategy failed");
+		}
 	}
 
     %strategy countFunct()extends Identity(){
 		visit Instrucao {
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
 
-				/*if(funcao != null){
-					counter.addFunc(funcao);
-				}*/
-
-				
 				int nArgs = contaArgumentos(`argumentos);
 				
 				funcao = new ContaFunc(`nome, nArgs);
