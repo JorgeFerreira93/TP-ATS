@@ -1,19 +1,21 @@
-void main(int b, int c, int d) {
+void main() {
     int a;
-    int o = max(1, 2);
-    a = max(1,2);
+    int b;
+    int res;
+    a = input(int);
+    b = input(int);
+    res = max(a,b);
+    print(';');
+    print(res);
 }
 
 int max(int a, int b){
     int res;
-    while(1){
-        if(2){
-            b=2;
-        }
-        else{
-            c=4;
-        }
+    if (a > b) {
+        res = a;
     }
+    else {
+        res = b;
+    }
+    return res; 
 }
-
-int teste(int a){}

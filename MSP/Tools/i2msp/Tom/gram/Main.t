@@ -96,6 +96,14 @@ public class Main {
 			Call(_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
 			}
+
+			Input(_,_,_,_,_,_) -> {
+				funcao.incLines(1);
+			}
+
+			Print(_,_,_,_,_,_) -> {
+				funcao.incLines(1);
+			}
 		}
 
 		visit LComentarios{
@@ -141,26 +149,6 @@ class ContaFunc{
 
 	public int getLines(){
 		return this.nLinhas;
-	}
-
-	public int getArgs(){
-		return this.nArgs;
-	}
-
-	public int getIfs(){
-		return this.nIfs;
-	}
-
-	public int getWhiles(){
-		return this.nWhiles;
-	}
-
-	public int getFors(){
-		return this.nFors;
-	}
-
-	public int getComentarios(){
-		return this.nComentarios;
 	}
 
 	public void incLines(int n){
