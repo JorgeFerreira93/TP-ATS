@@ -1,10 +1,10 @@
-Número total de linhas: 17
+Número total de linhas: 5
 Número total de funções: 3
 ----------------------------------------
 max
 	Número de argumentos: 2
-	Número de linhas: 8
-	Número de ifs: 1
+	Número de linhas: 2
+	Número de ifs: 0
 	Número de whiles: 0
 	Número de fors: 0
 	Número de comentários: 0
@@ -19,9 +19,9 @@ teste
 ----------------------------------------
 main
 	Número de argumentos: 3
-	Número de linhas: 8
+	Número de linhas: 2
 	Número de ifs: 0
 	Número de whiles: 0
 	Número de fors: 0
-	Número de comentários: 1
+	Número de comentários: 0
 

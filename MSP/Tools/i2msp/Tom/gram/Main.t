@@ -73,13 +73,16 @@ public class Main {
 		visit Instrucao {
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
 
-				if(funcao != null){
+				/*if(funcao != null){
 					counter.addFunc(funcao);
-				}
+				}*/
 
+				
 				int nArgs = contaArgumentos(`argumentos);
 				
 				funcao = new ContaFunc(`nome, nArgs);
+				counter.addFunc(funcao);
+
 				funcao.incLines(1);
 			}
 
@@ -108,10 +111,6 @@ public class Main {
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
 				funcao.incFors();
-			}
-
-			SeqInstrucao() -> {
-				counter.addFunc(funcao);
 			}
 		}
 
@@ -212,13 +211,24 @@ class ContaTudo{
 
 	public void addFunc(ContaFunc func){
 		this.funcs.put(func.getNome(), func);
-		this.lines += func.getLines();
+		/*this.lines += func.getLines();
+		System.out.println("Inseri " + func.getLines() + " linhas!");*/
+	}
+
+	public int totLinhas(){
+		int res = 0;
+
+		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
+			res += entry.getValue().getLines();
+		}
+
+		return res;
 	}
 
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("Número total de linhas: " + this.lines + "\n");
+		sb.append("Número total de linhas: " + this.totLinhas() + "\n");
 		sb.append("Número total de funções: " + this.funcs.size() + "\n");
 
 		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
