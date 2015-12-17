@@ -1,0 +1,18 @@
+--------------------------------Halstead-----------------------------------------------
+Operadores - Definições/chamada de funções + terminais 
+Operandos - tudo excepto operadores
+n1=operadores distintos
+n2=operandos distintos
+N1= operadores totais
+N2=operandos totais
+vocabulário do programa (n)= n1+n2
+comprimento do programa (N)= N1+N2
+comprimento calculado do programa (^N)= n1*log2(n1)+n2*log2(n2)
+Volume(V)= N*log2(n)
+Dificuldade(D)= n1/2 * N2/n2
+Esforço(E)= D*V
+Tempo necessário (T)=E/18 segundos
+Estimativa de bugs entregues (B)=V/3000
+-------------------------------------McCabe-------------------------------------------------
+Contador começa a 1,
+quando encontrar condicional/ciclo, contador++;
