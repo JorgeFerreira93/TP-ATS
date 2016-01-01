@@ -1,5 +1,5 @@
 void main() {
-    int a;
+    int a, c;
     int b;
     int res;
     a = input(int);
@@ -9,7 +9,7 @@ void main() {
     print(res);
 }
 
-int max(int a, int b){
+int max(int a){
     int res;
     if (a > b) {
         res = a;

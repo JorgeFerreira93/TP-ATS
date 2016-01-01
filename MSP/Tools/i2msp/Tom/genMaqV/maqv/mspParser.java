@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 maqv/msp.g 2016-01-01 13:25:19
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 maqv/msp.g 2016-01-01 18:27:06
  package maqv; 
 
 import org.antlr.runtime.*;
@@ -1730,7 +1730,7 @@ public class mspParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: INT, STRING, INT
+                    // elements: INT, INT, STRING
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 

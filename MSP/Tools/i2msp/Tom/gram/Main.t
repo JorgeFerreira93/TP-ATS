@@ -54,7 +54,7 @@ public class Main {
 
     %strategy countFunct()extends Identity(){
 		visit Instrucao {
-			Funcao(_,tipo,_,nome,b,c,argumentos,_,_,instr,_) -> {
+			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
 
 				int nArgs = contaArgumentos(`argumentos);
 
@@ -67,12 +67,17 @@ public class Main {
 				counter.adicionaOperador(`nome);
 				counter.adicionaOperador("(");
 				counter.adicionaOperador(")");
+				counter.adicionaOperador("{");
+				counter.adicionaOperador("}");
 				counter.addFunc(funcao);
 
 				funcao.incLines(1);
 			}
 
-			Declaracao(_,_,_,_,_,_) -> {
+			Declaracao(_,_,_,decls,_,_) -> {
+
+				resolveDecls(`decls);
+
 				funcao.incLines(1);
 				counter.adicionaOperador(";");
 			}
@@ -154,14 +159,44 @@ public class Main {
 	private static int contaArgumentos(Argumentos args){
 		%match(args){
 			ListaArgumentos(arg1, argsTail*) -> {
-				return 1 + `contaArgumentos(argsTail*);
+
+				System.out.println(`arg1);
+
+				return `contaArgumentos(arg1) + `contaArgumentos(argsTail*);
 			}
 
-			Argumento(_,_,_,_,_) -> {
+			Argumento(_,_,_,id,_) -> {
+
+				counter.adicionaOperando(`id);
+
 				return 1;
 			}
 		}
 		return 0;
+	}
+
+	private static void resolveDecls(Declaracoes decls){
+		%match(decls){
+			Decl(id,_,_,exp,_) -> {
+				counter.adicionaOperando(`id);
+
+				`resolveExpr(exp);
+			}
+			ListaDecl(decl1, decl*) -> {
+				resolveDecls(`decl1);
+				System.out.println(`decl1);
+				System.out.println(`decl);
+				resolveDecls(`decl);
+			}
+		}
+	}
+
+	private static void resolveExpr(Expressao exp){
+		%match(exp){
+			Id(id) -> {
+				counter.adicionaOperando(`id);
+			}
+		}
 	}
 
 }
@@ -251,8 +286,6 @@ class ContaTudo{
 		return res;
 	}
 
-
-
 	public void adicionaOperando(String op){
 		if(this.operandos.containsKey(op)){
 			int n = this.operandos.get(op);
@@ -283,7 +316,10 @@ class ContaTudo{
 			sb.append(entry.getValue().toString());
 		}
 
+		sb.append("----OPERADORES-----\n");
 		sb.append(this.operadores.toString());
+		sb.append("\n----OPERANDOS-----\n");
+		sb.append(this.operandos.toString());
 
 		return sb.toString();
 	}
