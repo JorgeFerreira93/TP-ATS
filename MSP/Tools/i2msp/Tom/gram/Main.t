@@ -82,7 +82,24 @@ public class Main {
 				counter.adicionaOperador(";");
 			}
 
-			Atribuicao(_,_,_,_,_,_,_) -> {
+			Atribuicao(_,_,_,op,_,_,_) -> {
+
+				if(`op == `Atrib()){
+					counter.adicionaOperador("=");
+				}
+				else if(`op == `Mult()){
+					counter.adicionaOperador("*=");
+				}
+				else if(`op == `Div()){
+					counter.adicionaOperador("/=");
+				}
+				else if(`op == `Soma()){
+					counter.adicionaOperador("+=");
+				}
+				else{
+					counter.adicionaOperador("-=");
+				}
+
 				funcao.incLines(1);
 				counter.adicionaOperador(";");
 			}
@@ -90,28 +107,48 @@ public class Main {
 			Return(_,_,_,_) -> {
 				funcao.incLines(1);
 				counter.adicionaOperador(";");
+				counter.adicionaOperador("Return");
 			}
 
-			If(_,_,_,_,_,_,_,_) -> {
+			If(_,_,_,_,_,_,_,e) -> {
 				funcao.incLines(3);
 				funcao.incIfs();
+
+				if(`e != `SeqInstrucao()){
+					counter.adicionaOperador("Else");
+				}
+
+				counter.adicionaOperador("If");
+				counter.adicionaOperador(")");
+				counter.adicionaOperador("(");
 			}
 			
 			While(_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
 				funcao.incWhiles();
+				counter.adicionaOperador("While");
+				counter.adicionaOperador(")");
+				counter.adicionaOperador("(");
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
 				funcao.incFors();
+				counter.adicionaOperador("For");
+				counter.adicionaOperador(")");
+				counter.adicionaOperador("(");
 			}
 		}
 
 		visit Expressao{
-			Call(_,_,_,_,_,_,_) -> {
+			Id(id) -> {
+				counter.adicionaOperando(`id);
+			}
+
+			Call(_,id,_,_,_,_,_) -> {
 				funcao.incLines(1);
 				counter.adicionaOperador(";");
+				counter.adicionaOperador(`id);
 			}
 
 			Input(_,_,_,_,_,_) -> {
@@ -122,6 +159,26 @@ public class Main {
 			Print(_,_,_,_,_,_) -> {
 				funcao.incLines(1);
 				counter.adicionaOperador(";");
+			}
+
+			Int(i) -> {
+				counter.adicionaOperando(Integer.toString(`i));
+			}
+
+			Char(c) -> {
+				counter.adicionaOperando(`c);
+			}
+
+			True()  -> {
+				counter.adicionaOperando("True");
+			}
+
+			False() -> {
+				counter.adicionaOperando("False");
+			}
+
+			Float(f) -> {
+				counter.adicionaOperando(Float.toString(`f));
 			}
 		}
 
@@ -159,9 +216,6 @@ public class Main {
 	private static int contaArgumentos(Argumentos args){
 		%match(args){
 			ListaArgumentos(arg1, argsTail*) -> {
-
-				System.out.println(`arg1);
-
 				return `contaArgumentos(arg1) + `contaArgumentos(argsTail*);
 			}
 
@@ -180,12 +234,14 @@ public class Main {
 			Decl(id,_,_,exp,_) -> {
 				counter.adicionaOperando(`id);
 
+				if(`exp != `Empty()){
+					counter.adicionaOperador("=");
+				}
+
 				`resolveExpr(exp);
 			}
 			ListaDecl(decl1, decl*) -> {
 				resolveDecls(`decl1);
-				System.out.println(`decl1);
-				System.out.println(`decl);
 				resolveDecls(`decl);
 			}
 		}
@@ -195,6 +251,14 @@ public class Main {
 		%match(exp){
 			Id(id) -> {
 				counter.adicionaOperando(`id);
+			}
+
+			Input(_,_,_,_,_,_) -> {
+				counter.adicionaOperador("Input");
+			}
+			
+			Print(_,_,_,Expressao:Expressao,_,_) -> {
+				counter.adicionaOperador("Print");
 			}
 		}
 	}
