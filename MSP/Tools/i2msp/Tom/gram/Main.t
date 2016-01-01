@@ -54,11 +54,19 @@ public class Main {
 
     %strategy countFunct()extends Identity(){
 		visit Instrucao {
-			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
+			Funcao(_,tipo,_,nome,b,c,argumentos,_,_,instr,_) -> {
 
 				int nArgs = contaArgumentos(`argumentos);
+
+				for(int i=0; i<nArgs-1; i++){
+					counter.adicionaOperador(",");
+				}
 				
 				funcao = new ContaFunc(`nome, nArgs);
+
+				counter.adicionaOperador(`nome);
+				counter.adicionaOperador("(");
+				counter.adicionaOperador(")");
 				counter.addFunc(funcao);
 
 				funcao.incLines(1);
@@ -66,14 +74,17 @@ public class Main {
 
 			Declaracao(_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 
 			Atribuicao(_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 			
 			Return(_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 
 			If(_,_,_,_,_,_,_,_) -> {
@@ -95,20 +106,47 @@ public class Main {
 		visit Expressao{
 			Call(_,_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 
 			Input(_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 
 			Print(_,_,_,_,_,_) -> {
 				funcao.incLines(1);
+				counter.adicionaOperador(";");
 			}
 		}
 
 		visit LComentarios{
 			Comentario(_) -> {
 				funcao.incComentarios();
+			}
+		}
+
+		visit DefTipo{
+
+			DInt() -> {
+
+				counter.adicionaOperador("Int");
+			}
+
+			DChar() -> {
+				counter.adicionaOperador("Char");
+			}
+
+			DBoolean() -> {
+				counter.adicionaOperador("Boolean");
+			}
+
+			DFloat() -> {
+				counter.adicionaOperador("Float");
+			}
+
+			DVoid() -> {
+				counter.adicionaOperador("Void");
 			}
 		}
 	}
@@ -131,7 +169,7 @@ public class Main {
 class ContaFunc{
 
 	private String nome;
-	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;
+	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
 
 	public ContaFunc(String nome, int nArgs){
 		this.nome = nome;
@@ -191,9 +229,12 @@ class ContaTudo{
 
 	private int lines;
 	private HashMap<String, ContaFunc> funcs;
+	private HashMap<String, Integer> operandos, operadores;
 
 	public ContaTudo(){
 		this.funcs = new HashMap<>();
+		operandos = new HashMap<>();
+		operadores = new HashMap<>();
 	}
 
 	public void addFunc(ContaFunc func){
@@ -210,6 +251,28 @@ class ContaTudo{
 		return res;
 	}
 
+
+
+	public void adicionaOperando(String op){
+		if(this.operandos.containsKey(op)){
+			int n = this.operandos.get(op);
+			this.operandos.put(op, n+1);
+		}
+		else{
+			this.operandos.put(op, 1);
+		}
+	}
+
+	public void adicionaOperador(String op){
+		if(this.operadores.containsKey(op)){
+			int n = this.operadores.get(op);
+			this.operadores.put(op, n+1);
+		}
+		else{
+			this.operadores.put(op, 1);
+		}
+	}
+
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
@@ -219,6 +282,8 @@ class ContaTudo{
 		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
 			sb.append(entry.getValue().toString());
 		}
+
+		sb.append(this.operadores.toString());
 
 		return sb.toString();
 	}
