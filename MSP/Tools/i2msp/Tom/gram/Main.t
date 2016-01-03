@@ -369,7 +369,56 @@ class ContaTudo{
 			this.operadores.put(op, 1);
 		}
 	}
-
+	public int operadoresDist(){
+		return this.operadores.keyset().size();
+	}
+	
+	public int operandosDist(){
+		return this.operandos.keyset().size();
+	}
+	
+	public int operadoresTotais(){
+		int sum=0;
+		for(Integer i:this.operadores.values())
+			sum+=i;
+		return i;
+	}
+	
+	public int operandosTotais(){
+		int sum=0;
+		for(Integer i:this.operandos.values())
+			sum+=i;
+		return i;
+	}
+	public int vocabulario(){
+		return this.operandosDist()+this.operadoresDist();
+	}
+	public int comprimento(){
+		return this.operadoresTotais()+this.operandosTotais();
+	}
+	public float comprimentoCalculado(){
+		int n1=this.operadoresDist();
+		int n2=this.operandosDist();
+		return (n1*Math.log(n1)/Math.log(2)) + (n2* Math.log(n2)/Math.log(2));
+	}
+	public float volume(){
+		return this.comprimento() * (Math.log(this.vocabulario())/Math.log(2));
+	}
+	public float dificuldade(){
+		int n1=this.operadoresDist();
+		int N2=this.operandosTotais();
+		int n2=this.operandosDist();
+		return (n1/2) * (N2/n2);
+	}
+	public float esforco(){
+		return this.volume()*this.dificuldade();
+	}
+	public float tempoNecessario(){
+		return this.esforco()/18;
+	}
+	public float estimateBugs(){
+		return this.volume()/3000;
+	}
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
