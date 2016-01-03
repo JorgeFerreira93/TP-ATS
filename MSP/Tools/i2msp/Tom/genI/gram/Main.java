@@ -192,6 +192,12 @@ public class Main {
 
 
 
+
+
+
+
+
+
 				counter.adicionaOperador("Int");
 			}}}}{if (tom_is_sort_DefTipo(tom__arg)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom__arg))) {if (tom_is_fun_sym_DChar((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom__arg)))) {
 
@@ -209,7 +215,7 @@ public class Main {
 
 
 				counter.adicionaOperador("Void");
-			}}}}}return _visit_DefTipo(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.LComentarios  visit_LComentarios( gram.i.types.LComentarios  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_LComentarios(tom__arg)) {if (tom_is_sort_LComentarios((( gram.i.types.LComentarios )tom__arg))) {if (tom_is_fun_sym_Comentario((( gram.i.types.LComentarios )(( gram.i.types.LComentarios )tom__arg)))) {     funcao.incComentarios();    }}}}}return _visit_LComentarios(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.Expressao  visit_Expressao( gram.i.types.Expressao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Id((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(tom_get_slot_Id_Id((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Call((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");     counter.adicionaOperador(tom_get_slot_Call_Id((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Input((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Print((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Int((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(Integer.toString(tom_get_slot_Int_Int((( gram.i.types.Expressao )tom__arg))));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Char((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(tom_get_slot_Char_Char((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_True((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando("True");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_False((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando("False");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Float((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(Float.toString(tom_get_slot_Float_num((( gram.i.types.Expressao )tom__arg))));    }}}}}return _visit_Expressao(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  visit_Instrucao( gram.i.types.Instrucao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Funcao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { String  tom_nome=tom_get_slot_Funcao_Nome((( gram.i.types.Instrucao )tom__arg));      int nArgs = contaArgumentos(tom_get_slot_Funcao_Argumentos((( gram.i.types.Instrucao )tom__arg)));      for(int i=0; i<nArgs-1; i++){      counter.adicionaOperador(",");     }          funcao = new ContaFunc(tom_nome, nArgs);      counter.adicionaOperador(tom_nome);     counter.adicionaOperador("(");     counter.adicionaOperador(")");     counter.adicionaOperador("{");     counter.adicionaOperador("}");     counter.addFunc(funcao);      funcao.incLines(1);    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Declaracao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {      resolveDecls(tom_get_slot_Declaracao_Declaracoes((( gram.i.types.Instrucao )tom__arg)));      funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Atribuicao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { gram.i.types.OpAtribuicao  tom_op=tom_get_slot_Atribuicao_op((( gram.i.types.Instrucao )tom__arg));      if(tom_op== tom_make_Atrib()){      counter.adicionaOperador("=");     }     else if(tom_op== tom_make_Mult()){      counter.adicionaOperador("*=");     }     else if(tom_op== tom_make_Div()){      counter.adicionaOperador("/=");     }     else if(tom_op== tom_make_Soma()){      counter.adicionaOperador("+=");     }     else{      counter.adicionaOperador("-=");     }      funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Return((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");     counter.adicionaOperador("Return");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_If((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(3);     funcao.incIfs();      if(tom_get_slot_If_Instrucao2((( gram.i.types.Instrucao )tom__arg))!= tom_empty_list_SeqInstrucao()){      counter.adicionaOperador("Else");     }      counter.adicionaOperador("If");     counter.adicionaOperador(")");     counter.adicionaOperador("(");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_While((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     funcao.incWhiles();     counter.adicionaOperador("While");     counter.adicionaOperador(")");     counter.adicionaOperador("(");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_For((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     funcao.incFors();     counter.adicionaOperador("For");     counter.adicionaOperador(")");     counter.adicionaOperador("(");    }}}}}return _visit_Instrucao(tom__arg,introspector);}}private static  tom.library.sl.Strategy  tom_make_countFunct() { return new countFunct();}
+			}}}}}return _visit_DefTipo(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.LComentarios  visit_LComentarios( gram.i.types.LComentarios  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_LComentarios(tom__arg)) {if (tom_is_sort_LComentarios((( gram.i.types.LComentarios )tom__arg))) {if (tom_is_fun_sym_Comentario((( gram.i.types.LComentarios )(( gram.i.types.LComentarios )tom__arg)))) {     funcao.incComentarios();    }}}}}return _visit_LComentarios(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.Expressao  visit_Expressao( gram.i.types.Expressao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Id((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(tom_get_slot_Id_Id((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Call((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");     counter.adicionaOperador(tom_get_slot_Call_Id((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Input((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Print((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Int((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(Integer.toString(tom_get_slot_Int_Int((( gram.i.types.Expressao )tom__arg))));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Char((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(tom_get_slot_Char_Char((( gram.i.types.Expressao )tom__arg)));    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_True((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando("True");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_False((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando("False");    }}}}{if (tom_is_sort_Expressao(tom__arg)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )tom__arg))) {if (tom_is_fun_sym_Float((( gram.i.types.Expressao )(( gram.i.types.Expressao )tom__arg)))) {     counter.adicionaOperando(Float.toString(tom_get_slot_Float_num((( gram.i.types.Expressao )tom__arg))));    }}}}}return _visit_Expressao(tom__arg,introspector);}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  visit_Instrucao( gram.i.types.Instrucao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Funcao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { String  tom_nome=tom_get_slot_Funcao_Nome((( gram.i.types.Instrucao )tom__arg));      int nArgs = contaArgumentos(tom_get_slot_Funcao_Argumentos((( gram.i.types.Instrucao )tom__arg)));      for(int i=0; i<nArgs-1; i++){      counter.adicionaOperador(",");     }          funcao = new ContaFunc(tom_nome, nArgs);      counter.adicionaOperador(tom_nome);     counter.adicionaOperador("(");     counter.adicionaOperador(")");     counter.adicionaOperador("{");     counter.adicionaOperador("}");     counter.addFunc(funcao);      funcao.incLines(1);    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Declaracao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {      resolveDecls(tom_get_slot_Declaracao_Declaracoes((( gram.i.types.Instrucao )tom__arg)));      funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Atribuicao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { gram.i.types.OpAtribuicao  tom_op=tom_get_slot_Atribuicao_op((( gram.i.types.Instrucao )tom__arg));      if(tom_op== tom_make_Atrib()){      counter.adicionaOperador("=");     }     else if(tom_op== tom_make_Mult()){      counter.adicionaOperador("*=");     }     else if(tom_op== tom_make_Div()){      counter.adicionaOperador("/=");     }     else if(tom_op== tom_make_Soma()){      counter.adicionaOperador("+=");     }     else{      counter.adicionaOperador("-=");     }      funcao.incLines(1);     counter.adicionaOperador(";");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Return((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     counter.adicionaOperador(";");     counter.adicionaOperador("Return");    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_If((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(3);     funcao.incIfs();      if(tom_get_slot_If_Instrucao2((( gram.i.types.Instrucao )tom__arg))!= tom_empty_list_SeqInstrucao()){      counter.adicionaOperador("Else");     }      counter.adicionaOperador("If");     counter.adicionaOperador(")");     counter.adicionaOperador("(");      counter.incMcCabe();    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_While((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     funcao.incWhiles();     counter.adicionaOperador("While");     counter.adicionaOperador(")");     counter.adicionaOperador("(");      counter.incMcCabe();    }}}}{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_For((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {     funcao.incLines(1);     funcao.incFors();     counter.adicionaOperador("For");     counter.adicionaOperador(")");     counter.adicionaOperador("(");      counter.incMcCabe();    }}}}}return _visit_Instrucao(tom__arg,introspector);}}private static  tom.library.sl.Strategy  tom_make_countFunct() { return new countFunct();}
 
 
 
@@ -326,11 +332,12 @@ class ContaFunc{
 
 class ContaTudo{
 
-	private int lines;
+	private int lines, mcCabe;
 	private HashMap<String, ContaFunc> funcs;
 	private HashMap<String, Integer> operandos, operadores;
 
 	public ContaTudo(){
+		this.mcCabe = 1;
 		this.funcs = new HashMap<>();
 		operandos = new HashMap<>();
 		operadores = new HashMap<>();
@@ -369,6 +376,60 @@ class ContaTudo{
 			this.operadores.put(op, 1);
 		}
 	}
+	public int operadoresDist(){
+		return this.operadores.keySet().size();
+	}
+	
+	public int operandosDist(){
+		return this.operandos.keySet().size();
+	}
+	
+	public int operadoresTotais(){
+		int sum=0;
+		for(Integer i: this.operadores.values())
+			sum+=i;
+		return sum;
+	}
+	
+	public int operandosTotais(){
+		int sum=0;
+		for(Integer i: this.operandos.values())
+			sum+=i;
+		return sum;
+	}
+	public int vocabulario(){
+		return this.operandosDist()+this.operadoresDist();
+	}
+	public int comprimento(){
+		return this.operadoresTotais()+this.operandosTotais();
+	}
+	public float comprimentoCalculado(){
+		int n1=this.operadoresDist();
+		int n2=this.operandosDist();
+		return (float)((n1*Math.log(n1)/Math.log(2)) + (n2* Math.log(n2)/Math.log(2)));
+	}
+	public float volume(){
+		return (float)(this.comprimento() * (Math.log(this.vocabulario())/Math.log(2)));
+	}
+	public float dificuldade(){
+		int n1=this.operadoresDist();
+		int N2=this.operandosTotais();
+		int n2=this.operandosDist();
+		return (n1/2) * (N2/n2);
+	}
+	public float esforco(){
+		return this.volume()*this.dificuldade();
+	}
+	public float tempoNecessario(){
+		return this.esforco()/18;
+	}
+	public float estimateBugs(){
+		return this.volume()/3000;
+	}
+
+	public void incMcCabe(){
+		this.mcCabe++;
+	}
 
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -380,11 +441,32 @@ class ContaTudo{
 			sb.append(entry.getValue().toString());
 		}
 
-		sb.append("----OPERADORES-----\n");
-		sb.append(this.operadores.toString());
-		sb.append("\n----OPERANDOS-----\n");
-		sb.append(this.operandos.toString());
+		sb.append("-------Métricas Halstead-------\n");
+		sb.append("Operadores distintos: ");
+		sb.append(this.operadoresDist());
+		sb.append("\nOperandos distintos: ");
+		sb.append(this.operandosDist());
+		sb.append("\nTotal de operadores: ");
+		sb.append(this.operadoresTotais());
+		sb.append("\nTotal de operandos: ");
+		sb.append(this.operandosTotais());
+		sb.append("\nVocabulário: ");
+		sb.append(this.vocabulario());
+		sb.append("\nComprimento: ");
+		sb.append(this.comprimento());
+		sb.append("\nVolume: ");
+		sb.append(this.volume());
+		sb.append("\nDificuldade: ");
+		sb.append(this.dificuldade());
+		sb.append("\nEsforço: ");
+		sb.append(this.esforco());
+		sb.append("\nTempo Necessário: ");
+		sb.append(this.tempoNecessario());
+		sb.append("s\nNº estimado de Bugs: ");
+		sb.append(this.estimateBugs());
 
+		sb.append("-------Complexidade Ciclomática-------\n");
+		sb.append(this.mcCabe);
 		return sb.toString();
 	}
 }

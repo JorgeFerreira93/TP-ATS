@@ -121,6 +121,8 @@ public class Main {
 				counter.adicionaOperador("If");
 				counter.adicionaOperador(")");
 				counter.adicionaOperador("(");
+
+				counter.incMcCabe();
 			}
 			
 			While(_,_,_,_,_,_,_,_) -> {
@@ -129,6 +131,8 @@ public class Main {
 				counter.adicionaOperador("While");
 				counter.adicionaOperador(")");
 				counter.adicionaOperador("(");
+
+				counter.incMcCabe();
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
@@ -137,6 +141,8 @@ public class Main {
 				counter.adicionaOperador("For");
 				counter.adicionaOperador(")");
 				counter.adicionaOperador("(");
+
+				counter.incMcCabe();
 			}
 		}
 
@@ -326,11 +332,12 @@ class ContaFunc{
 
 class ContaTudo{
 
-	private int lines;
+	private int lines, mcCabe;
 	private HashMap<String, ContaFunc> funcs;
 	private HashMap<String, Integer> operandos, operadores;
 
 	public ContaTudo(){
+		this.mcCabe = 1;
 		this.funcs = new HashMap<>();
 		operandos = new HashMap<>();
 		operadores = new HashMap<>();
@@ -370,25 +377,25 @@ class ContaTudo{
 		}
 	}
 	public int operadoresDist(){
-		return this.operadores.keyset().size();
+		return this.operadores.keySet().size();
 	}
 	
 	public int operandosDist(){
-		return this.operandos.keyset().size();
+		return this.operandos.keySet().size();
 	}
 	
 	public int operadoresTotais(){
 		int sum=0;
-		for(Integer i:this.operadores.values())
+		for(Integer i: this.operadores.values())
 			sum+=i;
-		return i;
+		return sum;
 	}
 	
 	public int operandosTotais(){
 		int sum=0;
-		for(Integer i:this.operandos.values())
+		for(Integer i: this.operandos.values())
 			sum+=i;
-		return i;
+		return sum;
 	}
 	public int vocabulario(){
 		return this.operandosDist()+this.operadoresDist();
@@ -399,10 +406,10 @@ class ContaTudo{
 	public float comprimentoCalculado(){
 		int n1=this.operadoresDist();
 		int n2=this.operandosDist();
-		return (n1*Math.log(n1)/Math.log(2)) + (n2* Math.log(n2)/Math.log(2));
+		return (float)((n1*Math.log(n1)/Math.log(2)) + (n2* Math.log(n2)/Math.log(2)));
 	}
 	public float volume(){
-		return this.comprimento() * (Math.log(this.vocabulario())/Math.log(2));
+		return (float)(this.comprimento() * (Math.log(this.vocabulario())/Math.log(2)));
 	}
 	public float dificuldade(){
 		int n1=this.operadoresDist();
@@ -419,6 +426,11 @@ class ContaTudo{
 	public float estimateBugs(){
 		return this.volume()/3000;
 	}
+
+	public void incMcCabe(){
+		this.mcCabe++;
+	}
+
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
@@ -429,11 +441,32 @@ class ContaTudo{
 			sb.append(entry.getValue().toString());
 		}
 
-		sb.append("----OPERADORES-----\n");
-		sb.append(this.operadores.toString());
-		sb.append("\n----OPERANDOS-----\n");
-		sb.append(this.operandos.toString());
+		sb.append("-------Métricas Halstead-------\n");
+		sb.append("Operadores distintos: ");
+		sb.append(this.operadoresDist());
+		sb.append("\nOperandos distintos: ");
+		sb.append(this.operandosDist());
+		sb.append("\nTotal de operadores: ");
+		sb.append(this.operadoresTotais());
+		sb.append("\nTotal de operandos: ");
+		sb.append(this.operandosTotais());
+		sb.append("\nVocabulário: ");
+		sb.append(this.vocabulario());
+		sb.append("\nComprimento: ");
+		sb.append(this.comprimento());
+		sb.append("\nVolume: ");
+		sb.append(this.volume());
+		sb.append("\nDificuldade: ");
+		sb.append(this.dificuldade());
+		sb.append("\nEsforço: ");
+		sb.append(this.esforco());
+		sb.append("\nTempo Necessário: ");
+		sb.append(this.tempoNecessario());
+		sb.append("s\nNº estimado de Bugs: ");
+		sb.append(this.estimateBugs());
 
+		sb.append("\n-------Complexidade Ciclomática-------\n");
+		sb.append(this.mcCabe);
 		return sb.toString();
 	}
 }
