@@ -14,18 +14,70 @@ import java.io.*;
 
 public class Main {
 
+	private static ArrayList<Programa> bonsProgramas = new ArrayList<>();
+	private static Programa programa;
+
 	public static void main(String[] args) {
-		Main main = new Main();
 
-		String path1 = "../exemplos/maiorDeDoisNumeros.i";
-		String path2 = "../exemplos/fatorial.i";
+		File folder = new File("../exemplos/");
+		File[] listOfFiles = folder.listFiles();
 
-		Programa p1 = new Programa(path1);
-		Programa p2 = new Programa(path2);
+		for (int i = 0; i < listOfFiles.length; i++) {
+
+			Programa p = new Programa(listOfFiles[i].getPath());
+			
+			bonsProgramas.add(p);
+		}
+
+		lerPrograma();
+
+		String[] ops = {"Detalhes do programa",
+						"Complexidade McCabe",
+						"Complexidade Halstead",
+						"Listar Smells"};
+
+		Menu menuMain = new Menu(ops);
+
+		do {
+            menuMain.executa();
+            switch (menuMain.getOpcao()) {
+                case 1: detalhes();
+                        break;
+                case 2: System.out.println(programa.toString());
+                        break;
+                case 3: System.out.println("Menu 3");
+                        break;
+            }
+        } while (menuMain.getOpcao()!=0);
+
 	}
 
-	public Main() {
-		//counter = new ContaTudo();
+	private static void lerPrograma(){
+		Scanner is = new Scanner(System.in);
+        
+        System.out.print("Nome Ficheiro: ");
+        String op = is.nextLine();
+
+        programa = new Programa(op);
+
+        System.out.println(programa.toString());
+	}
+
+	private static void detalhes(){
+
+		ArrayList<String> aux = programa.getFuncs();
+
+		aux.add("Tudo");
+
+		String[] listaFunc = aux.toArray(new String[aux.size()]);
+
+		Menu menuMain = new Menu(listaFunc);
+
+		do {
+            menuMain.executa();
+            
+            System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).toString());
+        } while (menuMain.getOpcao()!=0);
 	}
 }
 
@@ -97,7 +149,7 @@ class Programa{
 	private static int mcCabe;
 	private static HashMap<String, Funcao> funcs;
 	private static HashMap<String, Integer> operandos, operadores;
-	 static Funcao auxFunc;
+	private static Funcao auxFunc;
 
 	public Programa(String path){
 		this.mcCabe = 1;
@@ -192,6 +244,20 @@ class Programa{
 		mcCabe++;
 	}
 
+	public ArrayList<String> getFuncs(){
+		ArrayList<String> res = new ArrayList<>();
+
+		for(Map.Entry<String, Funcao> e: funcs.entrySet()){
+			res.add(e.getKey());
+		}
+
+		return res;
+	}
+
+	public Funcao getFuncao(String nome){
+		return funcs.get(nome);
+	}
+
 	private void parser(String path){
 		try {
 			
@@ -204,8 +270,6 @@ class Programa{
 			Instrucao p = (Instrucao) iAdaptor.getTerm(b);
 
 			start(p);
-
-			System.out.println(this.toString());
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -476,4 +540,70 @@ class Programa{
 			}
 		}
 	}
+}
+
+
+/**
+ * Esta classe implementa um menu em modo texto.
+ * 
+ * @author José Creissac Campos 
+ * @version v1.0
+ */
+class Menu {
+    // variáveis de instância
+    private List<String> opcoes;
+    private int op;
+    
+    /**
+     * Constructor for objects of class Menu
+     */
+    public Menu(String[] opcoes) {
+        this.opcoes = new ArrayList<String>();
+        for (String op : opcoes) //(int i=0; i<opcoes.length; i++)
+            this.opcoes.add(op);
+        this.op = 0;
+    }
+
+    /**
+     * M�todo para apresentar o menu e ler uma op��o.
+     * 
+     */
+    public void executa() {
+        do {
+            showMenu();
+            this.op = lerOpcao();
+        } while (this.op == -1);
+    }
+    
+    /** Apresentar o menu */
+    private void showMenu() {
+        System.out.println("\n *** Menu *** ");
+        for (int i=0; i<this.opcoes.size(); i++) {
+            System.out.print(i+1);
+            System.out.print(" - ");
+            System.out.println(this.opcoes.get(i));
+        }
+        System.out.println("0 - Sair");
+    }
+    
+    /** Ler uma op��o v�lida */
+    private int lerOpcao() {
+        int op; 
+        Scanner is = new Scanner(System.in);
+        
+        System.out.print("Opção: ");
+        op = is.nextInt();
+        if (op<0 || op>this.opcoes.size()) {
+            System.out.println("Opção Inválida!!!");
+            op = -1;
+        }
+        return op;
+    }
+    
+    /**
+     * M�todo para obter a op��o lida
+     */
+    public int getOpcao() {
+        return this.op;
+    }
 }
