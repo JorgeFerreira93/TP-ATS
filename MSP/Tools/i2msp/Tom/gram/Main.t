@@ -13,270 +13,28 @@ import java.io.*;
 
 
 public class Main {
-	%include{sl.tom}
-	%include{../genI/gram/i/i.tom}
-
-	static ContaTudo counter;
-	static ContaFunc funcao;
 
 	public static void main(String[] args) {
-		try {
-			iLexer lexer = new iLexer(new ANTLRInputStream(System.in));
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			iParser parser = new iParser(tokens);
+		Main main = new Main();
 
-			Tree b = (Tree) parser.prog().getTree();
-			Instrucao p = (Instrucao) iAdaptor.getTerm(b);
+		String path1 = "../exemplos/maiorDeDoisNumeros.i";
+		String path2 = "../exemplos/fatorial.i";
 
-			Main main = new Main();
-
-			main.start(p);
-
-			System.out.println(counter.toString());
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		Programa p1 = new Programa(path1);
+		Programa p2 = new Programa(path2);
 	}
 
 	public Main() {
-		counter = new ContaTudo();
+		//counter = new ContaTudo();
 	}
-
-	private void start(Instrucao p){
-
-		try {
-			`TopDown(countFunct()).visit(p);
-		} catch(Exception e) {
-			System.out.println("the strategy failed");
-		}
-	}
-
-    %strategy countFunct()extends Identity(){
-		visit Instrucao {
-			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
-
-				int nArgs = contaArgumentos(`argumentos);
-
-				for(int i=0; i<nArgs-1; i++){
-					counter.adicionaOperador(",");
-				}
-				
-				funcao = new ContaFunc(`nome, nArgs);
-
-				counter.adicionaOperador(`nome);
-				counter.adicionaOperador("(");
-				counter.adicionaOperador(")");
-				counter.adicionaOperador("{");
-				counter.adicionaOperador("}");
-				counter.addFunc(funcao);
-
-				funcao.incLines(1);
-			}
-
-			Declaracao(_,_,_,decls,_,_) -> {
-
-				resolveDecls(`decls);
-
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-			}
-
-			Atribuicao(_,_,_,op,_,_,_) -> {
-
-				if(`op == `Atrib()){
-					counter.adicionaOperador("=");
-				}
-				else if(`op == `Mult()){
-					counter.adicionaOperador("*=");
-				}
-				else if(`op == `Div()){
-					counter.adicionaOperador("/=");
-				}
-				else if(`op == `Soma()){
-					counter.adicionaOperador("+=");
-				}
-				else{
-					counter.adicionaOperador("-=");
-				}
-
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-			}
-			
-			Return(_,_,_,_) -> {
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-				counter.adicionaOperador("Return");
-			}
-
-			If(_,_,_,_,_,_,_,e) -> {
-				funcao.incLines(3);
-				funcao.incIfs();
-
-				if(`e != `SeqInstrucao()){
-					counter.adicionaOperador("Else");
-				}
-
-				counter.adicionaOperador("If");
-				counter.adicionaOperador(")");
-				counter.adicionaOperador("(");
-
-				counter.incMcCabe();
-			}
-			
-			While(_,_,_,_,_,_,_,_) -> {
-				funcao.incLines(1);
-				funcao.incWhiles();
-				counter.adicionaOperador("While");
-				counter.adicionaOperador(")");
-				counter.adicionaOperador("(");
-
-				counter.incMcCabe();
-			}
-			
-			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
-				funcao.incLines(1);
-				funcao.incFors();
-				counter.adicionaOperador("For");
-				counter.adicionaOperador(")");
-				counter.adicionaOperador("(");
-
-				counter.incMcCabe();
-			}
-		}
-
-		visit Expressao{
-			Id(id) -> {
-				counter.adicionaOperando(`id);
-			}
-
-			Call(_,id,_,_,_,_,_) -> {
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-				counter.adicionaOperador(`id);
-			}
-
-			Input(_,_,_,_,_,_) -> {
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-			}
-
-			Print(_,_,_,_,_,_) -> {
-				funcao.incLines(1);
-				counter.adicionaOperador(";");
-			}
-
-			Int(i) -> {
-				counter.adicionaOperando(Integer.toString(`i));
-			}
-
-			Char(c) -> {
-				counter.adicionaOperando(`c);
-			}
-
-			True()  -> {
-				counter.adicionaOperando("True");
-			}
-
-			False() -> {
-				counter.adicionaOperando("False");
-			}
-
-			Float(f) -> {
-				counter.adicionaOperando(Float.toString(`f));
-			}
-		}
-
-		visit LComentarios{
-			Comentario(_) -> {
-				funcao.incComentarios();
-			}
-		}
-
-		visit DefTipo{
-
-			DInt() -> {
-
-				counter.adicionaOperador("Int");
-			}
-
-			DChar() -> {
-				counter.adicionaOperador("Char");
-			}
-
-			DBoolean() -> {
-				counter.adicionaOperador("Boolean");
-			}
-
-			DFloat() -> {
-				counter.adicionaOperador("Float");
-			}
-
-			DVoid() -> {
-				counter.adicionaOperador("Void");
-			}
-		}
-	}
-
-	private static int contaArgumentos(Argumentos args){
-		%match(args){
-			ListaArgumentos(arg1, argsTail*) -> {
-				return `contaArgumentos(arg1) + `contaArgumentos(argsTail*);
-			}
-
-			Argumento(_,_,_,id,_) -> {
-
-				counter.adicionaOperando(`id);
-
-				return 1;
-			}
-		}
-		return 0;
-	}
-
-	private static void resolveDecls(Declaracoes decls){
-		%match(decls){
-			Decl(id,_,_,exp,_) -> {
-				counter.adicionaOperando(`id);
-
-				if(`exp != `Empty()){
-					counter.adicionaOperador("=");
-				}
-
-				`resolveExpr(exp);
-			}
-			ListaDecl(decl1, decl*) -> {
-				resolveDecls(`decl1);
-				resolveDecls(`decl);
-			}
-		}
-	}
-
-	private static void resolveExpr(Expressao exp){
-		%match(exp){
-			Id(id) -> {
-				counter.adicionaOperando(`id);
-			}
-
-			Input(_,_,_,_,_,_) -> {
-				counter.adicionaOperador("Input");
-			}
-			
-			Print(_,_,_,Expressao:Expressao,_,_) -> {
-				counter.adicionaOperador("Print");
-			}
-		}
-	}
-
 }
 
-class ContaFunc{
+class Funcao{
 
 	private String nome;
 	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
 
-	public ContaFunc(String nome, int nArgs){
+	public Funcao(String nome, int nArgs){
 		this.nome = nome;
 		this.nLinhas = 0;
 		this.nArgs = nArgs;
@@ -330,50 +88,53 @@ class ContaFunc{
 	}
 }
 
-class ContaTudo{
+class Programa{
 
-	private int lines, mcCabe;
-	private HashMap<String, ContaFunc> funcs;
-	private HashMap<String, Integer> operandos, operadores;
+	%include{sl.tom}
+	%include{../genI/gram/i/i.tom}
 
-	public ContaTudo(){
+	private int lines;
+	private static int mcCabe;
+	private static HashMap<String, Funcao> funcs;
+	private static HashMap<String, Integer> operandos, operadores;
+	 static Funcao auxFunc;
+
+	public Programa(String path){
 		this.mcCabe = 1;
 		this.funcs = new HashMap<>();
 		operandos = new HashMap<>();
 		operadores = new HashMap<>();
-	}
 
-	public void addFunc(ContaFunc func){
-		this.funcs.put(func.getNome(), func);
+		this.parser(path);
 	}
 
 	public int totLinhas(){
 		int res = 0;
 
-		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
+		for(Map.Entry<String, Funcao> entry : this.funcs.entrySet()){
 			res += entry.getValue().getLines();
 		}
 
 		return res;
 	}
 
-	public void adicionaOperando(String op){
-		if(this.operandos.containsKey(op)){
-			int n = this.operandos.get(op);
-			this.operandos.put(op, n+1);
+	public static void adicionaOperando(String op){
+		if(operandos.containsKey(op)){
+			int n = operandos.get(op);
+			operandos.put(op, n+1);
 		}
 		else{
-			this.operandos.put(op, 1);
+			operandos.put(op, 1);
 		}
 	}
 
-	public void adicionaOperador(String op){
-		if(this.operadores.containsKey(op)){
-			int n = this.operadores.get(op);
-			this.operadores.put(op, n+1);
+	public static void adicionaOperador(String op){
+		if(operadores.containsKey(op)){
+			int n = operadores.get(op);
+			operadores.put(op, n+1);
 		}
 		else{
-			this.operadores.put(op, 1);
+			operadores.put(op, 1);
 		}
 	}
 	public int operadoresDist(){
@@ -427,8 +188,37 @@ class ContaTudo{
 		return this.volume()/3000;
 	}
 
-	public void incMcCabe(){
-		this.mcCabe++;
+	public static void incMcCabe(){
+		mcCabe++;
+	}
+
+	private void parser(String path){
+		try {
+			
+			File f = new File(path);
+			iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			iParser parser = new iParser(tokens);
+
+			Tree b = (Tree) parser.prog().getTree();
+			Instrucao p = (Instrucao) iAdaptor.getTerm(b);
+
+			start(p);
+
+			System.out.println(this.toString());
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void start(Instrucao p){
+
+		try {
+			`TopDown(countFunct()).visit(p);
+		} catch(Exception e) {
+			System.out.println("the strategy failed");
+		}
 	}
 
 	public String toString(){
@@ -437,7 +227,7 @@ class ContaTudo{
 		sb.append("Número total de linhas: " + this.totLinhas() + "\n");
 		sb.append("Número total de funções: " + this.funcs.size() + "\n");
 
-		for(Map.Entry<String, ContaFunc> entry : this.funcs.entrySet()){
+		for(Map.Entry<String, Funcao> entry : this.funcs.entrySet()){
 			sb.append(entry.getValue().toString());
 		}
 
@@ -468,5 +258,222 @@ class ContaTudo{
 		sb.append("\n-------Complexidade Ciclomática-------\n");
 		sb.append(this.mcCabe);
 		return sb.toString();
+	}
+
+	%strategy countFunct() extends Identity(){
+		visit Instrucao {
+			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
+
+				int nArgs = contaArgumentos(`argumentos);
+
+				for(int i=0; i<nArgs-1; i++){
+					adicionaOperador(",");
+				}
+				
+				auxFunc = new Funcao(`nome, nArgs);
+
+				adicionaOperador(`nome);
+				adicionaOperador("(");
+				adicionaOperador(")");
+				adicionaOperador("{");
+				adicionaOperador("}");
+
+				funcs.put(auxFunc.getNome(), auxFunc);
+
+				auxFunc.incLines(1);
+			}
+
+			Declaracao(_,_,_,decls,_,_) -> {
+
+				resolveDecls(`decls);
+
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+			}
+
+			Atribuicao(_,_,_,op,_,_,_) -> {
+
+				if(`op == `Atrib()){
+					adicionaOperador("=");
+				}
+				else if(`op == `Mult()){
+					adicionaOperador("*=");
+				}
+				else if(`op == `Div()){
+					adicionaOperador("/=");
+				}
+				else if(`op == `Soma()){
+					adicionaOperador("+=");
+				}
+				else{
+					adicionaOperador("-=");
+				}
+
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+			}
+			
+			Return(_,_,_,_) -> {
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+				adicionaOperador("Return");
+			}
+
+			If(_,_,_,_,_,_,_,e) -> {
+				auxFunc.incLines(3);
+				auxFunc.incIfs();
+
+				if(`e != `SeqInstrucao()){
+					adicionaOperador("Else");
+				}
+
+				adicionaOperador("If");
+				adicionaOperador(")");
+				adicionaOperador("(");
+
+				incMcCabe();
+			}
+			
+			While(_,_,_,_,_,_,_,_) -> {
+				auxFunc.incLines(1);
+				auxFunc.incWhiles();
+				adicionaOperador("While");
+				adicionaOperador(")");
+				adicionaOperador("(");
+
+				incMcCabe();
+			}
+			
+			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
+				auxFunc.incLines(1);
+				auxFunc.incFors();
+				adicionaOperador("For");
+				adicionaOperador(")");
+				adicionaOperador("(");
+
+				incMcCabe();
+			}
+		}
+
+		visit Expressao{
+			Id(id) -> {
+				adicionaOperando(`id);
+			}
+
+			Call(_,id,_,_,_,_,_) -> {
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+				adicionaOperador(`id);
+			}
+
+			Input(_,_,_,_,_,_) -> {
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+			}
+
+			Print(_,_,_,_,_,_) -> {
+				auxFunc.incLines(1);
+				adicionaOperador(";");
+			}
+
+			Int(i) -> {
+				adicionaOperando(Integer.toString(`i));
+			}
+
+			Char(c) -> {
+				adicionaOperando(`c);
+			}
+
+			True()  -> {
+				adicionaOperando("True");
+			}
+
+			False() -> {
+				adicionaOperando("False");
+			}
+
+			Float(f) -> {
+				adicionaOperando(Float.toString(`f));
+			}
+		}
+
+		visit LComentarios{
+			Comentario(_) -> {
+				auxFunc.incComentarios();
+			}
+		}
+
+		visit DefTipo{
+
+			DInt() -> {
+				adicionaOperador("Int");
+			}
+
+			DChar() -> {
+				adicionaOperador("Char");
+			}
+
+			DBoolean() -> {
+				adicionaOperador("Boolean");
+			}
+
+			DFloat() -> {
+				adicionaOperador("Float");
+			}
+
+			DVoid() -> {
+				adicionaOperador("Void");
+			}
+		}
+	}
+
+	private static int contaArgumentos(Argumentos args){
+		%match(args){
+			ListaArgumentos(arg1, argsTail*) -> {
+				return `contaArgumentos(arg1) + `contaArgumentos(argsTail*);
+			}
+
+			Argumento(_,_,_,id,_) -> {
+
+				adicionaOperando(`id);
+
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	private static void resolveDecls(Declaracoes decls){
+		%match(decls){
+			Decl(id,_,_,exp,_) -> {
+				adicionaOperando(`id);
+
+				if(`exp != `Empty()){
+					adicionaOperador("=");
+				}
+
+				`resolveExpr(exp);
+			}
+			ListaDecl(decl1, decl*) -> {
+				resolveDecls(`decl1);
+				resolveDecls(`decl);
+			}
+		}
+	}
+
+	private static void resolveExpr(Expressao exp){
+		%match(exp){
+			Id(id) -> {
+				adicionaOperando(`id);
+			}
+
+			Input(_,_,_,_,_,_) -> {
+				adicionaOperador("Input");
+			}
+			
+			Print(_,_,_,Expressao:Expressao,_,_) -> {
+				adicionaOperador("Print");
+			}
+		}
 	}
 }
