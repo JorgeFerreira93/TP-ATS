@@ -33,8 +33,7 @@ public class Main {
 
 		String[] ops = {"Detalhes do programa",
 						"Complexidade McCabe",
-						"Complexidade Halstead",
-						"Listar Smells"};
+						"Complexidade Halstead"};
 
 		Menu menuMain = new Menu(ops);
 
@@ -43,9 +42,9 @@ public class Main {
             switch (menuMain.getOpcao()) {
                 case 1: detalhes();
                         break;
-                case 2: System.out.println(programa.toString());
+                case 2: complexidade(0);
                         break;
-                case 3: System.out.println("Menu 3");
+                case 3: complexidade(1);
                         break;
             }
         } while (menuMain.getOpcao()!=0);
@@ -65,9 +64,9 @@ public class Main {
 
 	private static void detalhes(){
 
-		ArrayList<String> aux = programa.getFuncs();
+		ArrayList<String> aux = programa.getArrayFuncs();
 
-		aux.add("Tudo");
+		System.out.println(programa.toString());
 
 		String[] listaFunc = aux.toArray(new String[aux.size()]);
 
@@ -75,9 +74,75 @@ public class Main {
 
 		do {
             menuMain.executa();
-            
-            System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).toString());
+
+            if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
+
+            	Funcao auxFunc = programa.getFuncao(listaFunc[menuMain.getOpcao()-1]);
+
+            	System.out.println(mediaLinhasProgramas());
+
+				if(auxFunc.getLines() > mediaLinhasProgramas()){
+					System.out.println("Função com linhas a mais!");
+				}
+
+				if(auxFunc.getLines() > mediaArgsProgramas()){
+					System.out.println("Função com argumentos a mais!");
+				}
+            	System.out.println(auxFunc.toString());
+            }
+
         } while (menuMain.getOpcao()!=0);
+	}
+
+	private static void complexidade(int tipo){
+
+		ArrayList<String> aux = programa.getArrayFuncs();
+
+		String[] listaFunc = aux.toArray(new String[aux.size()]);
+
+		Menu menuMain = new Menu(listaFunc);
+
+		do {
+            menuMain.executa();
+
+            if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
+            	if(tipo == 0){
+            		System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).complexidadeMcCabe());
+            	}
+            	else{
+            		System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).metricasHalstead());
+            	}
+            }
+
+        } while (menuMain.getOpcao()!=0);
+	}
+
+	private static float mediaLinhasProgramas(){
+		int soma = 0;
+		int tot = 0;
+
+		for(Programa p: bonsProgramas){
+			for(Map.Entry<String, Funcao> entry: p.getFuncs().entrySet()){
+				soma += entry.getValue().getLines();
+				tot++;
+			}
+		}
+
+		return soma/tot;
+	}
+
+	private static float mediaArgsProgramas(){
+		int soma = 0;
+		int tot = 0;
+
+		for(Programa p: bonsProgramas){
+			for(Map.Entry<String, Funcao> entry: p.getFuncs().entrySet()){
+				soma += entry.getValue().getNArgs();
+				tot++;
+			}
+		}
+
+		return soma/tot;
 	}
 }
 
@@ -85,6 +150,8 @@ class Funcao{
 
 	private String nome;
 	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
+	private int mcCabe;
+	private HashMap<String, Integer> operandos, operadores;
 
 	public Funcao(String nome, int nArgs){
 		this.nome = nome;
@@ -94,6 +161,9 @@ class Funcao{
 		this.nWhiles = 0;
 		this.nFors = 0;
 		this.nComentarios = 0;
+		this.mcCabe = 1;
+		operandos = new HashMap<>();
+		operadores = new HashMap<>();
 	}
 
 	public String getNome(){
@@ -102,6 +172,10 @@ class Funcao{
 
 	public int getLines(){
 		return this.nLinhas;
+	}
+
+	public int getNArgs(){
+		return this.nArgs;
 	}
 
 	public void incLines(int n){
@@ -123,54 +197,7 @@ class Funcao{
 	public void incComentarios(){
 		this.nComentarios++;
 	}
-
-	public String toString(){
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("----------------------------------------\n");
-		sb.append(this.nome + "\n\tNúmero de argumentos: " + this.nArgs + "\n");
-		sb.append("\tNúmero de linhas: " + this.nLinhas + "\n");
-		sb.append("\tNúmero de ifs: " + this.nIfs + "\n");
-		sb.append("\tNúmero de whiles: " + this.nWhiles + "\n");
-		sb.append("\tNúmero de fors: " + this.nFors + "\n");
-		sb.append("\tNúmero de comentários: " + this.nComentarios + "\n");
-
-		return sb.toString();
-	}
-}
-
-class Programa{
-
-	%include{sl.tom}
-	%include{../genI/gram/i/i.tom}
-
-	private int lines;
-	private static int mcCabe;
-	private static HashMap<String, Funcao> funcs;
-	private static HashMap<String, Integer> operandos, operadores;
-	private static Funcao auxFunc;
-
-	public Programa(String path){
-		this.mcCabe = 1;
-		this.funcs = new HashMap<>();
-		operandos = new HashMap<>();
-		operadores = new HashMap<>();
-
-		this.parser(path);
-	}
-
-	public int totLinhas(){
-		int res = 0;
-
-		for(Map.Entry<String, Funcao> entry : this.funcs.entrySet()){
-			res += entry.getValue().getLines();
-		}
-
-		return res;
-	}
-
-	public static void adicionaOperando(String op){
+	public void adicionaOperando(String op){
 		if(operandos.containsKey(op)){
 			int n = operandos.get(op);
 			operandos.put(op, n+1);
@@ -180,7 +207,7 @@ class Programa{
 		}
 	}
 
-	public static void adicionaOperador(String op){
+	public void adicionaOperador(String op){
 		if(operadores.containsKey(op)){
 			int n = operadores.get(op);
 			operadores.put(op, n+1);
@@ -240,11 +267,94 @@ class Programa{
 		return this.volume()/3000;
 	}
 
-	public static void incMcCabe(){
+	public void incMcCabe(){
 		mcCabe++;
 	}
 
-	public ArrayList<String> getFuncs(){
+	public String metricasHalstead(){
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("-------Métricas Halstead-------\n");
+		sb.append("Operadores distintos: ");
+		sb.append(this.operadoresDist());
+		sb.append("\nOperandos distintos: ");
+		sb.append(this.operandosDist());
+		sb.append("\nTotal de operadores: ");
+		sb.append(this.operadoresTotais());
+		sb.append("\nTotal de operandos: ");
+		sb.append(this.operandosTotais());
+		sb.append("\nVocabulário: ");
+		sb.append(this.vocabulario());
+		sb.append("\nComprimento: ");
+		sb.append(this.comprimento());
+		sb.append("\nVolume: ");
+		sb.append(this.volume());
+		sb.append("\nDificuldade: ");
+		sb.append(this.dificuldade());
+		sb.append("\nEsforço: ");
+		sb.append(this.esforco());
+		sb.append("\nTempo Necessário: ");
+		sb.append(this.tempoNecessario());
+		sb.append("s\nNº estimado de Bugs: ");
+		sb.append(this.estimateBugs());
+
+		return sb.toString();
+	}
+
+	public String complexidadeMcCabe(){
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("\n-------Complexidade Ciclomática-------\n");
+		sb.append(this.mcCabe);
+		return sb.toString();
+	}
+
+	public String toString(){
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("----------------------------------------\n");
+		sb.append(this.nome + "\n\tNúmero de argumentos: " + this.nArgs + "\n");
+		sb.append("\tNúmero de linhas: " + this.nLinhas + "\n");
+		sb.append("\tNúmero de ifs: " + this.nIfs + "\n");
+		sb.append("\tNúmero de whiles: " + this.nWhiles + "\n");
+		sb.append("\tNúmero de fors: " + this.nFors + "\n");
+		sb.append("\tNúmero de comentários: " + this.nComentarios + "\n");
+
+		return sb.toString();
+	}
+}
+
+class Programa{
+
+	%include{sl.tom}
+	%include{../genI/gram/i/i.tom}
+
+	private int lines;
+	private static HashMap<String, Funcao> funcs;
+	private static Funcao auxFunc;
+
+	public Programa(String path){
+		this.funcs = new HashMap<>();
+
+		this.parser(path);
+	}
+
+	public int totLinhas(){
+		int res = 0;
+
+		for(Map.Entry<String, Funcao> entry : this.funcs.entrySet()){
+			res += entry.getValue().getLines();
+		}
+
+		return res;
+	}
+
+	public HashMap<String, Funcao> getFuncs(){
+		return this.funcs;
+	}
+
+	public ArrayList<String> getArrayFuncs(){
 		ArrayList<String> res = new ArrayList<>();
 
 		for(Map.Entry<String, Funcao> e: funcs.entrySet()){
@@ -291,36 +401,6 @@ class Programa{
 		sb.append("Número total de linhas: " + this.totLinhas() + "\n");
 		sb.append("Número total de funções: " + this.funcs.size() + "\n");
 
-		for(Map.Entry<String, Funcao> entry : this.funcs.entrySet()){
-			sb.append(entry.getValue().toString());
-		}
-
-		sb.append("-------Métricas Halstead-------\n");
-		sb.append("Operadores distintos: ");
-		sb.append(this.operadoresDist());
-		sb.append("\nOperandos distintos: ");
-		sb.append(this.operandosDist());
-		sb.append("\nTotal de operadores: ");
-		sb.append(this.operadoresTotais());
-		sb.append("\nTotal de operandos: ");
-		sb.append(this.operandosTotais());
-		sb.append("\nVocabulário: ");
-		sb.append(this.vocabulario());
-		sb.append("\nComprimento: ");
-		sb.append(this.comprimento());
-		sb.append("\nVolume: ");
-		sb.append(this.volume());
-		sb.append("\nDificuldade: ");
-		sb.append(this.dificuldade());
-		sb.append("\nEsforço: ");
-		sb.append(this.esforco());
-		sb.append("\nTempo Necessário: ");
-		sb.append(this.tempoNecessario());
-		sb.append("s\nNº estimado de Bugs: ");
-		sb.append(this.estimateBugs());
-
-		sb.append("\n-------Complexidade Ciclomática-------\n");
-		sb.append(this.mcCabe);
 		return sb.toString();
 	}
 
@@ -329,18 +409,18 @@ class Programa{
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
 
 				int nArgs = contaArgumentos(`argumentos);
-
-				for(int i=0; i<nArgs-1; i++){
-					adicionaOperador(",");
-				}
 				
 				auxFunc = new Funcao(`nome, nArgs);
 
-				adicionaOperador(`nome);
-				adicionaOperador("(");
-				adicionaOperador(")");
-				adicionaOperador("{");
-				adicionaOperador("}");
+				for(int i=0; i<nArgs-1; i++){
+					auxFunc.adicionaOperador(",");
+				}
+
+				auxFunc.adicionaOperador(`nome);
+				auxFunc.adicionaOperador("(");
+				auxFunc.adicionaOperador(")");
+				auxFunc.adicionaOperador("{");
+				auxFunc.adicionaOperador("}");
 
 				funcs.put(auxFunc.getNome(), auxFunc);
 
@@ -352,35 +432,35 @@ class Programa{
 				resolveDecls(`decls);
 
 				auxFunc.incLines(1);
-				adicionaOperador(";");
+				auxFunc.adicionaOperador(";");
 			}
 
 			Atribuicao(_,_,_,op,_,_,_) -> {
 
 				if(`op == `Atrib()){
-					adicionaOperador("=");
+					auxFunc.adicionaOperador("=");
 				}
 				else if(`op == `Mult()){
-					adicionaOperador("*=");
+					auxFunc.adicionaOperador("*=");
 				}
 				else if(`op == `Div()){
-					adicionaOperador("/=");
+					auxFunc.adicionaOperador("/=");
 				}
 				else if(`op == `Soma()){
-					adicionaOperador("+=");
+					auxFunc.adicionaOperador("+=");
 				}
 				else{
-					adicionaOperador("-=");
+					auxFunc.adicionaOperador("-=");
 				}
 
 				auxFunc.incLines(1);
-				adicionaOperador(";");
+				auxFunc.adicionaOperador(";");
 			}
 			
 			Return(_,_,_,_) -> {
 				auxFunc.incLines(1);
-				adicionaOperador(";");
-				adicionaOperador("Return");
+				auxFunc.adicionaOperador(";");
+				auxFunc.adicionaOperador("Return");
 			}
 
 			If(_,_,_,_,_,_,_,e) -> {
@@ -388,76 +468,76 @@ class Programa{
 				auxFunc.incIfs();
 
 				if(`e != `SeqInstrucao()){
-					adicionaOperador("Else");
+					auxFunc.adicionaOperador("Else");
 				}
 
-				adicionaOperador("If");
-				adicionaOperador(")");
-				adicionaOperador("(");
+				auxFunc.adicionaOperador("If");
+				auxFunc.adicionaOperador(")");
+				auxFunc.adicionaOperador("(");
 
-				incMcCabe();
+				auxFunc.incMcCabe();
 			}
 			
 			While(_,_,_,_,_,_,_,_) -> {
 				auxFunc.incLines(1);
 				auxFunc.incWhiles();
-				adicionaOperador("While");
-				adicionaOperador(")");
-				adicionaOperador("(");
+				auxFunc.adicionaOperador("While");
+				auxFunc.adicionaOperador(")");
+				auxFunc.adicionaOperador("(");
 
-				incMcCabe();
+				auxFunc.incMcCabe();
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
 				auxFunc.incLines(1);
 				auxFunc.incFors();
-				adicionaOperador("For");
-				adicionaOperador(")");
-				adicionaOperador("(");
+				auxFunc.adicionaOperador("For");
+				auxFunc.adicionaOperador(")");
+				auxFunc.adicionaOperador("(");
 
-				incMcCabe();
+				auxFunc.incMcCabe();
 			}
 		}
 
 		visit Expressao{
 			Id(id) -> {
-				adicionaOperando(`id);
+				auxFunc.adicionaOperando(`id);
 			}
 
 			Call(_,id,_,_,_,_,_) -> {
 				auxFunc.incLines(1);
-				adicionaOperador(";");
-				adicionaOperador(`id);
+				auxFunc.adicionaOperador(";");
+				auxFunc.adicionaOperador(`id);
 			}
 
 			Input(_,_,_,_,_,_) -> {
 				auxFunc.incLines(1);
-				adicionaOperador(";");
+				auxFunc.adicionaOperador(";");
 			}
 
 			Print(_,_,_,_,_,_) -> {
 				auxFunc.incLines(1);
-				adicionaOperador(";");
+				auxFunc.adicionaOperador(";");
 			}
 
 			Int(i) -> {
-				adicionaOperando(Integer.toString(`i));
+				auxFunc.adicionaOperando(Integer.toString(`i));
 			}
 
 			Char(c) -> {
-				adicionaOperando(`c);
+				auxFunc.adicionaOperando(`c);
 			}
 
 			True()  -> {
-				adicionaOperando("True");
+				auxFunc.adicionaOperando("True");
 			}
 
 			False() -> {
-				adicionaOperando("False");
+				auxFunc.adicionaOperando("False");
 			}
 
 			Float(f) -> {
-				adicionaOperando(Float.toString(`f));
+				auxFunc.adicionaOperando(Float.toString(`f));
 			}
 		}
 
@@ -470,23 +550,23 @@ class Programa{
 		visit DefTipo{
 
 			DInt() -> {
-				adicionaOperador("Int");
+				auxFunc.adicionaOperador("Int");
 			}
 
 			DChar() -> {
-				adicionaOperador("Char");
+				auxFunc.adicionaOperador("Char");
 			}
 
 			DBoolean() -> {
-				adicionaOperador("Boolean");
+				auxFunc.adicionaOperador("Boolean");
 			}
 
 			DFloat() -> {
-				adicionaOperador("Float");
+				auxFunc.adicionaOperador("Float");
 			}
 
 			DVoid() -> {
-				adicionaOperador("Void");
+				auxFunc.adicionaOperador("Void");
 			}
 		}
 	}
@@ -499,7 +579,7 @@ class Programa{
 
 			Argumento(_,_,_,id,_) -> {
 
-				adicionaOperando(`id);
+				auxFunc.adicionaOperando(`id);
 
 				return 1;
 			}
@@ -510,10 +590,10 @@ class Programa{
 	private static void resolveDecls(Declaracoes decls){
 		%match(decls){
 			Decl(id,_,_,exp,_) -> {
-				adicionaOperando(`id);
+				auxFunc.adicionaOperando(`id);
 
 				if(`exp != `Empty()){
-					adicionaOperador("=");
+					auxFunc.adicionaOperador("=");
 				}
 
 				`resolveExpr(exp);
@@ -528,15 +608,15 @@ class Programa{
 	private static void resolveExpr(Expressao exp){
 		%match(exp){
 			Id(id) -> {
-				adicionaOperando(`id);
+				auxFunc.adicionaOperando(`id);
 			}
 
 			Input(_,_,_,_,_,_) -> {
-				adicionaOperador("Input");
+				auxFunc.adicionaOperador("Input");
 			}
 			
 			Print(_,_,_,Expressao:Expressao,_,_) -> {
-				adicionaOperador("Print");
+				auxFunc.adicionaOperador("Print");
 			}
 		}
 	}

@@ -13,7 +13,7 @@ void main() {
     print(res);
 }
 
-int max(int a){
+int max(int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int a, int c){
     int res;
     if (a > b) {
         res = a;
