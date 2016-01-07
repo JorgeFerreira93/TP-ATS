@@ -551,7 +551,18 @@ class Programa{
 			}
 
 			Nao(_) -> {
+				auxFunc.adicionaOperador("!");
 				auxFunc.addNao();
+			}
+
+			Ou(_,_,_,_) -> {
+				auxFunc.adicionaOperador("||");
+				auxFunc.incMcCabe();
+			}
+
+			E(_,_,_,_) -> {
+				auxFunc.adicionaOperador("&&");
+				auxFunc.incMcCabe();
 			}
 		}
 
