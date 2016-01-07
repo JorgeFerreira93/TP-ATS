@@ -58,15 +58,11 @@ public class Main {
         String op = is.nextLine();
 
         programa = new Programa(op);
-
-        System.out.println(programa.toString());
 	}
 
 	private static void detalhes(){
 
 		ArrayList<String> aux = programa.getArrayFuncs();
-
-		System.out.println(programa.toString());
 
 		String[] listaFunc = aux.toArray(new String[aux.size()]);
 
@@ -79,15 +75,18 @@ public class Main {
 
             	Funcao auxFunc = programa.getFuncao(listaFunc[menuMain.getOpcao()-1]);
 
-            	System.out.println(mediaLinhasProgramas());
-
 				if(auxFunc.getLines() > mediaLinhasProgramas()){
-					System.out.println("Função com linhas a mais!");
+					System.out.println("Smell: Função com linhas a mais!");
 				}
 
-				if(auxFunc.getLines() > mediaArgsProgramas()){
-					System.out.println("Função com argumentos a mais!");
+				if(auxFunc.getNArgs() > mediaArgsProgramas()){
+					System.out.println("Smell: Função com argumentos a mais!");
 				}
+
+				if(auxFunc.isNao()){
+					System.out.println("Smell: Negação da Condição!");
+				}
+            	
             	System.out.println(auxFunc.toString());
             }
 
@@ -142,7 +141,7 @@ public class Main {
 			}
 		}
 
-		return soma/tot;
+		return (float)soma/tot;
 	}
 }
 
@@ -152,6 +151,7 @@ class Funcao{
 	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
 	private int mcCabe;
 	private HashMap<String, Integer> operandos, operadores;
+	private boolean naoSmell;
 
 	public Funcao(String nome, int nArgs){
 		this.nome = nome;
@@ -164,6 +164,7 @@ class Funcao{
 		this.mcCabe = 1;
 		operandos = new HashMap<>();
 		operadores = new HashMap<>();
+		this.naoSmell = false;
 	}
 
 	public String getNome(){
@@ -237,6 +238,15 @@ class Funcao{
 			sum+=i;
 		return sum;
 	}
+
+	public void addNao(){
+		this.naoSmell = true;
+	}
+
+	public boolean isNao(){
+		return this.naoSmell;
+	}
+
 	public int vocabulario(){
 		return this.operandosDist()+this.operadoresDist();
 	}
@@ -538,6 +548,10 @@ class Programa{
 
 			Float(f) -> {
 				auxFunc.adicionaOperando(Float.toString(`f));
+			}
+
+			Nao(_) -> {
+				auxFunc.addNao();
 			}
 		}
 
