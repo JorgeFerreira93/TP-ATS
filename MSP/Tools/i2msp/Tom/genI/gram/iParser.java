@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 gram/i.g 2016-01-07 11:10:59
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 gram/i.g 2016-01-07 11:20:46
  package gram; 
 
 import org.antlr.runtime.*;
@@ -985,7 +985,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c2, idTipo, c3, c1, dec_nodo, c4
+            // elements: c3, c4, c2, dec_nodo, c1, idTipo
             // token labels: 
             // rule labels: retval, c1, c2, c4, c3
             // token list labels: 
@@ -1252,7 +1252,7 @@ public class iParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: ID, condicao, c1, c2, c3
+                    // elements: c1, c2, ID, c3, condicao
                     // token labels: 
                     // rule labels: retval, c1, c2, c3
                     // token list labels: 
@@ -1485,7 +1485,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c6, c2, blocoCodigo, c5, c3, argumentos, c1, c4, idTipo, c7, ID
+            // elements: c6, c5, c3, c2, c1, ID, c7, argumentos, blocoCodigo, c4, idTipo
             // token labels: 
             // rule labels: retval, c1, c2, c6, c5, c4, c3, c7
             // token list labels: 
@@ -1824,7 +1824,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c2, ID, c1, c3, idTipo
+            // elements: ID, idTipo, c1, c3, c2
             // token labels: 
             // rule labels: retval, c1, c2, c3
             // token list labels: 
@@ -2316,7 +2316,7 @@ public class iParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: c4, blocoCodigo, c2, c3, c5, else_, c1, condicao
+                    // elements: blocoCodigo, c2, condicao, c3, c1, else_, c5, c4
                     // token labels: 
                     // rule labels: retval, c1, c2, c5, c4, c3
                     // token list labels: 
@@ -2425,7 +2425,7 @@ public class iParser extends Parser {
                     {
 
                     // AST REWRITE
-                    // elements: c3, c4, condicao, c2, blocoCodigo, c5, c1
+                    // elements: c5, c3, c2, blocoCodigo, c4, condicao, c1
                     // token labels: 
                     // rule labels: retval, c1, c2, c5, c4, c3
                     // token list labels: 
@@ -2843,7 +2843,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c6, expressao, for_declaracao, c8, blocoCodigo, c5, condicao, c7, c1, c3, c2, c4
+            // elements: c6, c4, c7, expressao, for_declaracao, c3, c5, c2, blocoCodigo, c1, condicao, c8
             // token labels: 
             // rule labels: retval, c1, c2, c6, c5, c4, c3, c8, c7
             // token list labels: 
@@ -3231,7 +3231,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c1, c4, condicao, c6, c3, blocoCodigo, c5, c2
+            // elements: c1, c5, c3, c4, condicao, blocoCodigo, c2, c6
             // token labels: 
             // rule labels: retval, c1, c2, c6, c5, c4, c3
             // token list labels: 
@@ -3428,7 +3428,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: expressao, c2, c1, c3
+            // elements: expressao, c1, c3, c2
             // token labels: 
             // rule labels: retval, c1, c2, c3
             // token list labels: 
@@ -3620,7 +3620,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c1, parametros, ID, c4, c3, c2, c5
+            // elements: parametros, c1, c5, c2, c3, ID, c4
             // token labels: 
             // rule labels: retval, c1, c2, c5, c4, c3
             // token list labels: 
@@ -3843,7 +3843,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c1, expressao, c3, c5, c4, c2
+            // elements: c5, expressao, c2, c4, c3, c1
             // token labels: 
             // rule labels: retval, c1, c2, c5, c4, c3
             // token list labels: 
@@ -4060,7 +4060,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: c5, c3, c1, idTipo, c2, c4
+            // elements: c3, c4, c5, c1, c2, idTipo
             // token labels: 
             // rule labels: retval, c1, c2, c5, c4, c3
             // token list labels: 
@@ -4789,7 +4789,7 @@ public class iParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: c2, c1, expressao, condicao_ou, condicao, c4, c3
+                    // elements: c3, c4, condicao, c2, c1, expressao, condicao_ou
                     // token labels: 
                     // rule labels: retval, c1, c2, c4, c3
                     // token list labels: 
@@ -5021,17 +5021,17 @@ public class iParser extends Parser {
 
 
             	    // AST REWRITE
-            	    // elements: condicao_ou, c, c1, c2
+            	    // elements: condicao_ou, c1, c2, c
             	    // token labels: 
-            	    // rule labels: retval, c1, c2, c
+            	    // rule labels: retval, c1, c, c2
             	    // token list labels: 
             	    // rule list labels: 
             	    // wildcard labels: 
             	    retval.tree = root_0;
             	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             	    RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.tree:null);
-            	    RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
             	    RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
+            	    RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
 
             	    root_0 = (Tree)adaptor.nil();
             	    // 130:79: -> ^( Ou $condicao_ou ^( Comentarios ( $c1)? ) ^( Comentarios ( $c2)? ) $c)
@@ -5202,17 +5202,17 @@ public class iParser extends Parser {
 
 
             	    // AST REWRITE
-            	    // elements: condicao_e, c1, c2, c
+            	    // elements: c1, c, c2, condicao_e
             	    // token labels: 
-            	    // rule labels: retval, c1, c, c2
+            	    // rule labels: retval, c1, c2, c
             	    // token list labels: 
             	    // rule list labels: 
             	    // wildcard labels: 
             	    retval.tree = root_0;
             	    RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             	    RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.tree:null);
-            	    RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
             	    RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
+            	    RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
 
             	    root_0 = (Tree)adaptor.nil();
             	    // 134:106: -> ^( E $condicao_e ^( Comentarios ( $c1)? ) ^( Comentarios ( $c2)? ) $c)
@@ -5426,17 +5426,17 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: c1, c, c2, condicao_comparacao
+            	            // elements: c1, c2, c, condicao_comparacao
             	            // token labels: 
-            	            // rule labels: retval, c1, c2, c
+            	            // rule labels: retval, c1, c, c2
             	            // token list labels: 
             	            // rule list labels: 
             	            // wildcard labels: 
             	            retval.tree = root_0;
             	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             	            RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.tree:null);
-            	            RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
             	            RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
+            	            RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
 
             	            root_0 = (Tree)adaptor.nil();
             	            // 138:105: -> ^( Comp $condicao_comparacao ^( Comentarios ( $c1)? ) ^( Maior ) ^( Comentarios ( $c2)? ) $c)
@@ -5513,7 +5513,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: condicao_comparacao, c, c2, c1
+            	            // elements: c, c2, c1, condicao_comparacao
             	            // token labels: 
             	            // rule labels: retval, c1, c2, c
             	            // token list labels: 
@@ -5600,7 +5600,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: c2, c1, c, condicao_comparacao
+            	            // elements: c1, condicao_comparacao, c2, c
             	            // token labels: 
             	            // rule labels: retval, c1, c, c2
             	            // token list labels: 
@@ -5687,17 +5687,17 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: condicao_comparacao, c1, c2, c
+            	            // elements: c1, c, c2, condicao_comparacao
             	            // token labels: 
-            	            // rule labels: retval, c1, c, c2
+            	            // rule labels: retval, c1, c2, c
             	            // token list labels: 
             	            // rule list labels: 
             	            // wildcard labels: 
             	            retval.tree = root_0;
             	            RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
             	            RewriteRuleSubtreeStream stream_c1=new RewriteRuleSubtreeStream(adaptor,"rule c1",c1!=null?c1.tree:null);
-            	            RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
             	            RewriteRuleSubtreeStream stream_c2=new RewriteRuleSubtreeStream(adaptor,"rule c2",c2!=null?c2.tree:null);
+            	            RewriteRuleSubtreeStream stream_c=new RewriteRuleSubtreeStream(adaptor,"rule c",c!=null?c.tree:null);
 
             	            root_0 = (Tree)adaptor.nil();
             	            // 141:61: -> ^( Comp $condicao_comparacao ^( Comentarios ( $c1)? ) ^( MenorQ ) ^( Comentarios ( $c2)? ) $c)
@@ -5904,7 +5904,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: c1, e, c2, condicao_igualdade
+            	            // elements: c2, c1, condicao_igualdade, e
             	            // token labels: 
             	            // rule labels: retval, e, c1, c2
             	            // token list labels: 
@@ -5991,7 +5991,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: c2, e, condicao_igualdade, c2
+            	            // elements: e, c2, c2, condicao_igualdade
             	            // token labels: 
             	            // rule labels: retval, e, c2
             	            // token list labels: 
@@ -6167,7 +6167,7 @@ public class iParser extends Parser {
 
 
             // AST REWRITE
-            // elements: ID, c1, c3, opAtribuicao, c2, c4, condicao
+            // elements: c4, condicao, c2, ID, opAtribuicao, c3, c1
             // token labels: 
             // rule labels: retval, c1, c2, c4, c3
             // token list labels: 
@@ -6656,7 +6656,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: e, c2, expressao, c1
+            	            // elements: e, c2, c1, expressao
             	            // token labels: 
             	            // rule labels: retval, e, c1, c2
             	            // token list labels: 
@@ -6743,7 +6743,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: expressao, c1, e, c2
+            	            // elements: expressao, e, c1, c2
             	            // token labels: 
             	            // rule labels: retval, e, c1, c2
             	            // token list labels: 
@@ -6972,7 +6972,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: expressaoNum, o, c1, c2
+            	            // elements: o, c2, expressaoNum, c1
             	            // token labels: 
             	            // rule labels: retval, c1, c2, o
             	            // token list labels: 
@@ -7059,7 +7059,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: c2, o, c1, expressaoNum
+            	            // elements: expressaoNum, c1, c2, o
             	            // token labels: 
             	            // rule labels: retval, c1, c2, o
             	            // token list labels: 
@@ -7146,7 +7146,7 @@ public class iParser extends Parser {
 
 
             	            // AST REWRITE
-            	            // elements: expressaoNum, o, c1, c2
+            	            // elements: o, expressaoNum, c1, c2
             	            // token labels: 
             	            // rule labels: retval, c1, c2, o
             	            // token list labels: 
@@ -7312,7 +7312,7 @@ public class iParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: ID, opUnario
+                    // elements: opUnario, ID
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -7365,7 +7365,7 @@ public class iParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: opUnario, tipo
+                    // elements: tipo, opUnario
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -8107,7 +8107,16 @@ public class iParser extends Parser {
             loop33:
             do {
                 int alt33=2;
-                alt33 = dfa33.predict(input);
+                int LA33_0 = input.LA(1);
+
+                if ( (LA33_0==COMENTARIO_LINHA) ) {
+                    alt33=1;
+                }
+                else if ( (LA33_0==COMENTARIO_LINHAS) ) {
+                    alt33=1;
+                }
+
+
                 switch (alt33) {
             	case 1 :
             	    // gram/i.g:213:4: comentario
@@ -8331,7 +8340,6 @@ public class iParser extends Parser {
     protected DFA26 dfa26 = new DFA26(this);
     protected DFA28 dfa28 = new DFA28(this);
     protected DFA29 dfa29 = new DFA29(this);
-    protected DFA33 dfa33 = new DFA33(this);
     static final String DFA4_eotS =
         "\17\uffff";
     static final String DFA4_eofS =
@@ -9176,104 +9184,6 @@ public class iParser extends Parser {
         }
         public String getDescription() {
             return "186:2: ( opUnario ID -> ^( opUnario ^( Id ID ) ) | opUnario tipo -> ^( opUnario tipo ) | tipo -> tipo | ID -> ^( Id ID ) | incOp ID -> ^( IncAntes incOp ID ) | ID incOp -> ^( IncDepois incOp ID ) | call -> call | input_ -> input_ )";
-        }
-    }
-    static final String DFA33_eotS =
-        "\62\uffff";
-    static final String DFA33_eofS =
-        "\1\1\61\uffff";
-    static final String DFA33_minS =
-        "\1\111\61\uffff";
-    static final String DFA33_maxS =
-        "\1\175\61\uffff";
-    static final String DFA33_acceptS =
-        "\1\uffff\1\2\6\uffff\2\1\50\uffff";
-    static final String DFA33_specialS =
-        "\62\uffff}>";
-    static final String[] DFA33_transitionS = {
-            "\4\1\1\10\1\11\4\uffff\13\1\1\uffff\37\1",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-    };
-
-    static final short[] DFA33_eot = DFA.unpackEncodedString(DFA33_eotS);
-    static final short[] DFA33_eof = DFA.unpackEncodedString(DFA33_eofS);
-    static final char[] DFA33_min = DFA.unpackEncodedStringToUnsignedChars(DFA33_minS);
-    static final char[] DFA33_max = DFA.unpackEncodedStringToUnsignedChars(DFA33_maxS);
-    static final short[] DFA33_accept = DFA.unpackEncodedString(DFA33_acceptS);
-    static final short[] DFA33_special = DFA.unpackEncodedString(DFA33_specialS);
-    static final short[][] DFA33_transition;
-
-    static {
-        int numStates = DFA33_transitionS.length;
-        DFA33_transition = new short[numStates][];
-        for (int i=0; i<numStates; i++) {
-            DFA33_transition[i] = DFA.unpackEncodedString(DFA33_transitionS[i]);
-        }
-    }
-
-    class DFA33 extends DFA {
-
-        public DFA33(BaseRecognizer recognizer) {
-            this.recognizer = recognizer;
-            this.decisionNumber = 33;
-            this.eot = DFA33_eot;
-            this.eof = DFA33_eof;
-            this.min = DFA33_min;
-            this.max = DFA33_max;
-            this.accept = DFA33_accept;
-            this.special = DFA33_special;
-            this.transition = DFA33_transition;
-        }
-        public String getDescription() {
-            return "()* loopback of 213:4: ( comentario )*";
         }
     }
  

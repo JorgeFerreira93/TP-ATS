@@ -33,7 +33,8 @@ public class Main {
 
 		String[] ops = {"Detalhes do programa",
 						"Complexidade McCabe",
-						"Complexidade Halstead"};
+						"Complexidade Halstead",
+						"Valores de referência"};
 
 		Menu menuMain = new Menu(ops);
 
@@ -45,6 +46,8 @@ public class Main {
                 case 2: complexidade(0);
                         break;
                 case 3: complexidade(1);
+                        break;
+                case 4: referencia();
                         break;
             }
         } while (menuMain.getOpcao()!=0);
@@ -142,6 +145,11 @@ public class Main {
 		}
 
 		return (float)soma/tot;
+	}
+
+	private static void referencia(){
+		System.out.println("Média de argumentos por função: " + mediaArgsProgramas());
+		System.out.println("Média de linhas por função: " + mediaLinhasProgramas());
 	}
 }
 
