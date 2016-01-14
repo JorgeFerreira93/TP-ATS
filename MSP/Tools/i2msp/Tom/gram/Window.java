@@ -9,12 +9,13 @@
  * @author PedroJosÃ©
  */
 public class Window extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form Window
      */
-    public Window() {
+    public Window(/**/) {
         initComponents();
+        
     }
 
     /**
@@ -99,29 +100,29 @@ public class Window extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        jLabel1.setText("FunÃ§Ãµes");
+        jLabel1.setText("Funções");
 
-        jLabel2.setText("Argumentos na funÃ§Ã£o: ");
+        jLabel2.setText("Argumentos na função: ");
 
         jLabel3.setText("jLabel3");
 
-        jLabel4.setText("Linhas na funÃ§Ã£o:");
+        jLabel4.setText("Linhas na função:");
 
         jLabel5.setText("jLabel5");
 
-        jLabel6.setText("NÂº de If");
+        jLabel6.setText("Nº de If");
 
         jLabel7.setText("jLabel7");
 
-        jLabel8.setText("NÂº de While");
+        jLabel8.setText("Nº de While");
 
         jLabel9.setText("jLabel9");
 
-        jLabel10.setText("NÂº de For");
+        jLabel10.setText("Nº de For");
 
         jLabel11.setText("jLabel11");
 
-        jLabel12.setText("NÂº de ComentÃ¡rios");
+        jLabel12.setText("Nº de Comentários");
 
         jLabel13.setText("jLabel13");
 
@@ -129,13 +130,13 @@ public class Window extends javax.swing.JFrame {
 
         jLabel15.setText("jLabel15");
 
-        jLabel16.setText("NÂº de FunÃ§Ãµes:");
+        jLabel16.setText("Nº de Funções:");
 
         jLabel17.setText("jLabel17");
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel18.setText("NegaÃ§Ã£o numa condiÃ§Ã£o!");
+        jLabel18.setText("Negação numa condição!");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -459,7 +460,7 @@ public class Window extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Refactoring", jPanel4);
 
-        jMenu1.setText("AnÃ¡lise");
+        jMenu1.setText("Análise");
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem1.setText("Analisar um Programa");
@@ -542,37 +543,7 @@ public class Window extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Window().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
