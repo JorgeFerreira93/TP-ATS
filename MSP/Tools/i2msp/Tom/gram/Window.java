@@ -1,21 +1,29 @@
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author PedroJosÃ©
  */
 public class Window extends javax.swing.JFrame {
-    
+
+    JFileChooser chooser;
+
     /**
      * Creates new form Window
      */
     public Window(/**/) {
         initComponents();
-        
+
     }
 
     /**
@@ -253,13 +261,13 @@ public class Window extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList2);
 
-        jLabel19.setText("FunÃ§Ãµes");
+        jLabel19.setText("Funções");
 
-        jLabel20.setText("Complexidade CiclomÃ¡tica da FunÃ§Ã£o");
+        jLabel20.setText("Complexidade Ciclomática da Função");
 
         jLabel21.setText("jLabel21");
 
-        jLabel22.setText("VocabulÃ¡rio do Programa: ");
+        jLabel22.setText("Vocabulário do Programa: ");
 
         jLabel23.setText("Comprimento do Programa:");
 
@@ -269,9 +277,9 @@ public class Window extends javax.swing.JFrame {
 
         jLabel26.setText("Dificuldade:");
 
-        jLabel27.setText("EsforÃ§o:");
+        jLabel27.setText("Esforço:");
 
-        jLabel28.setText("Tempo NecessÃ¡rio Estimado:");
+        jLabel28.setText("Tempo Necessário Estimado:");
 
         jLabel29.setText("Estimativa de Bugs Existentes: ");
 
@@ -396,11 +404,11 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("MÃ©tricas de Complexidade do Programa", jPanel2);
+        jTabbedPane1.addTab("Métricas de Complexidade do Programa", jPanel2);
 
-        jLabel38.setText("NÂº de Argumentos por FunÃ§Ã£o:");
+        jLabel38.setText("Nº de Argumentos por Função:");
 
-        jLabel39.setText("NÂº de Linhas por FunÃ§Ã£o:");
+        jLabel39.setText("Nº de Linhas por Função:");
 
         jLabel40.setText("jLabel40");
 
@@ -437,7 +445,7 @@ public class Window extends javax.swing.JFrame {
                 .addContainerGap(362, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Valores de ReferÃªncia", jPanel3);
+        jTabbedPane1.addTab("Valores de Referência", jPanel3);
 
         jLabel42.setText("WIP");
 
@@ -462,8 +470,8 @@ public class Window extends javax.swing.JFrame {
 
         jMenu1.setText("Análise");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Analisar um Programa");
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Guardar dados de Análise");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -515,7 +523,19 @@ public class Window extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         //Novo JFileChooser.
-        // main. Analisar
+        this.chooser = new JFileChooser();
+        this.chooser = new JFileChooser();
+        int retrival = this.chooser.showSaveDialog(null);
+        if (retrival == JFileChooser.APPROVE_OPTION) {
+            try {
+                //filename
+                FileWriter destFile = new FileWriter(this.chooser.getSelectedFile() + ".pdf");
+               //guardar para pdf
+            } catch (IOException ex) {
+                Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // main. Analisar
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -527,15 +547,15 @@ public class Window extends javax.swing.JFrame {
         // TODO add your handling code here:
         new About().setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-    
-    public void fillProgramLabels(){
+
+    public void fillProgramLabels() {
         //Preencher As Labels relacionadas com o programa;
         //Preencher LABELS FuncÃ£o com ""
         //Preencher Valores de referÃªncia
-        
+
     }
-    
-    public void fillFunctionLabels(String funName){
+
+    public void fillFunctionLabels(String funName) {
         //Preencher Labels
         //Verificar com valores de referÃªncia pÃ´r a negrito e vermelho; else normal preto
         //Mais alguma palha...
