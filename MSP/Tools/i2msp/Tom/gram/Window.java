@@ -469,7 +469,7 @@ public class Window extends javax.swing.JFrame {
 
         jLabel43.setText("Repositorio");
 
-        jLabel44.setText("N de Variáveis Locais por Funcao:");
+        jLabel44.setText("N de Variaveis Locais por Funcao:");
 
         jLabel45.setText("jLabel45");
 
@@ -485,7 +485,7 @@ public class Window extends javax.swing.JFrame {
 
         jLabel50.setText("jLabel50");
 
-        jLabel51.setText("N de Variáveis Locais por Funcao:");
+        jLabel51.setText("N de Variaveis Locais por Funcao:");
 
         jLabel52.setText("jLabel52");
 
