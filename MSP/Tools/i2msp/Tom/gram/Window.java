@@ -21,7 +21,7 @@ public class Window extends javax.swing.JFrame {
     /**
      * Creates new form Window
      */
-    public Window(/**/) {
+    public Window(/*ArrayList<Programa> bons programas, Programa programa*/) {
         initComponents();
 
     }
