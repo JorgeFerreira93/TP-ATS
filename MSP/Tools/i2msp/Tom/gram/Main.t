@@ -30,7 +30,7 @@ public class Main {
 		}
 
 		lerPrograma();
-
+                //new Window(bonsProgramas,programa).setVisible(true);
 		String[] ops = {"Detalhes do programa",
 						"Complexidade McCabe",
 						"Complexidade Halstead",
@@ -482,7 +482,7 @@ class Programa{
 			}
 
 			If(_,_,_,_,_,_,_,e) -> {
-				auxFunc.incLines(3);
+				auxFunc.incLines(1);
 				auxFunc.incIfs();
 
 				if(`e != `SeqInstrucao()){
