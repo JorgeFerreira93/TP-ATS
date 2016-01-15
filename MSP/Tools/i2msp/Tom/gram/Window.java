@@ -23,7 +23,7 @@ public class Window extends javax.swing.JFrame {
      */
     public Window(/*ArrayList<Programa> bons programas, Programa programa*/) {
         initComponents();
-
+        //fillProgramLabels();
     }
 
     /**
