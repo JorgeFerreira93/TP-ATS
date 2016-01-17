@@ -30,7 +30,7 @@ public class Main {
 		}
 
 		lerPrograma();
-                //new Window(bonsProgramas,programa).setVisible(true);
+                new WindowGUI(bonsProgramas,programa).setVisible(true);
 		String[] ops = {"Detalhes do programa",
 						"Complexidade McCabe",
 						"Complexidade Halstead",
@@ -343,7 +343,7 @@ class Funcao{
 	}
 }
 */
-class Programa{
+class Programa implements iPrograma{
 
 	%include{sl.tom}
 	%include{../genI/gram/i/i.tom}

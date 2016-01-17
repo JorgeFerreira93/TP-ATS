@@ -428,7 +428,7 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="218" max="32767" attributes="0"/>
+                                      <EmptySpace pref="282" max="32767" attributes="0"/>
                                       <Component id="jLabel32" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -573,17 +573,17 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel22">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Vocabulario do Programa: "/>
+                <Property name="text" type="java.lang.String" value="Vocabulario: "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel23">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Comprimento do Programa:"/>
+                <Property name="text" type="java.lang.String" value="Comprimento:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel24">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Comprimento Calculado do Programa:"/>
+                <Property name="text" type="java.lang.String" value="Comprimento Calculado:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel25">
@@ -666,7 +666,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="382" max="32767" attributes="0"/>
+                      <EmptySpace pref="133" max="32767" attributes="0"/>
                       <Component id="jLabel42" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="311" max="-2" attributes="0"/>
                   </Group>
@@ -685,7 +685,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel42">
               <Properties>
-                <Property name="text" type="java.lang.String" value="WIP"/>
+                <Property name="text" type="java.lang.String" value="WIP Se calhar esta cena vai com o crl e usamos o main.t"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -968,6 +968,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Recalcular Valores de Referencia"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel47">
               <Properties>
@@ -1055,6 +1058,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atualizar NAF"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField2">
               <Events>
@@ -1065,6 +1071,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atualizar NLF"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField3">
               <Events>
@@ -1075,6 +1084,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Atualizar NVLF"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

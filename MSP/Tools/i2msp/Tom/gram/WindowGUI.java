@@ -1,8 +1,11 @@
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 
 /*
@@ -14,21 +17,58 @@ import javax.swing.JFileChooser;
  *
  * @author PedroJosé
  */
-public class Window extends javax.swing.JFrame {
+public class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
     RefValues referenceValues;
-    
+    iPrograma programa;
+    ArrayList<iPrograma> bonsProgramas;
 
     /**
      * Creates new form Window
      */
-    public Window(/*ArrayList<Programa> bons programas, Programa programa*/) {
+    public WindowGUI(ArrayList<iPrograma> bonsProgramas, iPrograma programa) {
         initComponents();
-        //this.referenceValues=new RefValues(, , , , , )
-        //fillProgramLabels();
+
+        this.programa = programa;
+        this.bonsProgramas = bonsProgramas;
+        this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), 0, 100, 10, 15);
+        fillProgramDetailLabels();
+        fillComplexityLabels();
+        fillReferenceValues();
     }
 
+    private float mediaLinhasProgramas() {
+        int soma = 0;
+        int tot = 0;
+
+        for (iPrograma p : bonsProgramas) {
+            for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
+                soma += entry.getValue().getLines();
+                tot++;
+            }
+        }
+
+        return (float) soma / tot;
+    }
+
+    private float mediaArgsProgramas() {
+        int soma = 0;
+        int tot = 0;
+
+        for (iPrograma p : bonsProgramas) {
+            for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
+                soma += entry.getValue().getNArgs();
+                tot++;
+            }
+        }
+
+        return (float) soma / tot;
+    }
+
+    /**
+     * Falta M�dia de VL
+     */
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -314,11 +354,11 @@ public class Window extends javax.swing.JFrame {
 
         jLabel21.setText("jLabel21");
 
-        jLabel22.setText("Vocabulario do Programa: ");
+        jLabel22.setText("Vocabulario: ");
 
-        jLabel23.setText("Comprimento do Programa:");
+        jLabel23.setText("Comprimento:");
 
-        jLabel24.setText("Comprimento Calculado do Programa:");
+        jLabel24.setText("Comprimento Calculado:");
 
         jLabel25.setText("Volume:");
 
@@ -377,7 +417,7 @@ public class Window extends javax.swing.JFrame {
                                 .addComponent(jLabel31))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel24)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 282, Short.MAX_VALUE)
                                 .addComponent(jLabel32))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel25)
@@ -453,14 +493,14 @@ public class Window extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Metricas de Complexidade do Programa", jPanel2);
 
-        jLabel42.setText("WIP");
+        jLabel42.setText("WIP Se calhar esta cena vai com o crl e usamos o main.t");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(382, Short.MAX_VALUE)
+                .addContainerGap(133, Short.MAX_VALUE)
                 .addComponent(jLabel42)
                 .addGap(311, 311, 311))
         );
@@ -493,6 +533,11 @@ public class Window extends javax.swing.JFrame {
         jLabel46.setText("Comunidade de Programadores");
 
         jButton1.setText("Recalcular Valores de Referencia");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel47.setText("N de Argumentos por Funcao:");
 
@@ -531,6 +576,11 @@ public class Window extends javax.swing.JFrame {
         });
 
         jButton2.setText("Atualizar NAF");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -539,6 +589,11 @@ public class Window extends javax.swing.JFrame {
         });
 
         jButton3.setText("Atualizar NLF");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -547,6 +602,11 @@ public class Window extends javax.swing.JFrame {
         });
 
         jButton4.setText("Atualizar NVLF");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -776,12 +836,12 @@ public class Window extends javax.swing.JFrame {
         if (retrival == JFileChooser.APPROVE_OPTION) {
             try {
                 //filename
-                FileWriter destFile = new FileWriter(this.chooser.getSelectedFile() + ".pdf");
-               //guardar para pdf
+                FileWriter destFile = new FileWriter(this.chooser.getSelectedFile() + ".csv");
+                //guardar para csv
             } catch (IOException ex) {
-                Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WindowGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            // main. Analisar
+
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -797,24 +857,123 @@ public class Window extends javax.swing.JFrame {
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
-        if(!(jTextField1.getText().matches("[0-9]+"))) jTextField1.setText("");
-        
+        if (!(jTextField1.getText().matches("[0-9]+"))) {
+            jTextField1.setText("");
+        }
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
-        if(!(jTextField2.getText().matches("[0-9]+"))) jTextField2.setText("");
+        if (!(jTextField2.getText().matches("[0-9]+"))) {
+            jTextField2.setText("");
+        }
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
-        if(!(jTextField3.getText().matches("[0-9]+"))) jTextField3.setText("");
+        if (!(jTextField3.getText().matches("[0-9]+"))) {
+            jTextField3.setText("");
+        }
     }//GEN-LAST:event_jTextField3ActionPerformed
 
-    public void fillProgramLabels() {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        referenceValues.updateReferenceValues(jSlider1.getValue());
+        this.fillReferenceValues();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if (!(jTextField1.getText().isEmpty())) {
+            referenceValues.setComFunctArgs(Integer.parseInt(jTextField1.getText()));
+            referenceValues.updateReferenceValues(jSlider1.getValue());
+            this.fillReferenceValues();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public void writeToCSV(FileWriter dest) {
+        try {
+            dest.write("----------An�lise-----------"+"\n");
+            for (Funcao f : programa.getFuncs().values()) {
+                dest.write(f.getNome()+"\n");
+                //dest.write(f.);
+            }
+        } catch (Exception e) {
+        }
+    }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        if (!(jTextField2.getText().isEmpty())) {
+            referenceValues.setComFunctLines(Integer.parseInt(jTextField2.getText()));
+            referenceValues.updateReferenceValues(jSlider1.getValue());
+            this.fillReferenceValues();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if (!(jTextField3.getText().isEmpty())) {
+            referenceValues.setComFunctLocalVars(Integer.parseInt(jTextField3.getText()));
+            referenceValues.updateReferenceValues(jSlider1.getValue());
+            this.fillReferenceValues();
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    public void fillProgramDetailLabels() {
         //Preencher As Labels relacionadas com o programa;
-        //Preencher LABELS Funcão com ""
-        //Preencher Valores de referência
+        DefaultListModel<String> dlm = new DefaultListModel<>();
+        for (String str : this.programa.getArrayFuncs()) {
+            dlm.addElement(str);
+        }
+        jList1.setModel(dlm);
+        turnFunctionDetailsVisib(false);
+        jLabel15.setText(programa.totLinhas() + "");
+        jLabel17.setText(programa.getFuncs().size() + "");
+
+    }
+
+    public void fillComplexityLabels() {
+        DefaultListModel<String> dlm = new DefaultListModel<>();
+        for (String str : this.programa.getArrayFuncs()) {
+            dlm.addElement(str);
+        }
+        jList2.setModel(dlm);
+        turnComplexityVisib(false);
+    }
+
+    public void fillReferenceValues() {
+        jLabel40.setText(referenceValues.getRepoFunctArgs() + "");
+        jLabel41.setText(referenceValues.getRepoFunctLines() + "");
+        jLabel45.setText(referenceValues.getRepoFunctLocalVars() + "");
+        jLabel49.setText(referenceValues.getComFunctArgs() + "");
+        jLabel50.setText(referenceValues.getComFunctLines() + "");
+        jLabel52.setText(referenceValues.getComFunctLocalVars() + "");
+        jLabel58.setText(referenceValues.getRvFunctionArgs() + "");
+        jLabel59.setText(referenceValues.getRvFunctionLines() + "");
+        jLabel60.setText(referenceValues.getRvFunctionLocalVars() + "");
+    }
+
+    private void turnComplexityVisib(boolean visibility) {
+        jLabel21.setVisible(visibility);
+        jLabel30.setVisible(visibility);
+        jLabel31.setVisible(visibility);
+        jLabel32.setVisible(visibility);
+        jLabel33.setVisible(visibility);
+        jLabel34.setVisible(visibility);
+        jLabel35.setVisible(visibility);
+        jLabel36.setVisible(visibility);
+        jLabel37.setVisible(visibility);
+    }
+
+    private void turnFunctionDetailsVisib(boolean visibility) {
+        jLabel3.setVisible(visibility);
+        jLabel5.setVisible(visibility);
+        jLabel7.setVisible(visibility);
+        jLabel9.setVisible(visibility);
+        jLabel11.setVisible(visibility);
+        jLabel13.setVisible(visibility);
+        jLabel63.setVisible(visibility);
 
     }
 
@@ -823,12 +982,11 @@ public class Window extends javax.swing.JFrame {
         //Verificar com valores de referência pôr a negrito e vermelho; else normal preto
         //Mais alguma palha...
     }
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        new Window().setVisible(true);
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
