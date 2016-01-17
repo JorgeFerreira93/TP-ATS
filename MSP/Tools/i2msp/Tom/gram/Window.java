@@ -17,12 +17,15 @@ import javax.swing.JFileChooser;
 public class Window extends javax.swing.JFrame {
 
     JFileChooser chooser;
+    RefValues referenceValues;
+    
 
     /**
      * Creates new form Window
      */
     public Window(/*ArrayList<Programa> bons programas, Programa programa*/) {
         initComponents();
+        //this.referenceValues=new RefValues(, , , , , )
         //fillProgramLabels();
     }
 
@@ -60,6 +63,8 @@ public class Window extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel18 = new javax.swing.JLabel();
+        jLabel62 = new javax.swing.JLabel();
+        jLabel63 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -148,19 +153,19 @@ public class Window extends javax.swing.JFrame {
 
         jLabel5.setText("jLabel5");
 
-        jLabel6.setText("N de If");
+        jLabel6.setText("N de If:");
 
         jLabel7.setText("jLabel7");
 
-        jLabel8.setText("N de While");
+        jLabel8.setText("N de While:");
 
         jLabel9.setText("jLabel9");
 
-        jLabel10.setText("N de For");
+        jLabel10.setText("N de For:");
 
         jLabel11.setText("jLabel11");
 
-        jLabel12.setText("N de Comentarios");
+        jLabel12.setText("N de Comentarios:");
 
         jLabel13.setText("jLabel13");
 
@@ -175,6 +180,10 @@ public class Window extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 0, 0));
         jLabel18.setText("Negacao numa condicao!");
+
+        jLabel62.setText("N de Variaveis Locais");
+
+        jLabel63.setText("jLabel63");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -227,7 +236,11 @@ public class Window extends javax.swing.JFrame {
                             .addComponent(jSeparator3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel18)
-                                .addGap(0, 248, Short.MAX_VALUE)))))
+                                .addGap(0, 248, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel62)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel63)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -263,7 +276,11 @@ public class Window extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(jLabel13))
-                        .addGap(29, 29, 29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel63)
+                            .addComponent(jLabel62))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -469,7 +486,7 @@ public class Window extends javax.swing.JFrame {
 
         jLabel43.setText("Repositorio");
 
-        jLabel44.setText("N de Variaveis Locais por Funcao:");
+        jLabel44.setText("N de Variáveis Locais por Funcao:");
 
         jLabel45.setText("jLabel45");
 
@@ -485,7 +502,7 @@ public class Window extends javax.swing.JFrame {
 
         jLabel50.setText("jLabel50");
 
-        jLabel51.setText("N de Variaveis Locais por Funcao:");
+        jLabel51.setText("N de Variáveis Locais por Funcao:");
 
         jLabel52.setText("jLabel52");
 
@@ -876,6 +893,8 @@ public class Window extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel60;
     private javax.swing.JLabel jLabel61;
+    private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;

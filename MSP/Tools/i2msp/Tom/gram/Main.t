@@ -152,7 +152,7 @@ public class Main {
 		System.out.println("Média de linhas por função: " + mediaLinhasProgramas());
 	}
 }
-
+/*
 class Funcao{
 
 	private String nome;
@@ -342,7 +342,7 @@ class Funcao{
 		return sb.toString();
 	}
 }
-
+*/
 class Programa{
 
 	%include{sl.tom}
