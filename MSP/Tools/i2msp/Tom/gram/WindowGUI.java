@@ -15,7 +15,7 @@ import javax.swing.JFileChooser;
  */
 /**
  *
- * @author PedroJosé
+ * @author PedroJosÃ©
  */
 public class WindowGUI extends javax.swing.JFrame {
 
@@ -67,7 +67,7 @@ public class WindowGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Falta M�dia de VL
+     * Falta Média de VL
      */
     /**
      * This method is called from within the constructor to initialize the form.
@@ -526,7 +526,7 @@ public class WindowGUI extends javax.swing.JFrame {
 
         jLabel43.setText("Repositorio");
 
-        jLabel44.setText("N de Vari�veis Locais por Funcao:");
+        jLabel44.setText("N de Variáveis Locais por Funcao:");
 
         jLabel45.setText("jLabel45");
 
@@ -547,7 +547,7 @@ public class WindowGUI extends javax.swing.JFrame {
 
         jLabel50.setText("jLabel50");
 
-        jLabel51.setText("N de Vari�veis Locais por Funcao:");
+        jLabel51.setText("N de Variáveis Locais por Funcao:");
 
         jLabel52.setText("jLabel52");
 
@@ -778,7 +778,7 @@ public class WindowGUI extends javax.swing.JFrame {
         jMenu1.setText("Analise");
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Guardar dados de An�lise");
+        jMenuItem1.setText("Guardar dados de Análise");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -894,7 +894,7 @@ public class WindowGUI extends javax.swing.JFrame {
 
     public void writeToCSV(FileWriter dest) {
         try {
-            dest.write("----------An�lise-----------"+"\n");
+            dest.write("----------Análise-----------"+"\n");
             for (Funcao f : programa.getFuncs().values()) {
                 dest.write(f.getNome()+"\n");
                 //dest.write(f.);
@@ -979,7 +979,7 @@ public class WindowGUI extends javax.swing.JFrame {
 
     public void fillFunctionLabels(String funName) {
         //Preencher Labels
-        //Verificar com valores de referência pôr a negrito e vermelho; else normal preto
+        //Verificar com valores de referÃªncia pÃ´r a negrito e vermelho; else normal preto
         //Mais alguma palha...
     }
 
