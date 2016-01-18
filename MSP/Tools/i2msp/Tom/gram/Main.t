@@ -14,11 +14,15 @@ import java.io.*;
 
 public class Main {
 
+	%include{WindowGUI.form}
+	%include{WindowGUI.java}
+
 	private static ArrayList<Programa> bonsProgramas = new ArrayList<>();
 	private static Programa programa;
 
 	public static void main(String[] args) {
-
+        new WindowGUI(bonsProgramas,programa).setVisible(true);
+/*
 		File folder = new File("../exemplos/");
 		File[] listOfFiles = folder.listFiles();
 
@@ -30,7 +34,6 @@ public class Main {
 		}
 
 		lerPrograma();
-                new WindowGUI(bonsProgramas,programa).setVisible(true);
 		String[] ops = {"Detalhes do programa",
 						"Complexidade McCabe",
 						"Complexidade Halstead",
@@ -50,7 +53,7 @@ public class Main {
                 case 4: referencia();
                         break;
             }
-        } while (menuMain.getOpcao()!=0);
+        } while (menuMain.getOpcao()!=0);*/
 
 	}
 
