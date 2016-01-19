@@ -474,7 +474,7 @@ class Programa {
             Instrucao p=(Instrucao) iAdaptor.getTerm(b);
             startRefactCondNegat(p);
             
-            this.parser(path);
+            this.start(p);
             }
             catch(Exception e){
                 e.printStackTrace();
