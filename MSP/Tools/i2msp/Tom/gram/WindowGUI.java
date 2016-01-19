@@ -1015,6 +1015,12 @@ public class WindowGUI extends javax.swing.JFrame {
         jLabel13.setText(f.getnComentarios()+"");
         fillFunctionLocalVars(f.getLocalVars());
         turnFunctionDetailsVisib(true);
+        if(f.isNao()){
+            jLabel18.setVisible(true);
+        }
+        else{
+            jLabel18.setVisible(false);
+        }
     }
 
     private void fillFunctionLines(int lines) {
@@ -1056,7 +1062,27 @@ public class WindowGUI extends javax.swing.JFrame {
             jLabel3.setFont(new Font("Tahoma", Font.BOLD, 14));
         }
     }
-
+    public void fillComplexityFunction(String funName){
+        Funcao f=programa.getFuncao(funName);
+        fillMcCabeWithColor(f.getMcCabe());
+        jLabel30.setText(f.vocabulario()+"");
+        jLabel31.setText(f.comprimento()+"");
+        jLabel32.setText(f.comprimentoCalculado()+"");
+        jLabel33.setText(""+f.volume());
+        jLabel34.setText(""+f.dificuldade());
+        jLabel35.setText(""+f.esforco());
+        jLabel36.setText(f.tempoNecessario()+" segundos");
+        jLabel37.setText(""+f.estimateBugs());
+        turnComplexityVisib(true);
+    }
+    
+    private void fillMcCabeWithColor(int mcCabe){
+        jLabel21.setText(mcCabe+"");
+        if(mcCabe>=1 && mcCabe<=4) jLabel21.setForeground(Color.green);
+        else if(mcCabe>4 && mcCabe<=7) jLabel21.setForeground(new Color(64, 191, 0));
+        else if(mcCabe>7 && mcCabe<=10) jLabel21.setForeground(new Color(127,127,0));
+        else jLabel21.setForeground(Color.red);
+    }
     /**
      * @param args the command line arguments
      */
