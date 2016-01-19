@@ -4,7 +4,10 @@ num=input(int);
 if(isPrime(num)){
 	print('Y');
 }
-else print('N');
+else{
+    print('N');
+    }
+
 }
 
 boolean isPrime(int num){

@@ -6,20 +6,26 @@ void main(){
 	if(isLeapYear(year)){
 	print('y');
 	}
-	else print('n');
+	else {
+		print('n');
+	}
 	yr=getLastTwoDigits(year);
 	print(yr);
 }
 
 boolean isLeapYear(int year){
-	if ((year % 400) == 0)
+	if ( year % 400 == 0){
         return true
-    else if ((year % 100) == 0)
+    }
+    else if (year % 100 == 0){
 		return false;
-    else if ((year % 4) == 0)
+	}
+    else if (year % 4 == 0){
         return true;
-    else
+    }
+    else{
         return false;
+	}
 }
 
 int getLastTwoDigits(int year){

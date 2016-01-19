@@ -44,6 +44,6 @@ int fibo(int num){
     }
     else
     {
-        return(fibo(num - 1) + fibo(num - 2));
+        return fibo(num - 1) + fibo(num - 2);
     }
 }

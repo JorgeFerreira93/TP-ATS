@@ -25,5 +25,5 @@ int getMinutes(int seconds) {
 }
 
 int getRealSeconds(int seconds) {
-        return (seconds - (getMinutes(seconds) * 60)-(getHours(seconds)*3600));
+        return seconds - (getMinutes(seconds) * 60)-(getHours(seconds)*3600);
 }

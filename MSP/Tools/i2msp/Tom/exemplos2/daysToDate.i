@@ -21,9 +21,9 @@ int daysToYears(int nDays){
 }
 
 int daysToMonths(int nDays){
-	return ndays % 365 / 7;
+	return (ndays % 365) / 7;
 }
 
 int totalDaysToDays(int nDays){
-	return ndays % 365 % 7;
+	return (ndays % 365) % 7;
 }

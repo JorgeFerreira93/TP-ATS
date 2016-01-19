@@ -6,7 +6,6 @@ upper=input(int);
 printArmstrongNumbers(lower, upper);
 }
 
-
 void printArmstrongNumbers(int min,int max){
 int temp;
 int num;

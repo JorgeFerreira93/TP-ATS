@@ -25,39 +25,21 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		File folder = new File("../exemplos2/");
+		File folder = new File("../exemplos/");
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
-
+System.out.println(listOfFiles[i].getPath());
 			Programa p = new Programa(listOfFiles[i].getPath());
+
+
 			
 			bonsProgramas.add(p);
 		}
 
 		lerPrograma();
-                new WindowGUI(bonsProgramas,Programa).setVisible(true);
-		String[] ops = {"Detalhes do Programa",
-						"Complexidade McCabe",
-						"Complexidade Halstead",
-						"Valores de referência"};
-
-		Menu menuMain = new Menu(ops);
-
-		do {
-            menuMain.executa();
-            switch (menuMain.getOpcao()) {
-                case 1: detalhes();
-                        break;
-                case 2: complexidade(0);
-                        break;
-                case 3: complexidade(1);
-                        break;
-                case 4: referencia();
-                        break;
-            }
-        } while (menuMain.getOpcao()!=0);
-
+        
+        new WindowGUI(bonsProgramas,Programa).setVisible(true);
 	}
 
 	private static void lerPrograma(){
@@ -67,62 +49,6 @@ public class Main {
         String op = is.nextLine();
 
         Programa = new Programa(op);
-	}
-
-	private static void detalhes(){
-
-		ArrayList<String> aux = Programa.getArrayFuncs();
-
-		String[] listaFunc = aux.toArray(new String[aux.size()]);
-
-		Menu menuMain = new Menu(listaFunc);
-
-		do {
-            menuMain.executa();
-
-            if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
-
-            	Funcao auxFunc = Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]);
-
-				if(auxFunc.getLines() > mediaLinhasProgramas()){
-					System.out.println("Smell: Função com linhas a mais!");
-				}
-
-				if(auxFunc.getNArgs() > mediaArgsProgramas()){
-					System.out.println("Smell: Função com argumentos a mais!");
-				}
-
-				if(auxFunc.isNao()){
-					System.out.println("Smell: Negação da Condição!");
-				}
-            	
-            	System.out.println(auxFunc.toString());
-            }
-
-        } while (menuMain.getOpcao()!=0);
-	}
-
-	private static void complexidade(int tipo){
-
-		ArrayList<String> aux = Programa.getArrayFuncs();
-
-		String[] listaFunc = aux.toArray(new String[aux.size()]);
-
-		Menu menuMain = new Menu(listaFunc);
-
-		do {
-            menuMain.executa();
-
-            if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
-            	if(tipo == 0){
-            		System.out.println(Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).complexidadeMcCabe());
-            	}
-            	else{
-            		System.out.println(Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).metricasHalstead());
-            	}
-            }
-
-        } while (menuMain.getOpcao()!=0);
 	}
 
 	private static float mediaLinhasProgramas(){
@@ -505,9 +431,9 @@ class Programa {
 	}
         %strategy refactCondNeg() extends Identity(){
             visit Instrucao {
-                If(_,_,_,Nao(Expressao),_,_,then,els) -> {
-                    `return If(_,_,_,Expressao,_,_,els,then);
-            }
+                If(c1,c2,c3,Nao(Expressao),c4,c5,els,then) -> {
+                    return `If(c1,c2,c3,Expressao,c4,c5,els,then);
+           	 	}
             }
         }
 	%strategy countFunct() extends Identity(){
@@ -608,7 +534,7 @@ class Programa {
 		visit Expressao{
 			Id(id) -> {
 				auxFunc.adicionaOperando(`id);
-                                auxFunc.incLocalVars(auxFunc.getNome());
+                auxFunc.incLocalVars(auxFunc.getNome());
 			}
 
 			Call(_,id,_,_,_,_,_) -> {
@@ -825,7 +751,7 @@ class WindowGUI extends javax.swing.JFrame {
         fillRefactoringDetails();
     }
 
-    private float mediaLocalVars(){
+    private float mediaLocalVars(){	
         int soma=0;
         int tot=0;
         for(Programa p:bonsProgramas){
