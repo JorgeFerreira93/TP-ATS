@@ -21,11 +21,11 @@ import javax.swing.JFileChooser;
 public class Main {
 
 	private static ArrayList<Programa> bonsProgramas = new ArrayList<>();
-	private static Programa programa;
+	private static Programa Programa;
 
 	public static void main(String[] args) {
 
-		File folder = new File("../exemplos/");
+		File folder = new File("../exemplos2/");
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
@@ -36,8 +36,8 @@ public class Main {
 		}
 
 		lerPrograma();
-                new WindowGUI(bonsProgramas,programa).setVisible(true);
-		String[] ops = {"Detalhes do programa",
+                new WindowGUI(bonsProgramas,Programa).setVisible(true);
+		String[] ops = {"Detalhes do Programa",
 						"Complexidade McCabe",
 						"Complexidade Halstead",
 						"Valores de referência"};
@@ -66,12 +66,12 @@ public class Main {
         System.out.print("Nome Ficheiro: ");
         String op = is.nextLine();
 
-        programa = new Programa(op);
+        Programa = new Programa(op);
 	}
 
 	private static void detalhes(){
 
-		ArrayList<String> aux = programa.getArrayFuncs();
+		ArrayList<String> aux = Programa.getArrayFuncs();
 
 		String[] listaFunc = aux.toArray(new String[aux.size()]);
 
@@ -82,7 +82,7 @@ public class Main {
 
             if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
 
-            	Funcao auxFunc = programa.getFuncao(listaFunc[menuMain.getOpcao()-1]);
+            	Funcao auxFunc = Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]);
 
 				if(auxFunc.getLines() > mediaLinhasProgramas()){
 					System.out.println("Smell: Função com linhas a mais!");
@@ -104,7 +104,7 @@ public class Main {
 
 	private static void complexidade(int tipo){
 
-		ArrayList<String> aux = programa.getArrayFuncs();
+		ArrayList<String> aux = Programa.getArrayFuncs();
 
 		String[] listaFunc = aux.toArray(new String[aux.size()]);
 
@@ -115,10 +115,10 @@ public class Main {
 
             if(menuMain.getOpcao()-1 < aux.size() && menuMain.getOpcao()-1 >= 0){
             	if(tipo == 0){
-            		System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).complexidadeMcCabe());
+            		System.out.println(Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).complexidadeMcCabe());
             	}
             	else{
-            		System.out.println(programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).metricasHalstead());
+            		System.out.println(Programa.getFuncao(listaFunc[menuMain.getOpcao()-1]).metricasHalstead());
             	}
             }
 
@@ -755,19 +755,19 @@ class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
     RefValues referenceValues;
-    iPrograma programa;
-    ArrayList<iPrograma> bonsProgramas;
+    Programa Programa;
+    ArrayList<Programa> bonsProgramas;
 
     /**
      * Creates new form Window
      */
-    public WindowGUI(ArrayList<iPrograma> bonsProgramas, iPrograma programa) {
+    public WindowGUI(ArrayList<Programa> bonsProgramas, Programa Programa) {
         initComponents();
 
-        this.programa = programa;
+        this.Programa = Programa;
         this.bonsProgramas = bonsProgramas;
         this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), 0, 100, 10, 15);
-        fillProgramDetailLabels();
+        fillProgramaDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
     }
@@ -776,7 +776,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getLines();
                 tot++;
@@ -790,7 +790,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getNArgs();
                 tot++;
@@ -950,7 +950,7 @@ class WindowGUI extends javax.swing.JFrame {
 
         jLabel13.setText("jLabel13");
 
-        jLabel14.setText("Linhas no programa:");
+        jLabel14.setText("Linhas no Programa:");
 
         jLabel15.setText("jLabel15");
 
@@ -1646,7 +1646,7 @@ class WindowGUI extends javax.swing.JFrame {
     public void writeToCSV(FileWriter dest) {
         try {
             dest.write("----------AnÃ¡lise-----------" + "\n");
-            for (Funcao f : programa.getFuncs().values()) {
+            for (Funcao f : Programa.getFuncs().values()) {
                 dest.write(f.getNome() + "\n");
                 //dest.write(f.);
             }
@@ -1677,9 +1677,9 @@ class WindowGUI extends javax.swing.JFrame {
         int returnValue = chooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
-            programa.parser(selectedFile.getName());
+            Programa.parser(selectedFile.getName());
             this.fillComplexityLabels();
-            this.fillProgramDetailLabels();
+            this.fillProgramaDetailLabels();
             this.fillReferenceValues();
             jLabel18.setVisible(false);
         }
@@ -1688,26 +1688,26 @@ class WindowGUI extends javax.swing.JFrame {
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
         // TODO add your handling code here:
-        //fillFunctionDetailLabels(jList1.getSelectedValue());
+        fillFunctionDetailLabels(jList1.getSelectedValue());
         
     }                                   
 
-    public void fillProgramDetailLabels() {
-        //Preencher As Labels relacionadas com o programa; 
+    public void fillProgramaDetailLabels() {
+        //Preencher As Labels relacionadas com o Programa; 
         DefaultListModel<String> dlm = new DefaultListModel<>();
-        for (String str : this.programa.getArrayFuncs()) {
+        for (String str : this.Programa.getArrayFuncs()) {
             dlm.addElement(str);
         }
         jList1.setModel(dlm);
         turnFunctionDetailsVisib(false);
-        jLabel15.setText(programa.totLinhas() + "");
-        jLabel17.setText(programa.getFuncs().size() + "");
+        jLabel15.setText(Programa.totLinhas() + "");
+        jLabel17.setText(Programa.getFuncs().size() + "");
 
     }
 
     public void fillComplexityLabels() {
         DefaultListModel<String> dlm = new DefaultListModel<>();
-        for (String str : this.programa.getArrayFuncs()) {
+        for (String str : this.Programa.getArrayFuncs()) {
             dlm.addElement(str);
         }
         jList2.setModel(dlm);
@@ -1750,7 +1750,7 @@ class WindowGUI extends javax.swing.JFrame {
     }
 
     public void fillFunctionDetailLabels(String funName) {
-        Funcao f = this.programa.getFuncao(funName);
+        Funcao f = this.Programa.getFuncao(funName);
         fillNArgs(f.getNArgs());
         fillFunctionLines(f.getLines());
         jLabel7.setText(f.getnIfs()+"");
@@ -1807,8 +1807,8 @@ class WindowGUI extends javax.swing.JFrame {
         }
     }
     public void fillComplexityFunction(String funName){
-        Funcao f=programa.getFuncao(funName);
-        fillMcCabeWithColor(f.getMcCabe());
+        Funcao f=Programa.getFuncao(funName);
+        //fillMcCabeWithColor(f.getMcCabe());
         jLabel30.setText(f.vocabulario()+"");
         jLabel31.setText(f.comprimento()+"");
         jLabel32.setText(f.comprimentoCalculado()+"");

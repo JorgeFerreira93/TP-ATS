@@ -13,7 +13,7 @@ ANTLR2=msp
 
 all: gram maqv
 
-gram: teste gom1 antlr1 tom1 
+gram: gom1 antlr1 tom1 
 
 teste: $(DIR1)/WindowGUI.java
 	javac -encoding UTF8 $(DIR1)/WindowGUI.java
