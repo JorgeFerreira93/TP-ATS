@@ -357,6 +357,11 @@ public class WindowGUI extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList2ValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(jList2);
 
         jLabel19.setText("Funcoes");
@@ -957,9 +962,14 @@ public class WindowGUI extends javax.swing.JFrame {
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         // TODO add your handling code here:
-        //fillFunctionDetailLabels(jList1.getSelectedValue());
+        fillFunctionDetailLabels(jList1.getSelectedValue());
         
     }//GEN-LAST:event_jList1ValueChanged
+
+    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
+        // TODO add your handling code here:
+        fillComplexityFunction(jList2.getSelectedValue());
+    }//GEN-LAST:event_jList2ValueChanged
 
     public void fillProgramDetailLabels() {
         //Preencher As Labels relacionadas com o programa; 

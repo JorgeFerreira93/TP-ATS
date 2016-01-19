@@ -755,13 +755,13 @@ class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
     RefValues referenceValues;
-    iPrograma programa;
-    ArrayList<iPrograma> bonsProgramas;
+    Programa programa;
+    ArrayList<Programa> bonsProgramas;
 
     /**
      * Creates new form Window
      */
-    public WindowGUI(ArrayList<iPrograma> bonsProgramas, iPrograma programa) {
+    public WindowGUI(ArrayList<Programa> bonsProgramas, Programa programa) {
         initComponents();
 
         this.programa = programa;
@@ -776,7 +776,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getLines();
                 tot++;
@@ -790,7 +790,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getNArgs();
                 tot++;
