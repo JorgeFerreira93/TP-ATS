@@ -13,7 +13,10 @@ ANTLR2=msp
 
 all: gram maqv
 
-gram: gom1 antlr1 tom1 
+gram: teste gom1 antlr1 tom1 
+
+teste: $(DIR1)/WindowGUI.java
+	javac -encoding UTF8 $(DIR1)/WindowGUI.java
 
 gom1:  $(DIR1)/$(GOM1).gom 
 	#gom --termgraph -d $(GEN_DIR1) $(DIR1)/$(GOM1).gom
