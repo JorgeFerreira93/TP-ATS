@@ -29,7 +29,7 @@ public class Main {
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
-System.out.println(listOfFiles[i].getPath());
+		System.out.println(listOfFiles[i].getPath());
 			Programa p = new Programa(listOfFiles[i].getPath());
 
 
