@@ -179,6 +179,11 @@ class Funcao{
 	public void incComentarios(){
 		this.nComentarios++;
 	}
+        
+        public boolean isUnused(String op){
+            return this.localVars.get(op)==0;
+        }
+        
 	public void adicionaOperando(String op){
 		if(operandos.containsKey(op)){
 			int n = operandos.get(op);
@@ -372,7 +377,7 @@ class Programa {
 	public Funcao getFuncao(String nome){
 		return funcs.get(nome);
 	}
-
+        
 	public void parser(String path){
 		try {
 			
@@ -1666,8 +1671,9 @@ class WindowGUI extends javax.swing.JFrame {
         if (retrival == JFileChooser.APPROVE_OPTION) {
             try {
                 //filename
-                FileWriter destFile = new FileWriter(this.chooser.getSelectedFile() + ".csv");
-                //guardar para csv
+                FileWriter destFile = new FileWriter(this.chooser.getSelectedFile() + ".txt");
+                writeToTxt(destFile);
+                
             } catch (IOException ex) {
                 Logger.getLogger(WindowGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1724,13 +1730,46 @@ class WindowGUI extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt){
         // Aqui chama-se estrategia de eliminar inexistentes;
     }
-    public void writeToCSV(FileWriter dest) {
+    public void writeToTxt(FileWriter dest) {
         try {
             dest.write("----------Analise-----------" + "\n");
+            dest.write("Total de Linhas: "+programa.totLinhas()+"\n");
+            dest.write("Total de Funcoes: "+programa.getArrayFuncs().size()+"\n");
             for (Funcao f : programa.getFuncs().values()) {
+                dest.write("Funcao: ");
                 dest.write(f.getNome() + "\n");
+                dest.write("--Sintaxe--\n");
+                dest.write("\tArgumentos: "+f.getNArgs()+"\n");
+                dest.write("\tLinhas da Funcao: "+f.getLines()+"\n");
+                dest.write("\tN de If: "+f.getnIfs()+"\n");
+                dest.write("\tN de While: "+f.getnWhiles()+"\n");
+                dest.write("\tN de For: "+f.getnFors()+"\n");
+                dest.write("\tN de Comentarios: "+f.getnComentarios()+"\n");
+                dest.write("\tN de Variaveis Locais: "+f.getLocalVars().size()+"\n");
+                dest.write("--Complexidade--\n");
+                dest.write("\tComplexidade Ciclomatica: "+f.getMcCabe()+"\n");
+                dest.write("\tComplexidade de Halstead\n");
+                dest.write("\tVocabulario: "+f.vocabulario()+"\n");
+                dest.write("\tComprimento: "+f.comprimento()+"\n");
+                dest.write("\tComprimento Calculado: "+f.comprimentoCalculado()+"\n");
+                dest.write("\tVolume: "+f.volume()+"\n");
+                dest.write("\tEsforco: "+f.esforco()+"\n");
+                dest.write("\tTempo Necessario: "+f.volume()+" segundos\n");
+                dest.write("\tEstimativa de bugs: "+f.estimateBugs()+"\n");
+                dest.write("--Smells--\n");
+                if(f.isNao()) dest.write("\tSmell! Negacao de condicao\n");
+                if(f.hasUnusedLocalVars()) dest.write("\tSmell! Variavel(is) local(is) inutilizada(s)\n");
+                if(f.getLines()>referenceValues.getRvFunctionLines()) dest.write("\tSmell! Corpo de funcao extenso\n");
+                if(f.getnArgs()>referenceValues.getRvFunctionArgs()) dest.write("\tSmell! Lista de argumentos extensa\n");
+                if(f.getLocalVars().size()>referenceValues.getRvFunctionLocalVars()) dest.write("\tSmell! Demasiadas variaveis locais\n");
                 //dest.write(f.);
             }
+            dest.write("--Valores de referencia utilizados--");
+            dest.write("\tArgumentos de Funcao: "+referenceValues.getRvFunctionArgs()+"\n");
+            dest.write("\tLinhas por Funcao: "+referenceValues.getRvFunctionLines()+"\n");
+            dest.write("\tVariaveis locais por Funcao: "+referenceValues.getRvFunctionLocalVars()+"\n");
+            dest.flush();
+            dest.close();
         } catch (Exception e) {
         }
     }
@@ -1758,7 +1797,7 @@ class WindowGUI extends javax.swing.JFrame {
         int returnValue = chooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
-            programa.parser(selectedFile.getName());
+            programa = new Programa(selectedFile.getPath());
             this.fillComplexityLabels();
             this.fillProgramDetailLabels();
             this.fillReferenceValues();
