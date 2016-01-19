@@ -1,4 +1,4 @@
-void main {
+void main() {
 int n;
 int r;
 float res;
@@ -9,14 +9,15 @@ print(res);
 }
 
 float nCr(int n,int r){
-	return (fact(n))/(fact(r)*fact(n-r));
+    aux = fact(r) * fact(n-r);
+	return fact(n)/aux;
 }
 
 int fact(int z){
     int f = 1, i;
     if (z == 0)
     {
-        return(f);
+        return f;
     }
     else
     {
@@ -25,5 +26,5 @@ int fact(int z){
             f = f * i;
 	}
     }
-    return(f);
+    return f;
 }

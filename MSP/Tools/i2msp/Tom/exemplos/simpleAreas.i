@@ -26,7 +26,8 @@ return 0.5*height*width;
 }
 
 float trapeziumArea(int base1,int base2, int height){
-return 0.5*(base1+base2)*height;
+aux = base1+base2;
+return 0.5*aux*height;
 }
 
 float diamondArea(int diagonal1,int diagonal2){

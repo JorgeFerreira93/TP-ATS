@@ -14,12 +14,18 @@ boolean isPerfect(int number){
 int rem;
 int sum=0;
 int i;
-for (i = 1; i <= (number - 1); i++){
+number = number-1;
+for (i = 1; i <= number; i++){
         rem = number % i;
 	if (rem == 0)
         {
             sum = sum + i;
         }
     }
-    return sum==number;
+    if(sum==number){
+    	return true;
+    }
+    else{
+    	return false;
+    }
 }

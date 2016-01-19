@@ -21,9 +21,10 @@ int getHours(int seconds) {
 }
 
 int getMinutes(int seconds) {
-        return (seconds - (getHours(seconds) * 3600)) / 60;
+		aux = seconds - getHours(seconds) * 3600;
+        return aux / 60;
 }
 
 int getRealSeconds(int seconds) {
-        return seconds - (getMinutes(seconds) * 60)-(getHours(seconds)*3600);
+        return seconds - etMinutes(seconds) * 60- getHours(seconds)*3600;
 }

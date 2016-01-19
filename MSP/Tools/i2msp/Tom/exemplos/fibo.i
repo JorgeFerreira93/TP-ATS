@@ -25,7 +25,7 @@ void printFibonacci(int limit){
 	count = 2;
     while (count < limit){
         fib3 = fib1 + fib2;
-        count++;
+        count = count + 1;
         print(fib3);
 		print(' ');
         fib1 = fib2;

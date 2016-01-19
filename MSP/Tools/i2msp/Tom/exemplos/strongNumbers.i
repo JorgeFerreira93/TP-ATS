@@ -14,15 +14,21 @@ boolean isStrong(int num){
   int i;
   temp=num;
   while(temp){
-      i=1,f=1;
+      i=1;f=1;
       r=num%10;
 
       while(i<=r){
          f=f*i;
-        i++;
+        i = i+1;
       }
       sum=sum+f;
       temp=temp/10;
   }
-  return num==sum;
+  
+  if(num == sum){
+    return true;
+  }
+  else{
+    return false;
+  }
 }

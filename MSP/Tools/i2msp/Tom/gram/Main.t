@@ -570,7 +570,7 @@ class Programa {
 			}
 
 			Float(f) -> {
-				auxFunc.adicionaOperando(Float.toString(`f));
+				//auxFunc.adicionaOperando(Integer.toString(`f));
 			}
 
 			Nao(_) -> {

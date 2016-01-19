@@ -10,9 +10,9 @@ void main(){
 	print(nDays);
 	print('=');
 	print(years);
-	print('\');
+	print('\\');
 	print(months);
-	print('\');
+	print('\\');
 	print(days);
 }
 

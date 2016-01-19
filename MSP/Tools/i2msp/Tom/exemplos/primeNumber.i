@@ -16,8 +16,13 @@ boolean isPrime(int num){
 	count=0;
 	for(i=2;i<=num/2 && count==0;i++){
         if(num%i==0){
-         count++;
+         count = count + 1;
         }
     }
-   return (count==0 && num!= 1);
+   if(count==0 && num!= 1){
+    return true;
+   }
+   else{
+    return false;
+   }
 }
