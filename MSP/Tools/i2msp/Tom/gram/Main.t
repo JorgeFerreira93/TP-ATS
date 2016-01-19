@@ -29,7 +29,7 @@ public class Main {
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
-System.out.println(listOfFiles[i].getPath());
+		System.out.println(listOfFiles[i].getPath());
 			Programa p = new Programa(listOfFiles[i].getPath());
 
 
@@ -431,9 +431,15 @@ class Programa {
 	}
         %strategy refactCondNeg() extends Identity(){
             visit Instrucao {
-                If(c1,c2,c3,Nao(Expressao),c4,c5,els,then) -> {
-                    return `If(c1,c2,c3,Expressao,c4,c5,els,then);
-           	 	}
+
+                If(_,_,_,Nao(Expressao),_,_,then,els) -> {
+                    if(`els!=`Empty()){
+						return `If(_,_,_,`Expressao,_,_,`els,`then);}
+					else 
+						return `If(_,_,_,`Nao(`Expressao),_,_,`then,`els);
+            }
+
+
             }
         }
 	%strategy countFunct() extends Identity(){
