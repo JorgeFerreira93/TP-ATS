@@ -755,19 +755,19 @@ class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
     RefValues referenceValues;
-    Programa Programa;
-    ArrayList<Programa> bonsProgramas;
+    iPrograma programa;
+    ArrayList<iPrograma> bonsProgramas;
 
     /**
      * Creates new form Window
      */
-    public WindowGUI(ArrayList<Programa> bonsProgramas, Programa Programa) {
+    public WindowGUI(ArrayList<iPrograma> bonsProgramas, iPrograma programa) {
         initComponents();
 
-        this.Programa = Programa;
+        this.programa = programa;
         this.bonsProgramas = bonsProgramas;
         this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), 0, 100, 10, 15);
-        fillProgramaDetailLabels();
+        fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
     }
@@ -776,7 +776,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (Programa p : bonsProgramas) {
+        for (iPrograma p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getLines();
                 tot++;
@@ -790,7 +790,7 @@ class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (Programa p : bonsProgramas) {
+        for (iPrograma p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getNArgs();
                 tot++;
@@ -950,7 +950,7 @@ class WindowGUI extends javax.swing.JFrame {
 
         jLabel13.setText("jLabel13");
 
-        jLabel14.setText("Linhas no Programa:");
+        jLabel14.setText("Linhas no programa:");
 
         jLabel15.setText("jLabel15");
 
@@ -1088,6 +1088,11 @@ class WindowGUI extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList2ValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(jList2);
 
         jLabel19.setText("Funcoes");
@@ -1645,7 +1650,7 @@ class WindowGUI extends javax.swing.JFrame {
 
     public void writeToCSV(FileWriter dest) {
         try {
-            dest.write("----------AnÃ¡lise-----------" + "\n");
+            dest.write("----------Analise-----------" + "\n");
             for (Funcao f : Programa.getFuncs().values()) {
                 dest.write(f.getNome() + "\n");
                 //dest.write(f.);
@@ -1690,7 +1695,12 @@ class WindowGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         fillFunctionDetailLabels(jList1.getSelectedValue());
         
-    }                                   
+    }   
+
+	 private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
+        // TODO add your handling code here:
+        fillComplexityFunction(jList2.getSelectedValue());
+    }      
 
     public void fillProgramaDetailLabels() {
         //Preencher As Labels relacionadas com o Programa; 
