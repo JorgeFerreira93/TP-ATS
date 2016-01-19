@@ -13,7 +13,9 @@ int power (int num, int pow)
 {
     if (pow>0)
     {
-        return (num * power(num, pow - 1));
+        return num * power(num, pow - 1);
     }
-    else return 1;
+    else{
+    	return 1;
+    	}
 }

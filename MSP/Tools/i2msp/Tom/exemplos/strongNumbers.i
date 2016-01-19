@@ -4,7 +4,7 @@ num=input(int);
 if(isStrong(num)){
 	print('Y');
 }
-else print('N');
+else{print('N');}
 }
 
 boolean isStrong(int num){

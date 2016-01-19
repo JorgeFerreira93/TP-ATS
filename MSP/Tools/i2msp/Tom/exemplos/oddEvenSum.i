@@ -18,7 +18,9 @@ int sumEven(int maxVal){
 	int i;
 	evenSum=0;
 	for(i=1;i<=maxVal;i++){
-		if(i%2==0) {evenSum++};
+		if(i%2==0){
+			evenSum++;
+		}
 	}
 	return evenSum;
 }
@@ -28,7 +30,9 @@ int sumOdd(int maxVal){
 	int i;
 	oddSum=0;
 	for(i=1;i<=maxVal;i++){
-		if(i%2!=0) {oddSum++};
+		if(i%2!=0) {
+			oddSum++;
+		}
 	}
 	return oddSum;
 }
