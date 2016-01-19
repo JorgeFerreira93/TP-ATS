@@ -18,6 +18,5 @@ public interface iPrograma {
     public ArrayList<String> getArrayFuncs();
     public Funcao getFuncao(String nome);
     public String toString();
-	public void parser(String path);
     
 }
