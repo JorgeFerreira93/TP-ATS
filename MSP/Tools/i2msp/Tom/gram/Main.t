@@ -10,6 +10,8 @@ import tom.library.sl.*;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -160,7 +162,7 @@ public class Main {
 class Funcao{
 
 	private String nome;
-	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
+	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios, localVars;	
 	private int mcCabe;
 	private HashMap<String, Integer> operandos, operadores;
 	private boolean naoSmell;
@@ -170,6 +172,7 @@ class Funcao{
 		this.nLinhas = 0;
 		this.nArgs = nArgs;
 		this.nIfs = 0;
+		this.localVars=0;
 		this.nWhiles = 0;
 		this.nFors = 0;
 		this.nComentarios = 0;
@@ -182,7 +185,13 @@ class Funcao{
 	public String getNome(){
 		return this.nome;
 	}
-
+	
+    public int getnComentarios() {
+        return nComentarios;
+    }
+	
+	
+        
 	public int getLines(){
 		return this.nLinhas;
 	}
@@ -190,7 +199,15 @@ class Funcao{
 	public int getNArgs(){
 		return this.nArgs;
 	}
+	
+	    public int getLocalVars() {
+        return localVars;
+    }
 
+    public void incLocalVars() {
+        this.localVars++;
+    }
+	
 	public void incLines(int n){
 		this.nLinhas += n;
 	}
@@ -198,7 +215,23 @@ class Funcao{
 	public void incIfs(){
 		this.nIfs++;
 	}
+	
+    public int getnFors() {
+        return nFors;
+    }
 
+    public int getnArgs() {
+        return nArgs;
+    }
+
+    public int getnIfs() {
+        return nIfs;
+    }
+
+    public int getnWhiles() {
+        return nWhiles;
+    }
+ 
 	public void incWhiles(){
 		this.nWhiles++;
 	}
@@ -717,7 +750,6 @@ class Menu {
         return this.op;
     }
 }
-
 class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
@@ -870,6 +902,7 @@ class WindowGUI extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -1194,14 +1227,14 @@ class WindowGUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Metricas de Complexidade do Programa", jPanel2);
 
-        jLabel42.setText("WIP Se calhar esta cena vai com o crl e usamos o main.t");
+        jLabel42.setText("Still WIP");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
+                .addContainerGap(363, Short.MAX_VALUE)
                 .addComponent(jLabel42)
                 .addGap(311, 311, 311))
         );
@@ -1227,7 +1260,7 @@ class WindowGUI extends javax.swing.JFrame {
 
         jLabel43.setText("Repositorio");
 
-        jLabel44.setText("N de Variáveis Locais por Funcao:");
+        jLabel44.setText("N de Variⷥis Locais por Funcao:");
 
         jLabel45.setText("jLabel45");
 
@@ -1248,7 +1281,7 @@ class WindowGUI extends javax.swing.JFrame {
 
         jLabel50.setText("jLabel50");
 
-        jLabel51.setText("N de Variáveis Locais por Funcao:");
+        jLabel51.setText("N de Variⷥis Locais por Funcao:");
 
         jLabel52.setText("jLabel52");
 
@@ -1479,13 +1512,22 @@ class WindowGUI extends javax.swing.JFrame {
         jMenu1.setText("Analise");
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Guardar dados de Análise");
+        jMenuItem1.setText("Guardar dados de Analise");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
         jMenu1.add(jMenuItem1);
+
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setText("Analisar outro Programa");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem2.setText("Sair");
@@ -1595,9 +1637,9 @@ class WindowGUI extends javax.swing.JFrame {
 
     public void writeToCSV(FileWriter dest) {
         try {
-            dest.write("----------Análise-----------"+"\n");
+            dest.write("----------Análise-----------" + "\n");
             for (Funcao f : programa.getFuncs().values()) {
-                dest.write(f.getNome()+"\n");
+                dest.write(f.getNome() + "\n");
                 //dest.write(f.);
             }
         } catch (Exception e) {
@@ -1621,8 +1663,23 @@ class WindowGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+        chooser = new JFileChooser();
+        int returnValue = chooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = chooser.getSelectedFile();
+            programa.parser(selectedFile.getName());
+            this.fillComplexityLabels();
+            this.fillProgramDetailLabels();
+            this.fillReferenceValues();
+            jLabel18.setVisible(false);
+        }
+
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
     public void fillProgramDetailLabels() {
-        //Preencher As Labels relacionadas com o programa;
+        //Preencher As Labels relacionadas com o programa; 
         DefaultListModel<String> dlm = new DefaultListModel<>();
         for (String str : this.programa.getArrayFuncs()) {
             dlm.addElement(str);
@@ -1678,16 +1735,61 @@ class WindowGUI extends javax.swing.JFrame {
 
     }
 
-    public void fillFunctionLabels(String funName) {
-        //Preencher Labels
-        //Verificar com valores de referÃªncia pÃ´r a negrito e vermelho; else normal preto
-        //Mais alguma palha...
+    public void fillFunctionDetailLabels(String funName) {
+        Funcao f = this.programa.getFuncao(funName);
+        fillNArgs(f.getNArgs());
+        fillFunctionLines(f.getLines());
+        jLabel7.setText(f.getnIfs()+"");
+        jLabel9.setText(f.getnWhiles()+"");
+        jLabel11.setText(f.getnFors()+"");
+        jLabel13.setText(f.getnComentarios()+"");
+        fillFunctionLocalVars(f.getLocalVars());
+        turnFunctionDetailsVisib(true);
+    }
+
+    private void fillFunctionLines(int lines) {
+        jLabel5.setText(lines + "");
+        if (lines > referenceValues.getRvFunctionLines()) {
+            jLabel5.setForeground(Color.red);
+            jLabel5.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else if (lines == referenceValues.getRvFunctionLines()) {
+            jLabel5.setForeground(Color.yellow);
+            jLabel5.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else {
+            jLabel5.setForeground(Color.green);
+            jLabel5.setFont(new Font("Tahoma", Font.BOLD, 14));
+        }
+    }
+    private void fillFunctionLocalVars(int localVars){
+        jLabel63.setText(localVars+ "");
+        if (localVars > referenceValues.getRvFunctionLocalVars()) {
+            jLabel63.setForeground(Color.red);
+            jLabel63.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else if (localVars == referenceValues.getRvFunctionLocalVars()) {
+            jLabel63.setForeground(Color.yellow);
+            jLabel63.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else {
+            jLabel63.setForeground(Color.green);
+            jLabel63.setFont(new Font("Tahoma", Font.BOLD, 14));
+        }
+    }
+    private void fillNArgs(int nArgs) {
+        jLabel3.setText(nArgs + "");
+        if (nArgs > referenceValues.getRvFunctionArgs()) {
+            jLabel3.setForeground(Color.red);
+            jLabel3.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else if (nArgs == referenceValues.getRvFunctionArgs()) {
+            jLabel3.setForeground(Color.yellow);
+            jLabel3.setFont(new Font("Tahoma", Font.BOLD, 14));
+        } else {
+            jLabel3.setForeground(Color.green);
+            jLabel3.setFont(new Font("Tahoma", Font.BOLD, 14));
+        }
     }
 
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -1765,6 +1867,7 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1786,7 +1889,6 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }
-
 class About extends javax.swing.JFrame {
 
     /**
