@@ -916,6 +916,12 @@ class WindowGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         jLabel1.setText("Funcoes");
@@ -1000,7 +1006,7 @@ class WindowGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel13))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel15))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1011,7 +1017,7 @@ class WindowGUI extends javax.swing.JFrame {
                             .addComponent(jSeparator3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel18)
-                                .addGap(0, 248, Short.MAX_VALUE))
+                                .addGap(0, 260, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel62)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1081,6 +1087,7 @@ class WindowGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(jList2);
 
         jLabel19.setText("Funcoes");
@@ -1152,7 +1159,7 @@ class WindowGUI extends javax.swing.JFrame {
                                 .addComponent(jLabel31))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel24)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 282, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
                                 .addComponent(jLabel32))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel25)
@@ -1235,7 +1242,7 @@ class WindowGUI extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(363, Short.MAX_VALUE)
+                .addContainerGap(375, Short.MAX_VALUE)
                 .addComponent(jLabel42)
                 .addGap(311, 311, 311))
         );
@@ -1678,6 +1685,12 @@ class WindowGUI extends javax.swing.JFrame {
         }
 
     }                                          
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
+        // TODO add your handling code here:
+        //fillFunctionDetailLabels(jList1.getSelectedValue());
+        
+    }                                   
 
     public void fillProgramDetailLabels() {
         //Preencher As Labels relacionadas com o programa; 
