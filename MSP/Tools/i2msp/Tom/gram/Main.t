@@ -29,10 +29,7 @@ public class Main {
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
-		System.out.println(listOfFiles[i].getPath());
 			Programa p = new Programa(listOfFiles[i].getPath());
-
-
 			
 			bonsProgramas.add(p);
 		}
@@ -43,12 +40,15 @@ public class Main {
 	}
 
 	private static void lerPrograma(){
-		Scanner is = new Scanner(System.in);
-        
-        System.out.print("Nome Ficheiro: ");
-        String op = is.nextLine();
 
-        Programa = new Programa(op);
+        JFileChooser j = new JFileChooser();
+
+		int ret = j.showSaveDialog(null);
+
+		if(ret == JFileChooser.APPROVE_OPTION) {
+        	Programa = new Programa(j.getSelectedFile().getAbsolutePath());
+    	}
+
 	}
 
 	private static float mediaLinhasProgramas(){
@@ -333,6 +333,7 @@ class Programa {
 
 	%include{sl.tom}
 	%include{../genI/gram/i/i.tom}
+	%include{util/types/List.tom}
         private String path;
 	private int lines;
 	private static HashMap<String, Funcao> funcs;
@@ -429,14 +430,61 @@ class Programa {
 
 		return sb.toString();
 	}
+
+	public void removeVariaveis(){
+            try{
+							System.out.println("dsadsa");
+							System.out.println("dsadsa");
+							System.out.println("dsadsa");
+							System.out.println("dsadsa");
+            File f = new File(path);
+            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+            CommonTokenStream tokens=new CommonTokenStream(lexer);
+            iParser parser = new iParser(tokens);
+            
+            Tree b=(Tree) parser.prog().getTree();
+            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+            try {
+				for (Map.Entry<String, Funcao> entry : this.funcs.entrySet()) {	               
+	                `TopDown(removeVars(entry.getValue().unusedVars())).visit(p);
+            	}
+			} catch(Exception e) {
+				System.out.println("the strategy failed");
+			}
+            
+            //this.start(p);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+	%strategy removeVars(List unusedVars) extends Identity(){
+		visit Instrucao {
+
+            Declaracao(_,_,_,decls,_,_) -> {
+            	testeRemoveVars(unusedVars, `decls);
+        	}
+	}
+}
+
+	public static void testeRemoveVars(List unusedVars, Declaracoes decls) {
+		%match(decls) {
+			Decl(id,_,_,_,_) -> {
+						//if (unusedVars.contains(`id))
+							System.out.println(`id);
+					}
+				}
+			}
+
         %strategy refactCondNeg() extends Identity(){
             visit Instrucao {
 
-                If(_,_,_,Nao(Expressao),_,_,then,els) -> {
-                    if(`els!=`Empty()){
-						return `If(_,_,_,`Expressao,_,_,`els,`then);}
+                If(c1,c2,c3,Nao(Expressao),c4,c5,then,els) -> {
+                    if(`els != `Exp(Empty())){
+						return `If(c1,c2,c3,Expressao,c4,c5,els,then);}
 					else 
-						return `If(_,_,_,`Nao(`Expressao),_,_,`then,`els);
+						return `If(c1,c2,c3,Nao(Expressao),c4,c5,then,els);
             }
 
 
@@ -522,8 +570,6 @@ class Programa {
 				auxFunc.adicionaOperador("While");
 				auxFunc.adicionaOperador(")");
 				auxFunc.adicionaOperador("(");
-
-
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
@@ -532,8 +578,6 @@ class Programa {
 				auxFunc.adicionaOperador("For");
 				auxFunc.adicionaOperador(")");
 				auxFunc.adicionaOperador("(");
-
-
 			}
 		}
 
@@ -575,9 +619,6 @@ class Programa {
 				auxFunc.adicionaOperando("False");
 			}
 
-			Float(f) -> {
-				//auxFunc.adicionaOperando(Integer.toString(`f));
-			}
 
 			Nao(_) -> {
 				auxFunc.adicionaOperador("!");
@@ -749,6 +790,7 @@ class WindowGUI extends javax.swing.JFrame {
         initComponents();
 
         this.programa = programa;
+        //programa.removeVariaveis();
         this.bonsProgramas = bonsProgramas;
         this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
         fillProgramDetailLabels();
