@@ -591,7 +591,7 @@ class Programa {
 				auxFunc.adicionaOperador(")");
 				auxFunc.adicionaOperador("(");
 
-				auxFunc.incMcCabe();
+
 			}
 			
 			For(_,_,_,_,_,_,_,_,_,_,_,_) -> {
@@ -601,7 +601,7 @@ class Programa {
 				auxFunc.adicionaOperador(")");
 				auxFunc.adicionaOperador("(");
 
-				auxFunc.incMcCabe();
+
 			}
 		}
 
