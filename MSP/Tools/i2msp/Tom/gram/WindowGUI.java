@@ -24,13 +24,13 @@ public class WindowGUI extends javax.swing.JFrame {
 
     JFileChooser chooser;
     RefValues referenceValues;
-    iPrograma programa;
-    ArrayList<iPrograma> bonsProgramas;
+    Programa programa;
+    ArrayList<Programa> bonsProgramas;
 
     /**
      * Creates new form Window
      */
-    public WindowGUI(ArrayList<iPrograma> bonsProgramas, iPrograma programa) {
+    public WindowGUI(ArrayList<Programa> bonsProgramas, Programa programa) {
         initComponents();
 
         this.programa = programa;
@@ -39,13 +39,14 @@ public class WindowGUI extends javax.swing.JFrame {
         fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
+        fillRefactoringDetails();
     }
 
     private float mediaLinhasProgramas() {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getLines();
                 tot++;
@@ -59,7 +60,7 @@ public class WindowGUI extends javax.swing.JFrame {
         int soma = 0;
         int tot = 0;
 
-        for (iPrograma p : bonsProgramas) {
+        for (Programa p : bonsProgramas) {
             for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
                 soma += entry.getValue().getNArgs();
                 tot++;
@@ -133,7 +134,10 @@ public class WindowGUI extends javax.swing.JFrame {
         jLabel36 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel42 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList3 = new javax.swing.JList<>();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
@@ -509,23 +513,50 @@ public class WindowGUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Metricas de Complexidade do Programa", jPanel2);
 
-        jLabel42.setText("Still WIP");
+        jList3.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList3ValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jList3);
+
+        jButton5.setText("Eliminar Smell: Negacao em Condicao");
+        jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Eliminar Smell: Variaveis Locais Inutilizadas");
+        jButton6.setEnabled(false);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(375, Short.MAX_VALUE)
-                .addComponent(jLabel42)
-                .addGap(311, 311, 311))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 195, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(124, 124, 124)
-                .addComponent(jLabel42)
-                .addContainerGap(274, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jButton5)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Refactoring", jPanel4);
@@ -971,6 +1002,37 @@ public class WindowGUI extends javax.swing.JFrame {
         fillComplexityFunction(jList2.getSelectedValue());
     }//GEN-LAST:event_jList2ValueChanged
 
+    private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
+        // TODO add your handling code here:
+        enableButtonsOnSmell(jList3.getSelectedValue());
+    }//GEN-LAST:event_jList3ValueChanged
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        this.programa.refactConditionNegation();
+        this.fillComplexityLabels();
+        this.fillProgramDetailLabels();
+        this.fillReferenceValues();
+        this.fillRefactoringDetails();
+    }//GEN-LAST:event_jButton5ActionPerformed
+    private void enableButtonsOnSmell(String function){
+        Funcao f=programa.getFuncao(function);
+        if(f.isNao()){
+            jButton5.setEnabled(true);
+        }
+        else{
+            jButton5.setEnabled(false);
+        }
+        /*
+        if(f.hasUnusedVars()){
+            jButton6.setEnabled(true);
+        }
+        else{
+            jButton6.setEnabled(false);
+        }
+        */
+        
+    }
     public void fillProgramDetailLabels() {
         //Preencher As Labels relacionadas com o programa; 
         DefaultListModel<String> dlm = new DefaultListModel<>();
@@ -1099,6 +1161,14 @@ public class WindowGUI extends javax.swing.JFrame {
         turnComplexityVisib(true);
     }
     
+    private void fillRefactoringDetails(){
+        DefaultListModel<String> dlm=new DefaultListModel<>();
+        for(String str:this.programa.getArrayFuncs())
+            dlm.addElement(str);
+        jList3.setModel(dlm);
+        
+    }
+    
     private void fillMcCabeWithColor(int mcCabe){
         jLabel21.setText(mcCabe+"");
         if(mcCabe>=1 && mcCabe<=4) jLabel21.setForeground(Color.green);
@@ -1115,6 +1185,8 @@ public class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1151,7 +1223,6 @@ public class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
@@ -1180,6 +1251,7 @@ public class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -1193,6 +1265,7 @@ public class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;

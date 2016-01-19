@@ -162,8 +162,9 @@ public class Main {
 class Funcao{
 
 	private String nome;
-	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios, localVars;	
+	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
 	private int mcCabe;
+        private HashMap<String, Integer> localVars;
 	private HashMap<String, Integer> operandos, operadores;
 	private boolean naoSmell;
 
@@ -172,7 +173,7 @@ class Funcao{
 		this.nLinhas = 0;
 		this.nArgs = nArgs;
 		this.nIfs = 0;
-		this.localVars=0;
+		this.localVars=new HashMap<>();
 		this.nWhiles = 0;
 		this.nFors = 0;
 		this.nComentarios = 0;
@@ -190,7 +191,9 @@ class Funcao{
         return nComentarios;
     }
 	
-	
+	public int getMcCabe(){
+            return this.mcCabe;
+        }
         
 	public int getLines(){
 		return this.nLinhas;
@@ -200,12 +203,19 @@ class Funcao{
 		return this.nArgs;
 	}
 	
-	    public int getLocalVars() {
+	    public HashMap<String,Integer> getLocalVars() {
         return localVars;
     }
 
-    public void incLocalVars() {
-        this.localVars++;
+    public void incLocalVars(String id) {
+        if(this.localVars.containsKey(id)){
+            int val=this.localVars.get(id)+1;
+            this.localVars.put(id,val );
+        }
+        else {
+            this.localVars.put(id, 0);
+        }
+            
     }
 	
 	public void incLines(int n){
@@ -276,14 +286,27 @@ class Funcao{
 			sum+=i;
 		return sum;
 	}
-	
+	public boolean hasUnusedLocalVars(){
+            boolean flag=false;
+            for(String id:this.localVars.keySet())
+                if(this.localVars.get(id)==0) flag=true;
+                
+            return flag;
+        }
+        
+        public ArrayList<String> unusedVars(){
+            ArrayList<String> res=new ArrayList<>();
+            for(String key: this.localVars.keySet())
+                if(this.localVars.get(key)==0) res.add(key);
+            return res;
+        }
 	public int operandosTotais(){
 		int sum=0;
 		for(Integer i: this.operandos.values())
 			sum+=i;
 		return sum;
 	}
-
+        
 	public void addNao(){
 		this.naoSmell = true;
 	}
@@ -384,14 +407,14 @@ class Programa {
 
 	%include{sl.tom}
 	%include{../genI/gram/i/i.tom}
-
+        private String path;
 	private int lines;
 	private static HashMap<String, Funcao> funcs;
 	private static Funcao auxFunc;
 
 	public Programa(String path){
 		this.funcs = new HashMap<>();
-
+                this.path=path;
 		this.parser(path);
 	}
 
@@ -440,7 +463,23 @@ class Programa {
 			e.printStackTrace();
 		}
 	}
-
+        public void refactConditionNegation(){
+            try{
+            File f = new File(path);
+            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+            CommonTokenStream tokens=new CommonTokenStream(lexer);
+            iParser parser = new iParser(tokens);
+            
+            Tree b=(Tree) parser.prog().getTree();
+            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+            startRefactCondNegat(p);
+            
+            this.parser(path);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 	private void start(Instrucao p){
 
 		try {
@@ -449,7 +488,13 @@ class Programa {
 			System.out.println("the strategy failed");
 		}
 	}
-
+        private void startRefactCondNegat(Instrucao p){
+            try {
+			`TopDown(refactCondNeg()).visit(p);
+		} catch(Exception e) {
+			System.out.println("the strategy failed");
+		}
+        }
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
@@ -458,7 +503,13 @@ class Programa {
 
 		return sb.toString();
 	}
-
+        %strategy refactCondNeg() extends Identity(){
+            visit Instrucao {
+                If(_,_,_,Nao(Expressao),_,_,then,els) -> {
+                    `return If(_,_,_,Expressao,_,_,els,then);
+            }
+            }
+        }
 	%strategy countFunct() extends Identity(){
 		visit Instrucao {
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
@@ -557,6 +608,7 @@ class Programa {
 		visit Expressao{
 			Id(id) -> {
 				auxFunc.adicionaOperando(`id);
+                                auxFunc.incLocalVars(auxFunc.getNome());
 			}
 
 			Call(_,id,_,_,_,_,_) -> {
@@ -766,12 +818,25 @@ class WindowGUI extends javax.swing.JFrame {
 
         this.programa = programa;
         this.bonsProgramas = bonsProgramas;
-        this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), 0, 100, 10, 15);
+        this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
         fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
+        fillRefactoringDetails();
     }
 
+    private float mediaLocalVars(){
+        int soma=0;
+        int tot=0;
+        for(Programa p:bonsProgramas){
+            for (Map.Entry<String, Funcao> entry : p.getFuncs().entrySet()) {
+                soma += entry.getValue().getLocalVars().size();
+                tot++;
+            }
+        }
+        return (float) soma/tot;
+    }
+    
     private float mediaLinhasProgramas() {
         int soma = 0;
         int tot = 0;
@@ -864,7 +929,10 @@ class WindowGUI extends javax.swing.JFrame {
         jLabel36 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel42 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList3 = new javax.swing.JList<>();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
@@ -1240,23 +1308,55 @@ class WindowGUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Metricas de Complexidade do Programa", jPanel2);
 
-        jLabel42.setText("Still WIP");
+        jList3.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList3ValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jList3);
+
+        jButton5.setText("Eliminar Smell: Negacao em Condicao");
+        jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Eliminar Smell: Variaveis Locais Inutilizadas");
+        jButton6.setEnabled(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(375, Short.MAX_VALUE)
-                .addComponent(jLabel42)
-                .addGap(311, 311, 311))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 195, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(124, 124, 124)
-                .addComponent(jLabel42)
-                .addContainerGap(274, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(jButton5)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Refactoring", jPanel4);
@@ -1647,11 +1747,13 @@ class WindowGUI extends javax.swing.JFrame {
             this.fillReferenceValues();
         }
     }                                        
-
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt){
+        // Aqui chama-se estrategia de eliminar inexistentes;
+    }
     public void writeToCSV(FileWriter dest) {
         try {
             dest.write("----------Analise-----------" + "\n");
-            for (Funcao f : Programa.getFuncs().values()) {
+            for (Funcao f : programa.getFuncs().values()) {
                 dest.write(f.getNome() + "\n");
                 //dest.write(f.);
             }
@@ -1682,9 +1784,9 @@ class WindowGUI extends javax.swing.JFrame {
         int returnValue = chooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
-            Programa.parser(selectedFile.getName());
+            programa.parser(selectedFile.getName());
             this.fillComplexityLabels();
-            this.fillProgramaDetailLabels();
+            this.fillProgramDetailLabels();
             this.fillReferenceValues();
             jLabel18.setVisible(false);
         }
@@ -1695,29 +1797,59 @@ class WindowGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         fillFunctionDetailLabels(jList1.getSelectedValue());
         
-    }   
+    }                                   
 
-	 private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
+    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
         // TODO add your handling code here:
         fillComplexityFunction(jList2.getSelectedValue());
-    }      
+    }                                   
 
-    public void fillProgramaDetailLabels() {
-        //Preencher As Labels relacionadas com o Programa; 
+    private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
+        // TODO add your handling code here:
+        enableButtonsOnSmell(jList3.getSelectedValue());
+    }                                   
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        // TODO add your handling code here:
+        this.programa.refactConditionNegation();
+        this.fillComplexityLabels();
+        this.fillProgramDetailLabels();
+        this.fillReferenceValues();
+        this.fillRefactoringDetails();
+    }                                        
+    private void enableButtonsOnSmell(String function){
+        Funcao f=programa.getFuncao(function);
+        if(f.isNao()){
+            jButton5.setEnabled(true);
+        }
+        else{
+            jButton5.setEnabled(false);
+        }
+        
+        if(f.hasUnusedLocalVars()){
+            jButton6.setEnabled(true);
+        }
+        else{
+            jButton6.setEnabled(false);
+        }
+        
+    }
+    public void fillProgramDetailLabels() {
+        //Preencher As Labels relacionadas com o programa; 
         DefaultListModel<String> dlm = new DefaultListModel<>();
-        for (String str : this.Programa.getArrayFuncs()) {
+        for (String str : this.programa.getArrayFuncs()) {
             dlm.addElement(str);
         }
         jList1.setModel(dlm);
         turnFunctionDetailsVisib(false);
-        jLabel15.setText(Programa.totLinhas() + "");
-        jLabel17.setText(Programa.getFuncs().size() + "");
+        jLabel15.setText(programa.totLinhas() + "");
+        jLabel17.setText(programa.getFuncs().size() + "");
 
     }
 
     public void fillComplexityLabels() {
         DefaultListModel<String> dlm = new DefaultListModel<>();
-        for (String str : this.Programa.getArrayFuncs()) {
+        for (String str : this.programa.getArrayFuncs()) {
             dlm.addElement(str);
         }
         jList2.setModel(dlm);
@@ -1760,14 +1892,14 @@ class WindowGUI extends javax.swing.JFrame {
     }
 
     public void fillFunctionDetailLabels(String funName) {
-        Funcao f = this.Programa.getFuncao(funName);
+        Funcao f = this.programa.getFuncao(funName);
         fillNArgs(f.getNArgs());
         fillFunctionLines(f.getLines());
         jLabel7.setText(f.getnIfs()+"");
         jLabel9.setText(f.getnWhiles()+"");
         jLabel11.setText(f.getnFors()+"");
         jLabel13.setText(f.getnComentarios()+"");
-        fillFunctionLocalVars(f.getLocalVars());
+        fillFunctionLocalVars(f.getLocalVars().size());
         turnFunctionDetailsVisib(true);
         if(f.isNao()){
             jLabel18.setVisible(true);
@@ -1817,8 +1949,8 @@ class WindowGUI extends javax.swing.JFrame {
         }
     }
     public void fillComplexityFunction(String funName){
-        Funcao f=Programa.getFuncao(funName);
-        //fillMcCabeWithColor(f.getMcCabe());
+        Funcao f=programa.getFuncao(funName);
+        fillMcCabeWithColor(f.getMcCabe());
         jLabel30.setText(f.vocabulario()+"");
         jLabel31.setText(f.comprimento()+"");
         jLabel32.setText(f.comprimentoCalculado()+"");
@@ -1828,6 +1960,14 @@ class WindowGUI extends javax.swing.JFrame {
         jLabel36.setText(f.tempoNecessario()+" segundos");
         jLabel37.setText(""+f.estimateBugs());
         turnComplexityVisib(true);
+    }
+    
+    private void fillRefactoringDetails(){
+        DefaultListModel<String> dlm=new DefaultListModel<>();
+        for(String str:this.programa.getArrayFuncs())
+            dlm.addElement(str);
+        jList3.setModel(dlm);
+        
     }
     
     private void fillMcCabeWithColor(int mcCabe){
@@ -1846,6 +1986,8 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1882,7 +2024,6 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
     private javax.swing.JLabel jLabel41;
-    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
@@ -1911,6 +2052,7 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -1924,6 +2066,7 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -1939,6 +2082,7 @@ class WindowGUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     // End of variables declaration                   
 }
+
 
 class About extends javax.swing.JFrame {
 
