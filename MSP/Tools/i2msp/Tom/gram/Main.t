@@ -506,7 +506,10 @@ class Programa {
         %strategy refactCondNeg() extends Identity(){
             visit Instrucao {
                 If(_,_,_,Nao(Expressao),_,_,then,els) -> {
-                    `return If(_,_,_,Expressao,_,_,els,then);
+                    if(`els!=`Empty()){
+						return `If(_,_,_,`Expressao,_,_,`els,`then);}
+					else 
+						return `If(_,_,_,Nao(Expressao),_,_,then,els);
             }
             }
         }
