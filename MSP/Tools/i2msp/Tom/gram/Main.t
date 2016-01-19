@@ -390,7 +390,7 @@ class Programa {
 		return funcs.get(nome);
 	}
 
-	private void parser(String path){
+	public void parser(String path){
 		try {
 			
 			File f = new File(path);
