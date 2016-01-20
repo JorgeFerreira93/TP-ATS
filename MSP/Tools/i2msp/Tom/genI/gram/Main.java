@@ -362,6 +362,7 @@ class Programa {
 		this.funcs = new HashMap<>();
         this.path=path;
 		this.parser(path);
+
 	}
 
 	public int totLinhas(){
@@ -372,6 +373,10 @@ class Programa {
 		}
 
 		return res;
+	}
+
+	public String getPath(){
+		return this.path;
 	}
 
 	public HashMap<String, Funcao> getFuncs(){
@@ -434,7 +439,6 @@ class Programa {
         Instrucao p=(Instrucao) iAdaptor.getTerm(b);
         startRefactCondNegat(p);
         
-        this.start(p);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -452,7 +456,14 @@ class Programa {
     
     private void startRefactCondNegat(Instrucao p){
         try {
-			tom_make_TopDown(tom_make_refactCondNeg()).visit(p);
+			Instrucao p2 = tom_make_TopDown(tom_make_refactCondNeg()).visit(p);
+
+			File novo = new File(this.path);
+
+			FileWriter fooWriter = new FileWriter(novo, false);
+				
+			fooWriter.write(arvoreParaFicheiroInstrucao(p2, false));
+			fooWriter.close();
 		} catch(Exception e) {
 			System.out.println("the strategy failed");
 		}
@@ -477,14 +488,14 @@ class Programa {
             Tree b=(Tree) parser.prog().getTree();
             Instrucao p=(Instrucao) iAdaptor.getTerm(b);
             try {					
-				Instrucao p3 = tom_make_TopDown(tom_make_removeVars(this.unusedVars())).visit(p);
+				Instrucao p2 = tom_make_TopDown(tom_make_removeVars(this.unusedVars())).visit(p);
 				//System.out.println(arvoreParaFicheiroInstrucao(p3, false));
 
 				File novo = new File(this.path);
 
 				FileWriter fooWriter = new FileWriter(novo, false);
 				
-				fooWriter.write(arvoreParaFicheiroInstrucao(p3, false));
+				fooWriter.write(arvoreParaFicheiroInstrucao(p2, false));
 				fooWriter.close();
 			} catch(Exception e) {
 				System.out.println("the strategy failed");
@@ -797,14 +808,14 @@ aux += "==";}}}}}
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Input((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) { gram.i.types.DefTipo  tom_tipo=tom_get_slot_Input_Tipo((( gram.i.types.Expressao )e));
 
 
-				String aux = "Input(";
+				String aux = "input(";
 
 				{{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DInt((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
-aux += "Int";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DChar((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
-aux += "Char";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DBoolean((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
-aux += "Boolean";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DFloat((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
-aux += "Float";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DVoid((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
-aux += "Void";}}}}}
+aux += "int";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DChar((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
+aux += "char";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DBoolean((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
+aux += "boolean";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DFloat((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
+aux += "float";}}}}{if (tom_is_sort_DefTipo(tom_tipo)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom_tipo))) {if (tom_is_fun_sym_DVoid((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom_tipo)))) {
+aux += "void";}}}}}
 
 
 				aux += ")";
@@ -906,15 +917,14 @@ aux = "void ";}}}}}
 		return "";
 	}
 
-
-	public static class refactCondNeg extends tom.library.sl.AbstractStrategyBasic {public refactCondNeg() {super(tom_make_Identity());}public tom.library.sl.Visitable[] getChildren() {tom.library.sl.Visitable[] stratChildren = new tom.library.sl.Visitable[getChildCount()];stratChildren[0] = super.getChildAt(0);return stratChildren;}public tom.library.sl.Visitable setChildren(tom.library.sl.Visitable[] children) {super.setChildAt(0, children[0]);return this;}public int getChildCount() {return 1;}public tom.library.sl.Visitable getChildAt(int index) {switch (index) {case 0: return super.getChildAt(0);default: throw new IndexOutOfBoundsException();}}public tom.library.sl.Visitable setChildAt(int index, tom.library.sl.Visitable child) {switch (index) {case 0: return super.setChildAt(0, child);default: throw new IndexOutOfBoundsException();}}@SuppressWarnings("unchecked")public <T> T visitLight(T v, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (tom_is_sort_Instrucao(v)) {return ((T)visit_Instrucao((( gram.i.types.Instrucao )v),introspector));}if (!(( null  == environment))) {return ((T)any.visit(environment,introspector));} else {return any.visitLight(v,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  _visit_Instrucao( gram.i.types.Instrucao  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.Instrucao )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  visit_Instrucao( gram.i.types.Instrucao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_If((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { gram.i.types.Expressao  tomMatch18_4=tom_get_slot_If_Condicao((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c1=tom_get_slot_If_c1((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c2=tom_get_slot_If_c2((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c3=tom_get_slot_If_c3((( gram.i.types.Instrucao )tom__arg));if (tom_is_sort_Expressao(tomMatch18_4)) {if (tom_is_fun_sym_Nao((( gram.i.types.Expressao )tomMatch18_4))) { gram.i.types.Expressao  tom_Expressao=tom_get_slot_Nao_Expressao(tomMatch18_4); gram.i.types.LComentarios  tom_c4=tom_get_slot_If_c4((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c5=tom_get_slot_If_c5((( gram.i.types.Instrucao )tom__arg)); gram.i.types.Instrucao  tom_then=tom_get_slot_If_Instrucao1((( gram.i.types.Instrucao )tom__arg)); gram.i.types.Instrucao  tom_els=tom_get_slot_If_Instrucao2((( gram.i.types.Instrucao )tom__arg));
-
+	public static class refactCondNeg extends tom.library.sl.AbstractStrategyBasic {public refactCondNeg() {super(tom_make_Identity());}public tom.library.sl.Visitable[] getChildren() {tom.library.sl.Visitable[] stratChildren = new tom.library.sl.Visitable[getChildCount()];stratChildren[0] = super.getChildAt(0);return stratChildren;}public tom.library.sl.Visitable setChildren(tom.library.sl.Visitable[] children) {super.setChildAt(0, children[0]);return this;}public int getChildCount() {return 1;}public tom.library.sl.Visitable getChildAt(int index) {switch (index) {case 0: return super.getChildAt(0);default: throw new IndexOutOfBoundsException();}}public tom.library.sl.Visitable setChildAt(int index, tom.library.sl.Visitable child) {switch (index) {case 0: return super.setChildAt(0, child);default: throw new IndexOutOfBoundsException();}}@SuppressWarnings("unchecked")public <T> T visitLight(T v, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (tom_is_sort_Instrucao(v)) {return ((T)visit_Instrucao((( gram.i.types.Instrucao )v),introspector));}if (!(( null  == environment))) {return ((T)any.visit(environment,introspector));} else {return any.visitLight(v,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  _visit_Instrucao( gram.i.types.Instrucao  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.Instrucao )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  visit_Instrucao( gram.i.types.Instrucao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_If((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) { gram.i.types.Expressao  tomMatch18_4=tom_get_slot_If_Condicao((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c1=tom_get_slot_If_c1((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c2=tom_get_slot_If_c2((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c3=tom_get_slot_If_c3((( gram.i.types.Instrucao )tom__arg));if (tom_is_sort_Expressao(tomMatch18_4)) {if (tom_is_fun_sym_Nao((( gram.i.types.Expressao )tomMatch18_4))) { gram.i.types.Expressao  tom_exp=tom_get_slot_Nao_Expressao(tomMatch18_4); gram.i.types.LComentarios  tom_c4=tom_get_slot_If_c4((( gram.i.types.Instrucao )tom__arg)); gram.i.types.LComentarios  tom_c5=tom_get_slot_If_c5((( gram.i.types.Instrucao )tom__arg)); gram.i.types.Instrucao  tom_then=tom_get_slot_If_Instrucao1((( gram.i.types.Instrucao )tom__arg)); gram.i.types.Instrucao  tom_els=tom_get_slot_If_Instrucao2((( gram.i.types.Instrucao )tom__arg));
 
 
+System.out.println("HUE");
                 if(tom_els!= tom_make_Exp(tom_make_Empty())){
-					return tom_make_If(tom_c1,tom_c2,tom_c3,tom_Expressao,tom_c4,tom_c5,tom_els,tom_then);}
+					return tom_make_If(tom_c1,tom_c2,tom_c3,tom_exp,tom_c4,tom_c5,tom_els,tom_then);}
 				else 
-					return tom_make_If(tom_c1,tom_c2,tom_c3,tom_make_Nao(tom_Expressao),tom_c4,tom_c5,tom_then,tom_els);
+					return tom_make_If(tom_c1,tom_c2,tom_c3,tom_make_Nao(tom_exp),tom_c4,tom_c5,tom_then,tom_els);
         	}}}}}}}return _visit_Instrucao(tom__arg,introspector);}}private static  tom.library.sl.Strategy  tom_make_refactCondNeg() { return new refactCondNeg();}public static class countFunct extends tom.library.sl.AbstractStrategyBasic {public countFunct() {super(tom_make_Identity());}public tom.library.sl.Visitable[] getChildren() {tom.library.sl.Visitable[] stratChildren = new tom.library.sl.Visitable[getChildCount()];stratChildren[0] = super.getChildAt(0);return stratChildren;}public tom.library.sl.Visitable setChildren(tom.library.sl.Visitable[] children) {super.setChildAt(0, children[0]);return this;}public int getChildCount() {return 1;}public tom.library.sl.Visitable getChildAt(int index) {switch (index) {case 0: return super.getChildAt(0);default: throw new IndexOutOfBoundsException();}}public tom.library.sl.Visitable setChildAt(int index, tom.library.sl.Visitable child) {switch (index) {case 0: return super.setChildAt(0, child);default: throw new IndexOutOfBoundsException();}}@SuppressWarnings("unchecked")public <T> T visitLight(T v, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (tom_is_sort_LComentarios(v)) {return ((T)visit_LComentarios((( gram.i.types.LComentarios )v),introspector));}if (tom_is_sort_Expressao(v)) {return ((T)visit_Expressao((( gram.i.types.Expressao )v),introspector));}if (tom_is_sort_Instrucao(v)) {return ((T)visit_Instrucao((( gram.i.types.Instrucao )v),introspector));}if (tom_is_sort_DefTipo(v)) {return ((T)visit_DefTipo((( gram.i.types.DefTipo )v),introspector));}if (!(( null  == environment))) {return ((T)any.visit(environment,introspector));} else {return any.visitLight(v,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.DefTipo  _visit_DefTipo( gram.i.types.DefTipo  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.DefTipo )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  _visit_Instrucao( gram.i.types.Instrucao  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.Instrucao )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Expressao  _visit_Expressao( gram.i.types.Expressao  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.Expressao )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.LComentarios  _visit_LComentarios( gram.i.types.LComentarios  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.LComentarios )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.DefTipo  visit_DefTipo( gram.i.types.DefTipo  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_DefTipo(tom__arg)) {if (tom_is_sort_DefTipo((( gram.i.types.DefTipo )tom__arg))) {if (tom_is_fun_sym_DInt((( gram.i.types.DefTipo )(( gram.i.types.DefTipo )tom__arg)))) {
 
 
@@ -1224,11 +1234,15 @@ class WindowGUI extends javax.swing.JFrame {
 
         this.programa = programa;
         this.bonsProgramas = bonsProgramas;
-        this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
+        init();
+    }
+
+    private void init(){
+    	this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
         fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
-        fillRefactoringDetails();
+       	fillRefactoringDetails();
     }
 
     private float mediaLocalVars(){	
@@ -2157,7 +2171,8 @@ class WindowGUI extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt){
         // Aqui chama-se estrategia de eliminar inexistentes;
         programa.removeVariaveis();
-
+        programa = new Programa(programa.getPath());
+        this.init();
     }
     public void writeToTxt(FileWriter dest) {
         try {
@@ -2269,7 +2284,6 @@ class WindowGUI extends javax.swing.JFrame {
         }
         
         if(programa.unusedVars().size() > 0){
-        	System.out.println(programa.unusedVars().size());
         	System.out.println(programa.unusedVars());
             jButton6.setEnabled(true);
         }

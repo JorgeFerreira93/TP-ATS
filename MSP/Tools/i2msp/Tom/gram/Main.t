@@ -362,6 +362,7 @@ class Programa {
 		this.funcs = new HashMap<>();
         this.path=path;
 		this.parser(path);
+
 	}
 
 	public int totLinhas(){
@@ -372,6 +373,10 @@ class Programa {
 		}
 
 		return res;
+	}
+
+	public String getPath(){
+		return this.path;
 	}
 
 	public HashMap<String, Funcao> getFuncs(){
@@ -434,7 +439,6 @@ class Programa {
         Instrucao p=(Instrucao) iAdaptor.getTerm(b);
         startRefactCondNegat(p);
         
-        this.start(p);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -452,7 +456,14 @@ class Programa {
     
     private void startRefactCondNegat(Instrucao p){
         try {
-			`TopDown(refactCondNeg()).visit(p);
+			Instrucao p2 = `TopDown(refactCondNeg()).visit(p);
+
+			File novo = new File(this.path);
+
+			FileWriter fooWriter = new FileWriter(novo, false);
+				
+			fooWriter.write(arvoreParaFicheiroInstrucao(p2, false));
+			fooWriter.close();
 		} catch(Exception e) {
 			System.out.println("the strategy failed");
 		}
@@ -477,14 +488,14 @@ class Programa {
             Tree b=(Tree) parser.prog().getTree();
             Instrucao p=(Instrucao) iAdaptor.getTerm(b);
             try {					
-				Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
+				Instrucao p2 = `TopDown(removeVars(this.unusedVars())).visit(p);
 				//System.out.println(arvoreParaFicheiroInstrucao(p3, false));
 
 				File novo = new File(this.path);
 
 				FileWriter fooWriter = new FileWriter(novo, false);
 				
-				fooWriter.write(arvoreParaFicheiroInstrucao(p3, false));
+				fooWriter.write(arvoreParaFicheiroInstrucao(p2, false));
 				fooWriter.close();
 			} catch(Exception e) {
 				System.out.println("the strategy failed");
@@ -797,14 +808,14 @@ class Programa {
 			}
 
 			Input(_,_,_,tipo,_,_) -> {
-				String aux = "Input(";
+				String aux = "input(";
 
 				%match(tipo) {
-					DInt() -> {aux += "Int";} 
-					DChar() -> {aux += "Char";}
-					DBoolean() -> {aux += "Boolean";} 
-					DFloat() -> {aux += "Float";}
-					DVoid() -> {aux += "Void";}
+					DInt() -> {aux += "int";} 
+					DChar() -> {aux += "char";}
+					DBoolean() -> {aux += "boolean";} 
+					DFloat() -> {aux += "float";}
+					DVoid() -> {aux += "void";}
 				}
 
 				aux += ")";
@@ -905,7 +916,6 @@ class Programa {
 
 		return "";
 	}
-
 
 	%strategy refactCondNeg() extends Identity(){
         visit Instrucao {
@@ -1224,11 +1234,15 @@ class WindowGUI extends javax.swing.JFrame {
 
         this.programa = programa;
         this.bonsProgramas = bonsProgramas;
-        this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
+        init();
+    }
+
+    private void init(){
+    	this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
         fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
-        fillRefactoringDetails();
+       	fillRefactoringDetails();
     }
 
     private float mediaLocalVars(){	
@@ -2157,7 +2171,8 @@ class WindowGUI extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt){
         // Aqui chama-se estrategia de eliminar inexistentes;
         programa.removeVariaveis();
-
+        programa = new Programa(programa.getPath());
+        this.init();
     }
     public void writeToTxt(FileWriter dest) {
         try {
@@ -2269,6 +2284,7 @@ class WindowGUI extends javax.swing.JFrame {
         }
         
         if(programa.unusedVars().size() > 0){
+        	System.out.println(programa.unusedVars());
             jButton6.setEnabled(true);
         }
         else{
