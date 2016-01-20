@@ -122,8 +122,8 @@ class Funcao{
     }
 	
 	public int getMcCabe(){
-            return this.mcCabe;
-        }
+		return this.mcCabe;
+	}
         
 	public int getLines(){
 		return this.nLinhas;
@@ -184,9 +184,9 @@ class Funcao{
 		this.nComentarios++;
 	}
         
-        public boolean isUnused(String op){
-            return this.localVars.get(op)==0;
-        }
+    public boolean isUnused(String op){
+        return this.localVars.get(op)==0;
+    }
         
 	public void adicionaOperando(String op){
 		if(operandos.containsKey(op)){
@@ -217,15 +217,16 @@ class Funcao{
 	
 	public int operadoresTotais(){
 		int sum=0;
-		for(Integer i: this.operadores.values())
+		for(Integer i: this.operadores.values()){
 			sum+=i;
+		}
 		return sum;
 	}
 	public boolean hasUnusedLocalVars(){
         boolean flag=false;
-        for(String id:this.localVars.keySet())
+        for(String id:this.localVars.keySet()){
             if(this.localVars.get(id)==0) flag=true;
-            
+        }   
         return flag;
     }
         
@@ -240,8 +241,9 @@ class Funcao{
 
 	public int operandosTotais(){
 		int sum=0;
-		for(Integer i: this.operandos.values())
+		for(Integer i: this.operandos.values()){
 			sum+=i;
+		}
 		return sum;
 	}
         
@@ -354,7 +356,7 @@ class Programa {
 
 	public Programa(String path){
 		this.funcs = new HashMap<>();
-                this.path=path;
+        this.path=path;
 		this.parser(path);
 	}
 
@@ -416,23 +418,25 @@ class Programa {
 			e.printStackTrace();
 		}
 	}
-        public void refactConditionNegation(){
-            try{
-            File f = new File(path);
-            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
-            CommonTokenStream tokens=new CommonTokenStream(lexer);
-            iParser parser = new iParser(tokens);
-            
-            Tree b=(Tree) parser.prog().getTree();
-            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
-            startRefactCondNegat(p);
-            
-            this.start(p);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        
+    public void refactConditionNegation(){
+        try{
+        File f = new File(path);
+        iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+        CommonTokenStream tokens=new CommonTokenStream(lexer);
+        iParser parser = new iParser(tokens);
+        
+        Tree b=(Tree) parser.prog().getTree();
+        Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+        startRefactCondNegat(p);
+        
+        this.start(p);
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 	private void start(Instrucao p){
 
 		try {
@@ -460,25 +464,25 @@ class Programa {
 	}
 
 	public void removeVariaveis(){
-            try{
-	            File f = new File(path);
-	            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
-	            CommonTokenStream tokens=new CommonTokenStream(lexer);
-	            iParser parser = new iParser(tokens);
-	            
-	            Tree b=(Tree) parser.prog().getTree();
-	            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
-	            try {					
-					Instrucao p3 = tom_make_TopDown(tom_make_removeVars(this.unusedVars())).visit(p);
-					System.out.println(arvoreParaFicheiroInstrucao(p3, false));
-				} catch(Exception e) {
-					System.out.println("the strategy failed");
-				}
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        try{
+            File f = new File(path);
+            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+            CommonTokenStream tokens=new CommonTokenStream(lexer);
+            iParser parser = new iParser(tokens);
+            
+            Tree b=(Tree) parser.prog().getTree();
+            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+            try {					
+				Instrucao p3 = tom_make_TopDown(tom_make_removeVars(this.unusedVars())).visit(p);
+				System.out.println(arvoreParaFicheiroInstrucao(p3, false));
+			} catch(Exception e) {
+				System.out.println("the strategy failed");
+			}
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
 	public static class removeVars extends tom.library.sl.AbstractStrategyBasic {private  java.util.List  unusedVars;public removeVars( java.util.List  unusedVars) {super(tom_make_Identity());this.unusedVars=unusedVars;}public  java.util.List  getunusedVars() {return unusedVars;}public tom.library.sl.Visitable[] getChildren() {tom.library.sl.Visitable[] stratChildren = new tom.library.sl.Visitable[getChildCount()];stratChildren[0] = super.getChildAt(0);return stratChildren;}public tom.library.sl.Visitable setChildren(tom.library.sl.Visitable[] children) {super.setChildAt(0, children[0]);return this;}public int getChildCount() {return 1;}public tom.library.sl.Visitable getChildAt(int index) {switch (index) {case 0: return super.getChildAt(0);default: throw new IndexOutOfBoundsException();}}public tom.library.sl.Visitable setChildAt(int index, tom.library.sl.Visitable child) {switch (index) {case 0: return super.setChildAt(0, child);default: throw new IndexOutOfBoundsException();}}@SuppressWarnings("unchecked")public <T> T visitLight(T v, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (tom_is_sort_Instrucao(v)) {return ((T)visit_Instrucao((( gram.i.types.Instrucao )v),introspector));}if (!(( null  == environment))) {return ((T)any.visit(environment,introspector));} else {return any.visitLight(v,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  _visit_Instrucao( gram.i.types.Instrucao  arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {if (!(( null  == environment))) {return (( gram.i.types.Instrucao )any.visit(environment,introspector));} else {return any.visitLight(arg,introspector);}}@SuppressWarnings("unchecked")public  gram.i.types.Instrucao  visit_Instrucao( gram.i.types.Instrucao  tom__arg, tom.library.sl.Introspector introspector) throws tom.library.sl.VisitFailure {{{if (tom_is_sort_Instrucao(tom__arg)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )tom__arg))) {if (tom_is_fun_sym_Declaracao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )tom__arg)))) {
 
@@ -494,23 +498,6 @@ class Programa {
         	}}}}}return _visit_Instrucao(tom__arg,introspector);}}private static  tom.library.sl.Strategy  tom_make_removeVars( java.util.List  t0) { return new removeVars(t0);}
 
 
-/*
-	public static int testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
-		%match(decls) {
-
-			ListaDecl(decl, declss*) -> {
-				return `testeRemoveVars(unusedVars, decl) + `testeRemoveVars(unusedVars, declss*);
-			}
-
-			Decl(id,_,_,_,_) -> {
-				if (unusedVars.contains(`id)){
-					return 1;
-				}
-			}
-		}
-
-		return 0;
-	}*/
 
 	public static Declaracoes testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
 		{{if (tom_is_sort_Declaracoes(decls)) {if (tom_is_fun_sym_ListaDecl((( gram.i.types.Declaracoes )(( gram.i.types.Declaracoes )decls)))) {if (!( ( tom_is_empty_ListaDecl_Declaracoes((( gram.i.types.Declaracoes )decls)) || tom_equal_term_Declaracoes((( gram.i.types.Declaracoes )decls), tom_empty_list_ListaDecl()) ) )) { gram.i.types.Declaracoes  tom_decl=((tom_is_fun_sym_ListaDecl((( gram.i.types.Declaracoes )decls)))?(tom_get_head_ListaDecl_Declaracoes((( gram.i.types.Declaracoes )decls))):((( gram.i.types.Declaracoes )decls))); gram.i.types.Declaracoes  tom_declss=((tom_is_fun_sym_ListaDecl((( gram.i.types.Declaracoes )decls)))?(tom_get_tail_ListaDecl_Declaracoes((( gram.i.types.Declaracoes )decls))):(tom_empty_list_ListaDecl()));{{if (tom_is_sort_Declaracoes(tom_decl)) {if (tom_is_sort_Declaracoes((( gram.i.types.Declaracoes )tom_decl))) {if (tom_is_fun_sym_Decl((( gram.i.types.Declaracoes )(( gram.i.types.Declaracoes )tom_decl)))) {
@@ -2735,8 +2722,8 @@ class RefValues {
     
     
     public void updateReferenceValues(int perc){
-        float repoPerc=(100-perc)/100;
-        float comPerc=perc/100;
+        float repoPerc=(100-(float)perc)/100;
+        float comPerc=(float)perc/100;
         this.rvFA=repoPerc*repoFunctArgs+comPerc*comFunctArgs;
         this.rvFL=repoPerc*repoFunctLines+comPerc*comFunctLines;
         this.rvFLV=repoPerc*repoFunctLocalVars+comPerc*comFunctLocalVars;

@@ -122,8 +122,8 @@ class Funcao{
     }
 	
 	public int getMcCabe(){
-            return this.mcCabe;
-        }
+		return this.mcCabe;
+	}
         
 	public int getLines(){
 		return this.nLinhas;
@@ -184,9 +184,9 @@ class Funcao{
 		this.nComentarios++;
 	}
         
-        public boolean isUnused(String op){
-            return this.localVars.get(op)==0;
-        }
+    public boolean isUnused(String op){
+        return this.localVars.get(op)==0;
+    }
         
 	public void adicionaOperando(String op){
 		if(operandos.containsKey(op)){
@@ -217,15 +217,16 @@ class Funcao{
 	
 	public int operadoresTotais(){
 		int sum=0;
-		for(Integer i: this.operadores.values())
+		for(Integer i: this.operadores.values()){
 			sum+=i;
+		}
 		return sum;
 	}
 	public boolean hasUnusedLocalVars(){
         boolean flag=false;
-        for(String id:this.localVars.keySet())
+        for(String id:this.localVars.keySet()){
             if(this.localVars.get(id)==0) flag=true;
-            
+        }   
         return flag;
     }
         
@@ -240,8 +241,9 @@ class Funcao{
 
 	public int operandosTotais(){
 		int sum=0;
-		for(Integer i: this.operandos.values())
+		for(Integer i: this.operandos.values()){
 			sum+=i;
+		}
 		return sum;
 	}
         
@@ -354,7 +356,7 @@ class Programa {
 
 	public Programa(String path){
 		this.funcs = new HashMap<>();
-                this.path=path;
+        this.path=path;
 		this.parser(path);
 	}
 
@@ -416,23 +418,25 @@ class Programa {
 			e.printStackTrace();
 		}
 	}
-        public void refactConditionNegation(){
-            try{
-            File f = new File(path);
-            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
-            CommonTokenStream tokens=new CommonTokenStream(lexer);
-            iParser parser = new iParser(tokens);
-            
-            Tree b=(Tree) parser.prog().getTree();
-            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
-            startRefactCondNegat(p);
-            
-            this.start(p);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        
+    public void refactConditionNegation(){
+        try{
+        File f = new File(path);
+        iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+        CommonTokenStream tokens=new CommonTokenStream(lexer);
+        iParser parser = new iParser(tokens);
+        
+        Tree b=(Tree) parser.prog().getTree();
+        Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+        startRefactCondNegat(p);
+        
+        this.start(p);
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 	private void start(Instrucao p){
 
 		try {
@@ -460,25 +464,25 @@ class Programa {
 	}
 
 	public void removeVariaveis(){
-            try{
-	            File f = new File(path);
-	            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
-	            CommonTokenStream tokens=new CommonTokenStream(lexer);
-	            iParser parser = new iParser(tokens);
-	            
-	            Tree b=(Tree) parser.prog().getTree();
-	            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
-	            try {					
-					Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
-					System.out.println(arvoreParaFicheiroInstrucao(p3, false));
-				} catch(Exception e) {
-					System.out.println("the strategy failed");
-				}
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+        try{
+            File f = new File(path);
+            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+            CommonTokenStream tokens=new CommonTokenStream(lexer);
+            iParser parser = new iParser(tokens);
+            
+            Tree b=(Tree) parser.prog().getTree();
+            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+            try {					
+				Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
+				System.out.println(arvoreParaFicheiroInstrucao(p3, false));
+			} catch(Exception e) {
+				System.out.println("the strategy failed");
+			}
         }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
 	%strategy removeVars(List unusedVars) extends Identity(){
 		visit Instrucao {
@@ -492,25 +496,8 @@ class Programa {
             		return `Declaracao(c1,tipo,c2,d,c3,c4);
             	}
         	}
-	}
-}
-/*
-	public static int testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
-		%match(decls) {
-
-			ListaDecl(decl, declss*) -> {
-				return `testeRemoveVars(unusedVars, decl) + `testeRemoveVars(unusedVars, declss*);
-			}
-
-			Decl(id,_,_,_,_) -> {
-				if (unusedVars.contains(`id)){
-					return 1;
-				}
-			}
 		}
-
-		return 0;
-	}*/
+	}
 
 	public static Declaracoes testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
 		%match(decls) {
@@ -2735,8 +2722,8 @@ class RefValues {
     
     
     public void updateReferenceValues(int perc){
-        float repoPerc=(100-perc)/100;
-        float comPerc=perc/100;
+        float repoPerc=(100-(float)perc)/100;
+        float comPerc=(float)perc/100;
         this.rvFA=repoPerc*repoFunctArgs+comPerc*comFunctArgs;
         this.rvFL=repoPerc*repoFunctLines+comPerc*comFunctLines;
         this.rvFLV=repoPerc*repoFunctLocalVars+comPerc*comFunctLocalVars;
