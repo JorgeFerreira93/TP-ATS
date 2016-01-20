@@ -113,6 +113,10 @@ class Funcao{
 		this.naoSmell = false;
 	}
 
+	public void setNArgs(int nArgs){
+		this.nArgs = nArgs;
+	}
+
 	public String getNome(){
 		return this.nome;
 	}
@@ -474,7 +478,14 @@ class Programa {
             Instrucao p=(Instrucao) iAdaptor.getTerm(b);
             try {					
 				Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
-				System.out.println(arvoreParaFicheiroInstrucao(p3, false));
+				//System.out.println(arvoreParaFicheiroInstrucao(p3, false));
+
+				File novo = new File(this.path);
+
+				FileWriter fooWriter = new FileWriter(novo, false);
+				
+				fooWriter.write(arvoreParaFicheiroInstrucao(p3, false));
+				fooWriter.close();
 			} catch(Exception e) {
 				System.out.println("the strategy failed");
 			}
@@ -897,25 +908,26 @@ class Programa {
 
 
 	%strategy refactCondNeg() extends Identity(){
-            visit Instrucao {
+        visit Instrucao {
 
-                If(c1,c2,c3,Nao(Expressao),c4,c5,then,els) -> {
-                    if(`els != `Exp(Empty())){
-						return `If(c1,c2,c3,Expressao,c4,c5,els,then);}
-					else 
-						return `If(c1,c2,c3,Nao(Expressao),c4,c5,then,els);
-            }
+            If(c1,c2,c3,Nao(Expressao),c4,c5,then,els) -> {
+                if(`els != `Exp(Empty())){
+					return `If(c1,c2,c3,Expressao,c4,c5,els,then);}
+				else 
+					return `If(c1,c2,c3,Nao(Expressao),c4,c5,then,els);
+        	}
+	    }
+    }
 
-
-            }
-        }
 	%strategy countFunct() extends Identity(){
 		visit Instrucao {
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,instr,_) -> {
+				
+				auxFunc = new Funcao(`nome, 0);
 
 				int nArgs = contaArgumentos(`argumentos);
-				
-				auxFunc = new Funcao(`nome, nArgs);
+
+				auxFunc.setNArgs(nArgs);
 
 				for(int i=0; i<nArgs-1; i++){
 					auxFunc.adicionaOperador(",");
@@ -1094,6 +1106,7 @@ class Programa {
 			Argumento(_,_,_,id,_) -> {
 
 				auxFunc.adicionaOperando(`id);
+                auxFunc.incLocalVars(`id);
 
 				return 1;
 			}
@@ -1216,7 +1229,6 @@ class WindowGUI extends javax.swing.JFrame {
         fillComplexityLabels();
         fillReferenceValues();
         fillRefactoringDetails();
-        programa.removeVariaveis();
     }
 
     private float mediaLocalVars(){	
@@ -2144,6 +2156,8 @@ class WindowGUI extends javax.swing.JFrame {
     }                                        
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt){
         // Aqui chama-se estrategia de eliminar inexistentes;
+        programa.removeVariaveis();
+
     }
     public void writeToTxt(FileWriter dest) {
         try {
@@ -2254,7 +2268,7 @@ class WindowGUI extends javax.swing.JFrame {
             jButton5.setEnabled(false);
         }
         
-        if(f.hasUnusedLocalVars()){
+        if(programa.unusedVars().size() > 0){
             jButton6.setEnabled(true);
         }
         else{
