@@ -1,6 +1,6 @@
 void main(){
 int range;
-int a;
+
 range=input(int);
 printTabuada(range);
 }

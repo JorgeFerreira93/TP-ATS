@@ -484,13 +484,17 @@ class Programa {
 		visit Instrucao {
 
             Declaracao(c1,tipo,c2,decls,c3,c4) -> {
-            	if(testeRemoveVars(unusedVars, `decls) == 1){
+            	Declaracoes d = testeRemoveVars(unusedVars, `decls);
+            	if(d == `ListaDecl()){
             		return `Exp(Empty());
+            	}
+            	else{
+            		return `Declaracao(c1,tipo,c2,d,c3,c4);
             	}
         	}
 	}
 }
-
+/*
 	public static int testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
 		%match(decls) {
 
@@ -506,6 +510,26 @@ class Programa {
 		}
 
 		return 0;
+	}*/
+
+	public static Declaracoes testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
+		%match(decls) {
+
+			ListaDecl(decl, declss*) -> {
+
+				%match(decl){
+					d@Decl(id,_,_,_,_) -> {
+						if (unusedVars.contains(`id)){
+							return testeRemoveVars(unusedVars, `declss);
+						}
+						else{
+							return `ListaDecl(d, testeRemoveVars(unusedVars, declss));
+						}
+					}
+				}
+			}			
+		}
+		return decls;
 	}
 
 	private String arvoreParaFicheiroInstrucao(Instrucao i, Boolean f) {
@@ -812,7 +836,6 @@ class Programa {
 			
 			ListaDecl(decl, decls*) -> {
 				return `arvoreParaFicheiroDeclaracoes(decl);
-//				System.out.println();
 			}
 			
 			Decl(id,_,_,exp,_) -> {
@@ -1073,13 +1096,6 @@ class Programa {
 				auxFunc.adicionaOperador("Void");
 			}
 		}
-
-		visit Declaracoes {
-
-			Decl(id,_,_,_,_) -> {
-                auxFunc.incLocalVars(`id);
-			}
-		}
 	}
 
 	private static int contaArgumentos(Argumentos args){
@@ -1102,6 +1118,7 @@ class Programa {
 		%match(decls){
 			Decl(id,_,_,exp,_) -> {
 				auxFunc.adicionaOperando(`id);
+                auxFunc.incLocalVars(`id);
 
 				if(`exp != `Empty()){
 					auxFunc.adicionaOperador("=");
