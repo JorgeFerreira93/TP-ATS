@@ -470,7 +470,7 @@ class Programa {
 	            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
 	            try {					
 					Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
-					System.out.println(p3);
+					System.out.println(arvoreParaFicheiroInstrucao(p3, false));
 				} catch(Exception e) {
 					System.out.println("the strategy failed");
 				}
@@ -508,143 +508,380 @@ class Programa {
 		return 0;
 	}
 
-/*
-
-	private String arvoreParaFicheir(Instrucao i) {
+	private String arvoreParaFicheiroInstrucao(Instrucao i, Boolean f) {
 		%match(i) {
-			Atribuicao(_,id,_,opAtrib,_,exp,_) -> {
-				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
-				String prefix;
-				if (actualFunctionName.equals(""))
-					prefix = "";
-				else
-					prefix = actualFunctionName + "_";
 
-				%match(opAtrib) {
-					Atrib() -> { return "Pusha \"" + prefix + `id + "\"," + genExp + "Store,"; }
-					Mult() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Mul,Store,"; }
-					Div() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Div,Store,"; }
-					Soma() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Add,Store,"; }
-					Sub() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Sub,Store,"; }
+			Atribuicao(_,id,_,op,_,exp,_) -> {
+				String aux = "" + `id;
+
+				%match(op){
+					Atrib() -> {aux += "=";}
+					Mult() -> {aux += "*=";}
+					Div() -> {aux += "/=";}
+					Soma() -> {aux += "+=";}
+					Sub() -> {aux += "-=";}
 				}
-				return "";
-			}
 
+				aux += `arvoreParaFicheiroExpressao(exp);
+				if(f){
+					aux += ";";
+				}
+				else{
+					aux += ";\n";
+				}
+
+				return aux;
+			}
+			
 			Declaracao(_,tipo,_,decls,_,_) -> {
-				String genDecl = `compileAnnotDeclaracoes(decls, tipo, numInstrucao);
-				functionsDeclarations.append(genDecl);
-				return "";
+
+				String aux = "";
+
+				%match(tipo){
+					DInt() -> {aux += "int ";}
+					DChar() -> {aux += "char ";}
+					DBoolean() -> {aux += "boolean ";}
+					DFloat() -> {aux += "float ";}
+					DVoid() -> {aux += "void ";}
+				}
+
+				aux += `arvoreParaFicheiroDeclaracoes(decls);
+
+				aux += ";\n";
+
+				return aux;
+			}
+			
+			If(_,_,_,cond,_,_,inst1,inst2) -> {
+				String aux = "" + "If(";
+				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += "){\n";
+				aux += `arvoreParaFicheiroInstrucao(inst1, false);
+				aux += "} else{\n";
+				aux += `arvoreParaFicheiroInstrucao(inst2, false);
+				aux += "}";
+
+				return aux;
+			}
+			
+			While(_,_,_,cond,_,_,inst,_) -> {
+				String aux = "" + "while(";
+				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += "){\n";
+				aux += `arvoreParaFicheiroInstrucao(inst, false);
+				aux += "}";
+
+				return aux;
 			}
 
-			If(_,_,_,condicao,_,_,inst1,inst2) -> {
-				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
-				String genInst1 = `compileAnnotInstrucao(inst1, numInstrucao);
-				String genInst2 = `compileAnnotInstrucao(inst2, numInstrucao);
-				int num = numInstrucao.inc();
+			For(_,_,decl,_,cond,_,_,exp,_,_,inst,_) -> {
+				String aux = "" + "for(";
+				aux += `arvoreParaFicheiroInstrucao(decl, true);
+				aux += " ";
+				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += "; ";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += "){\n";
+				aux += `arvoreParaFicheiroInstrucao(inst, false);
+				aux += "}";
 
-				return genCondicao + "Jumpf \"senao" + num + "\"," + genInst1 + "Jump \"fse" + num + "\",ALabel \"senao" + num + "\"," + genInst2 + "ALabel \"fse" + num + "\",";
-			}
-
-			While(_,_,_,condicao,_,_,inst,_) -> {
-				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
-				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
-				int num = numInstrucao.inc();
-
-				return "ALabel \"enq" + num + "\"," + genCondicao + "Jumpf \"fenq" + num + "\"," + genInst + "Jump \"enq" + num +"\"," + "ALabel \"fenq" + num + "\",";
-			}
-
-			For(_,_,decl,_,condicao,_,_,exp,_,_,inst,_) -> {
-				String genDecl = `compileAnnotInstrucao(decl, numInstrucao);
-				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
-				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
-				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
-
-				int num = numInstrucao.inc();
-				String labelInit = "ALabel \"for" + num + "\",";
-				String jump = "Jumpf \"ffor"+ num + "\",";
-				String labelJump = "ALabel \"ffor" + num + "\",";
-				String labelEnd = "Jump \"for" + num + "\",";
-
-				functionsDeclarations.append(genDecl);
-
-				return labelInit.concat(genCondicao).concat(jump).concat(genInst).concat(genExp).concat(labelEnd).concat(labelJump);
+				return aux;
 			}
 
 			Return(_,_,exp,_) -> {
-				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
-				String prefix = "f:";
-				String ret = "Ret,";
-				String storeVarFunct = "Pusha \"" + prefix + actualFunctionName + "\"," + genExp + "Store,";
+				String aux = "" + "return ";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += ";\n";
 
-				return storeVarFunct;
+				return aux;
 			}
 
 			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,inst,_) -> {
-				int actualMemAddress = memAdress;
-				memAdress++;
-				int sizeAddress = 1;
 
-				actualFunctionName = `nome;
-				String prefix = "f:";
-				String functionDeclaration = "Decl \"" + prefix + `nome + "\" " + actualMemAddress + " " +  sizeAddress + ",";
-				String functionRet = "";
+				String aux = "";
+
 				%match(tipo) {
-					DVoid() -> { if (!actualFunctionName.equals("main")) functionRet = "Ret,"; }
-					_ -> { if(!actualFunctionName.equals("main")) functionRet = "Ret,"; }
+					DInt() -> {aux += "int ";}
+					DChar() -> {aux += "char ";}
+					DBoolean() -> {aux += "boolean ";}
+					DFloat() -> {aux += "float ";}
+					DVoid() -> {aux += "void ";}
 				}
-				String halt = actualFunctionName.equals("main") ? "Halt," : "";
-				String genArgs = `compileArguments(nome, argumentos);
 
-				functionsDeclarations.append(functionDeclaration);
-				functionsDeclarations.append(genArgs);
+				aux = aux + `nome + "(";
 
-				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
-				String function = "ALabel \"f:" + `nome + "\"," + genInst + functionRet + halt;
-				
-				return function;
+				aux += `arvoreParaFicheiroArgumentos(argumentos);
+
+				aux += "){\n";
+
+				aux += `arvoreParaFicheiroInstrucao(inst, false);
+
+				aux += "}\n";
+
+				return aux;
 			}
 
 			Exp(exp) -> {
-				callReturnNeeded = false;
-				String exp = `compileAnnotExpressoes(exp, numInstrucao);
-				callReturnNeeded = true;
-
-				return exp;
+				return `arvoreParaFicheiroExpressao(exp);
 			}
 
-			SeqInstrucao(inst1, inst*) -> {
-				String genInst = `compileAnnotInstrucao(inst1, numInstrucao);
-				String seqInst = genInst.concat(`compileAnnotInstrucao(inst*, numInstrucao));
+			SeqInstrucao(inst, insts*) -> {
+				String aux = `arvoreParaFicheiroInstrucao(inst, false);
+				aux += `arvoreParaFicheiroInstrucao(insts, false);
 
-				return seqInst;
+				return aux;
 			}
+			
 		}
+
 		return "";
 	}
 
-*/
+	private String arvoreParaFicheiroExpressao(Expressao e) {
+		%match(e){
+			
+			ExpNum(exp1,_,op,_,exp2) -> {
+				
+				String aux = `arvoreParaFicheiroExpressao(exp1);
+
+				%match(op){
+					Mais() -> {aux += "+";}
+					Vezes() -> {aux += "*";}
+					Divide() -> {aux += "/";}
+					Menos() -> {aux += "-";}
+					Mod() -> {aux += "%";}
+				}
+
+				aux += `arvoreParaFicheiroExpressao(exp2);
+
+				return aux;
+			}
+
+			Id(id) -> {
+				return `id;
+			}
+
+			Pos(exp) -> {
+				String aux = "+";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				return aux;
+			}
+			
+			Neg(exp) -> {
+				String aux = "-";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				return aux;
+			}
+			
+			Nao(exp) -> {
+				String aux = "!";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				return aux;
+			}
+
+			Call(_,id,_,_,parametros,_,_) -> {
+				String aux = `id + "(";
+
+				aux += `arvoreParaFicheiroParametros(parametros);
+
+				aux += ")\n";
+
+				return aux;
+			}
+			
+			IncAntes(op,id) -> {
+				%match(op){
+					Inc() -> {
+						String aux = "++" + `id;
+						return aux;
+					}
+					Dec() -> {
+						String aux = "--" + `id;
+						return aux;
+					}
+				}
+			}
+			
+			IncDepois(op,id) -> {
+				%match(op){
+					Inc() -> {
+						String aux = `id + "++";
+						return aux;
+					}
+					Dec() -> {
+						String aux = `id + "--";
+						return aux;
+					}
+				}
+			}
+			
+			Condicional(cond,_,_,exp1,_,_,exp2) -> {
+				
+				String aux = "";
+
+				aux += `arvoreParaFicheiroExpressao(exp1);
+				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += `arvoreParaFicheiroExpressao(exp2);
+
+				return aux;
+			}
+			
+			Int(i) -> {return "" + `i;}
+
+			Char(c) -> {String aux = "'" + `c + "'";return aux;}
+
+			True() -> {return "true";}
+
+			False() -> {return "false";}
+
+			Float(f) -> {return "" + `f;}
+
+			Ou(exp1,_,_,exp2) -> {
+				String aux = "";
+				aux += `arvoreParaFicheiroExpressao(exp1);
+				aux += "||";
+				aux += `arvoreParaFicheiroExpressao(exp2);
+				return aux;
+			}
+
+			E(exp1,_,_,exp2) -> {
+				String aux = "";
+				aux += `arvoreParaFicheiroExpressao(exp1);
+				aux += "&&";
+				aux += `arvoreParaFicheiroExpressao(exp2);
+				return aux;
+			}
+
+			Comp(exp1,_,op,_,exp2) -> {
+				String aux = `arvoreParaFicheiroExpressao(exp1);
+
+				%match(op) {
+					Maior() -> {aux += ">";}
+					Menor() -> {aux += "<";}
+					MaiorQ() -> {aux += ">=";}
+					MenorQ() -> {aux += "<=";}
+					Dif() -> {aux += "!=";}
+					Igual() -> {aux += "==";}
+				}
+				
+				aux += `arvoreParaFicheiroExpressao(exp2);
+
+				return aux;
+			}
+
+			Input(_,_,_,tipo,_,_) -> {
+				String aux = "Input(";
+
+				%match(tipo) {
+					DInt() -> {aux += "Int";} 
+					DChar() -> {aux += "Char";}
+					DBoolean() -> {aux += "Boolean";} 
+					DFloat() -> {aux += "Float";}
+					DVoid() -> {aux += "Void";}
+				}
+
+				aux += ")";
+
+				return aux;
+			}
+
+			Print(_,_,_,exp,_,_) -> {
+				String aux = "print(";
+				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += ");\n";
+				return aux;
+			}
+
+			Expressoes(exp, exps*) -> {
+				String aux = `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exps);
+				return aux;
+			}
+		}
+
+		return "";
+	}
+
+	private String arvoreParaFicheiroDeclaracoes(Declaracoes d) {
+		%match(d){
+			
+			ListaDecl(decl, decls*) -> {
+				return `arvoreParaFicheiroDeclaracoes(decl);
+//				System.out.println();
+			}
+			
+			Decl(id,_,_,exp,_) -> {
+				String aux = `id;
+				aux += `arvoreParaFicheiroExpressao(exp);
+				return aux;
+			}
+		}
+
+		return "";
+	}
+
+	private String arvoreParaFicheiroArgumentos(Argumentos d) {
+		%match(d){
+			
+			ListaArgumentos(arg, args) -> {
+				String aux = `arvoreParaFicheiroArgumentos(arg);
+				aux += ", \n";
+				aux += `arvoreParaFicheiroArgumentos(args);
+
+				return aux;
+			}
+
+			ListaArgumentos(arg) -> {
+				return `arvoreParaFicheiroArgumentos(arg);
+			}
+			
+			Argumento(_,tipo,_,id,_) -> {
+
+				String aux = "";
+
+				%match(tipo) {
+					DInt() -> {aux = "int ";}
+					DChar() -> {aux = "char ";}
+					DBoolean() -> {aux = "boolean ";}
+					DFloat() -> {aux = "float ";}
+					DVoid() -> {aux = "void ";}
+				}
+
+				aux += `id;
+
+				return aux;
+
+			}
+		}
+
+		return "";
+	}
+
+	private String arvoreParaFicheiroParametros(Parametros d) {
+		%match(d){
+			
+			ListaParametros(param, params) -> {
+				String aux = `arvoreParaFicheiroParametros(param);
+
+				aux += ", \n";
+				aux += `arvoreParaFicheiroParametros(params);
+				return aux;
+			}
+
+			ListaParametros(param) -> {
+				return `arvoreParaFicheiroParametros(param);
+			}
+			
+			Parametro(_,exp,_) -> {
+				return `arvoreParaFicheiroExpressao(exp);
+			}
+		}
+
+		return "";
+	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        %strategy refactCondNeg() extends Identity(){
+	%strategy refactCondNeg() extends Identity(){
             visit Instrucao {
 
                 If(c1,c2,c3,Nao(Expressao),c4,c5,then,els) -> {
