@@ -43,6 +43,10 @@ public class Main {
 
         JFileChooser j = new JFileChooser();
 
+        File workingDirectory = new File(System.getProperty("user.dir"));
+		
+		j.setCurrentDirectory(workingDirectory);
+
 		int ret = j.showSaveDialog(null);
 
 		if(ret == JFileChooser.APPROVE_OPTION) {
@@ -90,7 +94,7 @@ class Funcao{
 	private String nome;
 	private int nLinhas, nArgs, nIfs, nWhiles, nFors, nComentarios;	
 	private int mcCabe;
-        private HashMap<String, Integer> localVars;
+    private HashMap<String, Integer> localVars;
 	private HashMap<String, Integer> operandos, operadores;
 	private boolean naoSmell;
 
@@ -129,7 +133,7 @@ class Funcao{
 		return this.nArgs;
 	}
 	
-	    public HashMap<String,Integer> getLocalVars() {
+	public HashMap<String,Integer> getLocalVars() {
         return localVars;
     }
 
@@ -218,19 +222,22 @@ class Funcao{
 		return sum;
 	}
 	public boolean hasUnusedLocalVars(){
-            boolean flag=false;
-            for(String id:this.localVars.keySet())
-                if(this.localVars.get(id)==0) flag=true;
-                
-            return flag;
-        }
+        boolean flag=false;
+        for(String id:this.localVars.keySet())
+            if(this.localVars.get(id)==0) flag=true;
+            
+        return flag;
+    }
         
-        public ArrayList<String> unusedVars(){
-            ArrayList<String> res=new ArrayList<>();
-            for(String key: this.localVars.keySet())
-                if(this.localVars.get(key)==0) res.add(key);
-            return res;
+    public ArrayList<String> unusedVars(){
+        ArrayList<String> res=new ArrayList<>();
+
+    	for(String key: this.localVars.keySet()){
+        	if(this.localVars.get(key)==0) res.add(key);
         }
+        return res;
+    }
+
 	public int operandosTotais(){
 		int sum=0;
 		for(Integer i: this.operandos.values())
@@ -339,7 +346,8 @@ class Programa {
 	%include{sl.tom}
 	%include{../genI/gram/i/i.tom}
 	%include{util/types/List.tom}
-        private String path;
+    
+   	private String path;
 	private int lines;
 	private static HashMap<String, Funcao> funcs;
 	private static Funcao auxFunc;
@@ -376,6 +384,19 @@ class Programa {
 
 	public Funcao getFuncao(String nome){
 		return funcs.get(nome);
+	}
+
+	public ArrayList<String> unusedVars(){
+
+		ArrayList<String> res = new ArrayList<>();
+
+		for (Map.Entry<String, Funcao> entry : this.funcs.entrySet()) {
+			for(String s: entry.getValue().unusedVars()){
+				res.add(s);
+			}
+    	}
+
+    	return res;
 	}
         
 	public void parser(String path){
@@ -420,13 +441,15 @@ class Programa {
 			System.out.println("the strategy failed");
 		}
 	}
-        private void startRefactCondNegat(Instrucao p){
-            try {
+    
+    private void startRefactCondNegat(Instrucao p){
+        try {
 			`TopDown(refactCondNeg()).visit(p);
 		} catch(Exception e) {
 			System.out.println("the strategy failed");
 		}
-        }
+    }
+	
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
@@ -438,26 +461,19 @@ class Programa {
 
 	public void removeVariaveis(){
             try{
-							System.out.println("dsadsa");
-							System.out.println("dsadsa");
-							System.out.println("dsadsa");
-							System.out.println("dsadsa");
-            File f = new File(path);
-            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
-            CommonTokenStream tokens=new CommonTokenStream(lexer);
-            iParser parser = new iParser(tokens);
-            
-            Tree b=(Tree) parser.prog().getTree();
-            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
-            try {
-				for (Map.Entry<String, Funcao> entry : this.funcs.entrySet()) {	               
-	                `TopDown(removeVars(entry.getValue().unusedVars())).visit(p);
-            	}
-			} catch(Exception e) {
-				System.out.println("the strategy failed");
-			}
-            
-            //this.start(p);
+	            File f = new File(path);
+	            iLexer lexer = new iLexer(new ANTLRInputStream(new FileInputStream(f)));
+	            CommonTokenStream tokens=new CommonTokenStream(lexer);
+	            iParser parser = new iParser(tokens);
+	            
+	            Tree b=(Tree) parser.prog().getTree();
+	            Instrucao p=(Instrucao) iAdaptor.getTerm(b);
+	            try {					
+					Instrucao p3 = `TopDown(removeVars(this.unusedVars())).visit(p);
+					System.out.println(p3);
+				} catch(Exception e) {
+					System.out.println("the strategy failed");
+				}
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -467,20 +483,166 @@ class Programa {
 	%strategy removeVars(List unusedVars) extends Identity(){
 		visit Instrucao {
 
-            Declaracao(_,_,_,decls,_,_) -> {
-            	testeRemoveVars(unusedVars, `decls);
+            Declaracao(c1,tipo,c2,decls,c3,c4) -> {
+            	if(testeRemoveVars(unusedVars, `decls) == 1){
+            		return `Exp(Empty());
+            	}
         	}
 	}
 }
 
-	public static void testeRemoveVars(List unusedVars, Declaracoes decls) {
+	public static int testeRemoveVars(List<String> unusedVars, Declaracoes decls) {
 		%match(decls) {
+
+			ListaDecl(decl, declss*) -> {
+				return `testeRemoveVars(unusedVars, decl) + `testeRemoveVars(unusedVars, declss*);
+			}
+
 			Decl(id,_,_,_,_) -> {
-						//if (unusedVars.contains(`id))
-							System.out.println(`id);
-					}
+				if (unusedVars.contains(`id)){
+					return 1;
 				}
 			}
+		}
+
+		return 0;
+	}
+
+/*
+
+	private String arvoreParaFicheir(Instrucao i) {
+		%match(i) {
+			Atribuicao(_,id,_,opAtrib,_,exp,_) -> {
+				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
+				String prefix;
+				if (actualFunctionName.equals(""))
+					prefix = "";
+				else
+					prefix = actualFunctionName + "_";
+
+				%match(opAtrib) {
+					Atrib() -> { return "Pusha \"" + prefix + `id + "\"," + genExp + "Store,"; }
+					Mult() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Mul,Store,"; }
+					Div() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Div,Store,"; }
+					Soma() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Add,Store,"; }
+					Sub() -> { return "Pusha \"" + prefix + `id + "\",Pusha \"" + prefix + `id + "\",Load," + genExp + "Sub,Store,"; }
+				}
+				return "";
+			}
+
+			Declaracao(_,tipo,_,decls,_,_) -> {
+				String genDecl = `compileAnnotDeclaracoes(decls, tipo, numInstrucao);
+				functionsDeclarations.append(genDecl);
+				return "";
+			}
+
+			If(_,_,_,condicao,_,_,inst1,inst2) -> {
+				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
+				String genInst1 = `compileAnnotInstrucao(inst1, numInstrucao);
+				String genInst2 = `compileAnnotInstrucao(inst2, numInstrucao);
+				int num = numInstrucao.inc();
+
+				return genCondicao + "Jumpf \"senao" + num + "\"," + genInst1 + "Jump \"fse" + num + "\",ALabel \"senao" + num + "\"," + genInst2 + "ALabel \"fse" + num + "\",";
+			}
+
+			While(_,_,_,condicao,_,_,inst,_) -> {
+				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
+				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
+				int num = numInstrucao.inc();
+
+				return "ALabel \"enq" + num + "\"," + genCondicao + "Jumpf \"fenq" + num + "\"," + genInst + "Jump \"enq" + num +"\"," + "ALabel \"fenq" + num + "\",";
+			}
+
+			For(_,_,decl,_,condicao,_,_,exp,_,_,inst,_) -> {
+				String genDecl = `compileAnnotInstrucao(decl, numInstrucao);
+				String genCondicao = `compileAnnotExpressoes(condicao, numInstrucao);
+				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
+				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
+
+				int num = numInstrucao.inc();
+				String labelInit = "ALabel \"for" + num + "\",";
+				String jump = "Jumpf \"ffor"+ num + "\",";
+				String labelJump = "ALabel \"ffor" + num + "\",";
+				String labelEnd = "Jump \"for" + num + "\",";
+
+				functionsDeclarations.append(genDecl);
+
+				return labelInit.concat(genCondicao).concat(jump).concat(genInst).concat(genExp).concat(labelEnd).concat(labelJump);
+			}
+
+			Return(_,_,exp,_) -> {
+				String genExp = `compileAnnotExpressoes(exp, numInstrucao);
+				String prefix = "f:";
+				String ret = "Ret,";
+				String storeVarFunct = "Pusha \"" + prefix + actualFunctionName + "\"," + genExp + "Store,";
+
+				return storeVarFunct;
+			}
+
+			Funcao(_,tipo,_,nome,_,_,argumentos,_,_,inst,_) -> {
+				int actualMemAddress = memAdress;
+				memAdress++;
+				int sizeAddress = 1;
+
+				actualFunctionName = `nome;
+				String prefix = "f:";
+				String functionDeclaration = "Decl \"" + prefix + `nome + "\" " + actualMemAddress + " " +  sizeAddress + ",";
+				String functionRet = "";
+				%match(tipo) {
+					DVoid() -> { if (!actualFunctionName.equals("main")) functionRet = "Ret,"; }
+					_ -> { if(!actualFunctionName.equals("main")) functionRet = "Ret,"; }
+				}
+				String halt = actualFunctionName.equals("main") ? "Halt," : "";
+				String genArgs = `compileArguments(nome, argumentos);
+
+				functionsDeclarations.append(functionDeclaration);
+				functionsDeclarations.append(genArgs);
+
+				String genInst = `compileAnnotInstrucao(inst, numInstrucao);
+				String function = "ALabel \"f:" + `nome + "\"," + genInst + functionRet + halt;
+				
+				return function;
+			}
+
+			Exp(exp) -> {
+				callReturnNeeded = false;
+				String exp = `compileAnnotExpressoes(exp, numInstrucao);
+				callReturnNeeded = true;
+
+				return exp;
+			}
+
+			SeqInstrucao(inst1, inst*) -> {
+				String genInst = `compileAnnotInstrucao(inst1, numInstrucao);
+				String seqInst = genInst.concat(`compileAnnotInstrucao(inst*, numInstrucao));
+
+				return seqInst;
+			}
+		}
+		return "";
+	}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         %strategy refactCondNeg() extends Identity(){
             visit Instrucao {
@@ -589,7 +751,7 @@ class Programa {
 		visit Expressao{
 			Id(id) -> {
 				auxFunc.adicionaOperando(`id);
-                auxFunc.incLocalVars(auxFunc.getNome());
+                auxFunc.incLocalVars(`id);
 			}
 
 			Call(_,id,_,_,_,_,_) -> {
@@ -667,6 +829,13 @@ class Programa {
 
 			DVoid() -> {
 				auxFunc.adicionaOperador("Void");
+			}
+		}
+
+		visit Declaracoes {
+
+			Decl(id,_,_,_,_) -> {
+                auxFunc.incLocalVars(`id);
 			}
 		}
 	}
@@ -795,13 +964,13 @@ class WindowGUI extends javax.swing.JFrame {
         initComponents();
 
         this.programa = programa;
-        //programa.removeVariaveis();
         this.bonsProgramas = bonsProgramas;
         this.referenceValues = new RefValues(this.mediaLinhasProgramas(), this.mediaArgsProgramas(), this.mediaLocalVars(), 100, 10, 15);
         fillProgramDetailLabels();
         fillComplexityLabels();
         fillReferenceValues();
         fillRefactoringDetails();
+        programa.removeVariaveis();
     }
 
     private float mediaLocalVars(){	

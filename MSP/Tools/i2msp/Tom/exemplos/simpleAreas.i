@@ -2,7 +2,6 @@ void main(){
 int height;
 float resf;
 int width;
-int unused;
 int base1;
 int base2;
 int diagonal1;
