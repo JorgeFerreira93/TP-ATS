@@ -522,7 +522,7 @@ class Programa {
 					Sub() -> {aux += "-=";}
 				}
 
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				if(f){
 					aux += ";";
 				}
@@ -554,22 +554,22 @@ class Programa {
 			
 			If(_,_,_,cond,_,_,inst1,inst2) -> {
 				String aux = "" + "If(";
-				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += `arvoreParaFicheiroExpressao(cond, false);
 				aux += "){\n";
 				aux += `arvoreParaFicheiroInstrucao(inst1, false);
-				aux += "} else{\n";
+				aux += "}\nelse{\n";
 				aux += `arvoreParaFicheiroInstrucao(inst2, false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}
 			
 			While(_,_,_,cond,_,_,inst,_) -> {
 				String aux = "" + "while(";
-				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += `arvoreParaFicheiroExpressao(cond, false);
 				aux += "){\n";
 				aux += `arvoreParaFicheiroInstrucao(inst, false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}
@@ -578,19 +578,19 @@ class Programa {
 				String aux = "" + "for(";
 				aux += `arvoreParaFicheiroInstrucao(decl, true);
 				aux += " ";
-				aux += `arvoreParaFicheiroExpressao(cond);
+				aux += `arvoreParaFicheiroExpressao(cond, false);
 				aux += "; ";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				aux += "){\n";
 				aux += `arvoreParaFicheiroInstrucao(inst, false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}
 
 			Return(_,_,exp,_) -> {
 				String aux = "" + "return ";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				aux += ";\n";
 
 				return aux;
@@ -622,7 +622,7 @@ class Programa {
 			}
 
 			Exp(exp) -> {
-				return `arvoreParaFicheiroExpressao(exp);
+				return `arvoreParaFicheiroExpressao(exp, true);
 			}
 
 			SeqInstrucao(inst, insts*) -> {
@@ -637,12 +637,12 @@ class Programa {
 		return "";
 	}
 
-	private String arvoreParaFicheiroExpressao(Expressao e) {
+	private String arvoreParaFicheiroExpressao(Expressao e, Boolean ex) {
 		%match(e){
 			
 			ExpNum(exp1,_,op,_,exp2) -> {
 				
-				String aux = `arvoreParaFicheiroExpressao(exp1);
+				String aux = `arvoreParaFicheiroExpressao(exp1, false);
 
 				%match(op){
 					Mais() -> {aux += "+";}
@@ -652,7 +652,7 @@ class Programa {
 					Mod() -> {aux += "%";}
 				}
 
-				aux += `arvoreParaFicheiroExpressao(exp2);
+				aux += `arvoreParaFicheiroExpressao(exp2, false);
 
 				return aux;
 			}
@@ -663,19 +663,19 @@ class Programa {
 
 			Pos(exp) -> {
 				String aux = "+";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				return aux;
 			}
 			
 			Neg(exp) -> {
 				String aux = "-";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				return aux;
 			}
 			
 			Nao(exp) -> {
 				String aux = "!";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				return aux;
 			}
 
@@ -684,7 +684,12 @@ class Programa {
 
 				aux += `arvoreParaFicheiroParametros(parametros);
 
-				aux += ")\n";
+				if(ex){
+					aux += ");\n";	
+				}
+				else{
+					aux += ")";
+				}
 
 				return aux;
 			}
@@ -719,9 +724,9 @@ class Programa {
 				
 				String aux = "";
 
-				aux += `arvoreParaFicheiroExpressao(exp1);
-				aux += `arvoreParaFicheiroExpressao(cond);
-				aux += `arvoreParaFicheiroExpressao(exp2);
+				aux += `arvoreParaFicheiroExpressao(exp1, false);
+				aux += `arvoreParaFicheiroExpressao(cond, false);
+				aux += `arvoreParaFicheiroExpressao(exp2, false);
 
 				return aux;
 			}
@@ -738,22 +743,22 @@ class Programa {
 
 			Ou(exp1,_,_,exp2) -> {
 				String aux = "";
-				aux += `arvoreParaFicheiroExpressao(exp1);
+				aux += `arvoreParaFicheiroExpressao(exp1, false);
 				aux += "||";
-				aux += `arvoreParaFicheiroExpressao(exp2);
+				aux += `arvoreParaFicheiroExpressao(exp2, false);
 				return aux;
 			}
 
 			E(exp1,_,_,exp2) -> {
 				String aux = "";
-				aux += `arvoreParaFicheiroExpressao(exp1);
+				aux += `arvoreParaFicheiroExpressao(exp1, false);
 				aux += "&&";
-				aux += `arvoreParaFicheiroExpressao(exp2);
+				aux += `arvoreParaFicheiroExpressao(exp2, false);
 				return aux;
 			}
 
 			Comp(exp1,_,op,_,exp2) -> {
-				String aux = `arvoreParaFicheiroExpressao(exp1);
+				String aux = `arvoreParaFicheiroExpressao(exp1, false);
 
 				%match(op) {
 					Maior() -> {aux += ">";}
@@ -764,7 +769,7 @@ class Programa {
 					Igual() -> {aux += "==";}
 				}
 				
-				aux += `arvoreParaFicheiroExpressao(exp2);
+				aux += `arvoreParaFicheiroExpressao(exp2, false);
 
 				return aux;
 			}
@@ -787,14 +792,14 @@ class Programa {
 
 			Print(_,_,_,exp,_,_) -> {
 				String aux = "print(";
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				aux += ");\n";
 				return aux;
 			}
 
 			Expressoes(exp, exps*) -> {
-				String aux = `arvoreParaFicheiroExpressao(exp);
-				aux += `arvoreParaFicheiroExpressao(exps);
+				String aux = `arvoreParaFicheiroExpressao(exp, false);
+				aux += `arvoreParaFicheiroExpressao(exps, false);
 				return aux;
 			}
 		}
@@ -812,7 +817,7 @@ class Programa {
 			
 			Decl(id,_,_,exp,_) -> {
 				String aux = `id;
-				aux += `arvoreParaFicheiroExpressao(exp);
+				aux += `arvoreParaFicheiroExpressao(exp, false);
 				return aux;
 			}
 		}
@@ -873,7 +878,7 @@ class Programa {
 			}
 			
 			Parametro(_,exp,_) -> {
-				return `arvoreParaFicheiroExpressao(exp);
+				return `arvoreParaFicheiroExpressao(exp, false);
 			}
 		}
 

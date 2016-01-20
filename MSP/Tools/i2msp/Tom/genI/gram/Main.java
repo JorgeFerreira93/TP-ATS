@@ -522,7 +522,7 @@ aux += "+=";}}}}{if (tom_is_sort_OpAtribuicao(tom_op)) {if (tom_is_sort_OpAtribu
 aux += "-=";}}}}}
 
 
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Atribuicao_Expressao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Atribuicao_Expressao((( gram.i.types.Instrucao )i)),false);
 				if(f){
 					aux += ";";
 				}
@@ -554,22 +554,22 @@ aux += "void ";}}}}}
 
 
 				String aux = "" + "If(";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_If_Condicao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_If_Condicao((( gram.i.types.Instrucao )i)),false);
 				aux += "){\n";
 				aux += arvoreParaFicheiroInstrucao(tom_get_slot_If_Instrucao1((( gram.i.types.Instrucao )i)),false);
-				aux += "} else{\n";
+				aux += "}\nelse{\n";
 				aux += arvoreParaFicheiroInstrucao(tom_get_slot_If_Instrucao2((( gram.i.types.Instrucao )i)),false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}}}}{if (tom_is_sort_Instrucao(i)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )i))) {if (tom_is_fun_sym_While((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )i)))) {
 
 
 				String aux = "" + "while(";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_While_Condicao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_While_Condicao((( gram.i.types.Instrucao )i)),false);
 				aux += "){\n";
 				aux += arvoreParaFicheiroInstrucao(tom_get_slot_While_Instrucao((( gram.i.types.Instrucao )i)),false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}}}}{if (tom_is_sort_Instrucao(i)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )i))) {if (tom_is_fun_sym_For((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )i)))) {
@@ -578,19 +578,19 @@ aux += "void ";}}}}}
 				String aux = "" + "for(";
 				aux += arvoreParaFicheiroInstrucao(tom_get_slot_For_Declaracao((( gram.i.types.Instrucao )i)),true);
 				aux += " ";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_For_Condicao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_For_Condicao((( gram.i.types.Instrucao )i)),false);
 				aux += "; ";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_For_Expressao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_For_Expressao((( gram.i.types.Instrucao )i)),false);
 				aux += "){\n";
 				aux += arvoreParaFicheiroInstrucao(tom_get_slot_For_Instrucao((( gram.i.types.Instrucao )i)),false);
-				aux += "}";
+				aux += "}\n";
 
 				return aux;
 			}}}}{if (tom_is_sort_Instrucao(i)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )i))) {if (tom_is_fun_sym_Return((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )i)))) {
 
 
 				String aux = "" + "return ";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Return_Expressao((( gram.i.types.Instrucao )i)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Return_Expressao((( gram.i.types.Instrucao )i)),false);
 				aux += ";\n";
 
 				return aux;
@@ -622,7 +622,7 @@ aux += "void ";}}}}}
 			}}}}{if (tom_is_sort_Instrucao(i)) {if (tom_is_sort_Instrucao((( gram.i.types.Instrucao )i))) {if (tom_is_fun_sym_Exp((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )i)))) {
 
 
-				return arvoreParaFicheiroExpressao(tom_get_slot_Exp_Expressao((( gram.i.types.Instrucao )i)));
+				return arvoreParaFicheiroExpressao(tom_get_slot_Exp_Expressao((( gram.i.types.Instrucao )i)),true);
 			}}}}{if (tom_is_sort_Instrucao(i)) {if (tom_is_fun_sym_SeqInstrucao((( gram.i.types.Instrucao )(( gram.i.types.Instrucao )i)))) {if (!( ( tom_is_empty_SeqInstrucao_Instrucao((( gram.i.types.Instrucao )i)) || tom_equal_term_Instrucao((( gram.i.types.Instrucao )i), tom_empty_list_SeqInstrucao()) ) )) {
 
 
@@ -637,12 +637,12 @@ aux += "void ";}}}}}
 		return "";
 	}
 
-	private String arvoreParaFicheiroExpressao(Expressao e) {
+	private String arvoreParaFicheiroExpressao(Expressao e, Boolean ex) {
 		{{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_ExpNum((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) { gram.i.types.OpNum  tom_op=tom_get_slot_ExpNum_op((( gram.i.types.Expressao )e));
 
 
 				
-				String aux = arvoreParaFicheiroExpressao(tom_get_slot_ExpNum_Exp1((( gram.i.types.Expressao )e)));
+				String aux = arvoreParaFicheiroExpressao(tom_get_slot_ExpNum_Exp1((( gram.i.types.Expressao )e)),false);
 
 				{{if (tom_is_sort_OpNum(tom_op)) {if (tom_is_sort_OpNum((( gram.i.types.OpNum )tom_op))) {if (tom_is_fun_sym_Mais((( gram.i.types.OpNum )(( gram.i.types.OpNum )tom_op)))) {
 aux += "+";}}}}{if (tom_is_sort_OpNum(tom_op)) {if (tom_is_sort_OpNum((( gram.i.types.OpNum )tom_op))) {if (tom_is_fun_sym_Vezes((( gram.i.types.OpNum )(( gram.i.types.OpNum )tom_op)))) {
@@ -652,7 +652,7 @@ aux += "-";}}}}{if (tom_is_sort_OpNum(tom_op)) {if (tom_is_sort_OpNum((( gram.i.
 aux += "%";}}}}}
 
 
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_ExpNum_Exp2((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_ExpNum_Exp2((( gram.i.types.Expressao )e)),false);
 
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Id((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
@@ -663,19 +663,19 @@ aux += "%";}}}}}
 
 
 				String aux = "+";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Pos_Expressao((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Pos_Expressao((( gram.i.types.Expressao )e)),false);
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Neg((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
 
 
 				String aux = "-";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Neg_Expressao((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Neg_Expressao((( gram.i.types.Expressao )e)),false);
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Nao((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
 
 
 				String aux = "!";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Nao_Expressao((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Nao_Expressao((( gram.i.types.Expressao )e)),false);
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Call((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
 
@@ -684,7 +684,12 @@ aux += "%";}}}}}
 
 				aux += arvoreParaFicheiroParametros(tom_get_slot_Call_Parametros((( gram.i.types.Expressao )e)));
 
-				aux += ")\n";
+				if(ex){
+					aux += ");\n";	
+				}
+				else{
+					aux += ")";
+				}
 
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_IncAntes((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) { gram.i.types.OpInc  tom_op=tom_get_slot_IncAntes_OpInc((( gram.i.types.Expressao )e)); String  tom_id=tom_get_slot_IncAntes_Id((( gram.i.types.Expressao )e));{{if (tom_is_sort_OpInc(tom_op)) {if (tom_is_sort_OpInc((( gram.i.types.OpInc )tom_op))) {if (tom_is_fun_sym_Inc((( gram.i.types.OpInc )(( gram.i.types.OpInc )tom_op)))) {
@@ -719,9 +724,9 @@ aux += "%";}}}}}
 				
 				String aux = "";
 
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Exp1((( gram.i.types.Expressao )e)));
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Condicao((( gram.i.types.Expressao )e)));
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Exp2((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Exp1((( gram.i.types.Expressao )e)),false);
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Condicao((( gram.i.types.Expressao )e)),false);
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Condicional_Exp2((( gram.i.types.Expressao )e)),false);
 
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Int((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
@@ -738,22 +743,22 @@ return "" + tom_get_slot_Float_num((( gram.i.types.Expressao )e));}}}}{if (tom_i
 
 
 				String aux = "";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Ou_Cond1((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Ou_Cond1((( gram.i.types.Expressao )e)),false);
 				aux += "||";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Ou_Cond2((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Ou_Cond2((( gram.i.types.Expressao )e)),false);
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_E((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {
 
 
 				String aux = "";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_E_Cond1((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_E_Cond1((( gram.i.types.Expressao )e)),false);
 				aux += "&&";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_E_Cond2((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_E_Cond2((( gram.i.types.Expressao )e)),false);
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Comp((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) { gram.i.types.OpComp  tom_op=tom_get_slot_Comp_OpComp((( gram.i.types.Expressao )e));
 
 
-				String aux = arvoreParaFicheiroExpressao(tom_get_slot_Comp_Exp1((( gram.i.types.Expressao )e)));
+				String aux = arvoreParaFicheiroExpressao(tom_get_slot_Comp_Exp1((( gram.i.types.Expressao )e)),false);
 
 				{{if (tom_is_sort_OpComp(tom_op)) {if (tom_is_sort_OpComp((( gram.i.types.OpComp )tom_op))) {if (tom_is_fun_sym_Maior((( gram.i.types.OpComp )(( gram.i.types.OpComp )tom_op)))) {
 aux += ">";}}}}{if (tom_is_sort_OpComp(tom_op)) {if (tom_is_sort_OpComp((( gram.i.types.OpComp )tom_op))) {if (tom_is_fun_sym_Menor((( gram.i.types.OpComp )(( gram.i.types.OpComp )tom_op)))) {
@@ -764,7 +769,7 @@ aux += "!=";}}}}{if (tom_is_sort_OpComp(tom_op)) {if (tom_is_sort_OpComp((( gram
 aux += "==";}}}}}
 
 				
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Comp_Exp2((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Comp_Exp2((( gram.i.types.Expressao )e)),false);
 
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_sort_Expressao((( gram.i.types.Expressao )e))) {if (tom_is_fun_sym_Input((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) { gram.i.types.DefTipo  tom_tipo=tom_get_slot_Input_Tipo((( gram.i.types.Expressao )e));
@@ -787,14 +792,14 @@ aux += "Void";}}}}}
 
 
 				String aux = "print(";
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Print_Expressao((( gram.i.types.Expressao )e)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Print_Expressao((( gram.i.types.Expressao )e)),false);
 				aux += ");\n";
 				return aux;
 			}}}}{if (tom_is_sort_Expressao(e)) {if (tom_is_fun_sym_Expressoes((( gram.i.types.Expressao )(( gram.i.types.Expressao )e)))) {if (!( ( tom_is_empty_Expressoes_Expressao((( gram.i.types.Expressao )e)) || tom_equal_term_Expressao((( gram.i.types.Expressao )e), tom_empty_list_Expressoes()) ) )) {
 
 
-				String aux = arvoreParaFicheiroExpressao(((tom_is_fun_sym_Expressoes((( gram.i.types.Expressao )e)))?(tom_get_head_Expressoes_Expressao((( gram.i.types.Expressao )e))):((( gram.i.types.Expressao )e))));
-				aux += arvoreParaFicheiroExpressao(((tom_is_fun_sym_Expressoes((( gram.i.types.Expressao )e)))?(tom_get_tail_Expressoes_Expressao((( gram.i.types.Expressao )e))):(tom_empty_list_Expressoes())));
+				String aux = arvoreParaFicheiroExpressao(((tom_is_fun_sym_Expressoes((( gram.i.types.Expressao )e)))?(tom_get_head_Expressoes_Expressao((( gram.i.types.Expressao )e))):((( gram.i.types.Expressao )e))),false);
+				aux += arvoreParaFicheiroExpressao(((tom_is_fun_sym_Expressoes((( gram.i.types.Expressao )e)))?(tom_get_tail_Expressoes_Expressao((( gram.i.types.Expressao )e))):(tom_empty_list_Expressoes())),false);
 				return aux;
 			}}}}}
 
@@ -812,7 +817,7 @@ aux += "Void";}}}}}
 
 
 				String aux = tom_get_slot_Decl_Id((( gram.i.types.Declaracoes )d));
-				aux += arvoreParaFicheiroExpressao(tom_get_slot_Decl_Expressao((( gram.i.types.Declaracoes )d)));
+				aux += arvoreParaFicheiroExpressao(tom_get_slot_Decl_Expressao((( gram.i.types.Declaracoes )d)),false);
 				return aux;
 			}}}}}
 
@@ -873,7 +878,7 @@ aux = "void ";}}}}}
 			}}}}}{if (tom_is_sort_Parametros(d)) {if (tom_is_sort_Parametros((( gram.i.types.Parametros )d))) {if (tom_is_fun_sym_Parametro((( gram.i.types.Parametros )(( gram.i.types.Parametros )d)))) {
 
 
-				return arvoreParaFicheiroExpressao(tom_get_slot_Parametro_Expressao((( gram.i.types.Parametros )d)));
+				return arvoreParaFicheiroExpressao(tom_get_slot_Parametro_Expressao((( gram.i.types.Parametros )d)),false);
 			}}}}}
 
 
