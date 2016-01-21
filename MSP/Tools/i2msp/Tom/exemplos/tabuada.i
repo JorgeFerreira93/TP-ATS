@@ -16,10 +16,4 @@ print(i*j);
 }
 print('\n');
 }
-if(!i == 2){
-	i = 4;
-}
-else{
-	i = 2;
-}
 }

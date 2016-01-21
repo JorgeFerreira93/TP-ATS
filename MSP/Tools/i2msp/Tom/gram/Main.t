@@ -456,6 +456,7 @@ class Programa {
     
     private void startRefactCondNegat(Instrucao p){
         try {
+        	System.out.println(p);
 			Instrucao p2 = `TopDown(refactCondNeg()).visit(p);
 
 			File novo = new File(this.path);
@@ -586,7 +587,7 @@ class Programa {
 			}
 			
 			If(_,_,_,cond,_,_,inst1,inst2) -> {
-				String aux = "" + "If(";
+				String aux = "" + "if(";
 				aux += `arvoreParaFicheiroExpressao(cond, false);
 				aux += "){\n";
 				aux += `arvoreParaFicheiroInstrucao(inst1, false);
@@ -920,11 +921,12 @@ class Programa {
 	%strategy refactCondNeg() extends Identity(){
         visit Instrucao {
 
-            If(c1,c2,c3,Nao(Expressao),c4,c5,then,els) -> {
+            If(c1,c2,c3,Nao(e),c4,c5,then,els) -> {
+                	System.out.println("Print");
                 if(`els != `Exp(Empty())){
-					return `If(c1,c2,c3,Expressao,c4,c5,els,then);}
+					return `If(c1,c2,c3,e,c4,c5,els,then);}
 				else 
-					return `If(c1,c2,c3,Nao(Expressao),c4,c5,then,els);
+					return `If(c1,c2,c3,Nao(e),c4,c5,then,els);
         	}
 	    }
     }

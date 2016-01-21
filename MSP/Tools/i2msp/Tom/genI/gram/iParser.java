@@ -1,4 +1,4 @@
-// $ANTLR 3.2 Sep 23, 2009 12:02:23 gram/i.g 2016-01-20 23:00:48
+// $ANTLR 3.2 Sep 23, 2009 12:02:23 gram/i.g 2016-01-21 11:54:36
  package gram; 
 
 import org.antlr.runtime.*;
@@ -8107,16 +8107,7 @@ public class iParser extends Parser {
             loop33:
             do {
                 int alt33=2;
-                int LA33_0 = input.LA(1);
-
-                if ( (LA33_0==COMENTARIO_LINHA) ) {
-                    alt33=1;
-                }
-                else if ( (LA33_0==COMENTARIO_LINHAS) ) {
-                    alt33=1;
-                }
-
-
+                alt33 = dfa33.predict(input);
                 switch (alt33) {
             	case 1 :
             	    // gram/i.g:213:4: comentario
@@ -8340,6 +8331,7 @@ public class iParser extends Parser {
     protected DFA26 dfa26 = new DFA26(this);
     protected DFA28 dfa28 = new DFA28(this);
     protected DFA29 dfa29 = new DFA29(this);
+    protected DFA33 dfa33 = new DFA33(this);
     static final String DFA4_eotS =
         "\17\uffff";
     static final String DFA4_eofS =
@@ -9184,6 +9176,104 @@ public class iParser extends Parser {
         }
         public String getDescription() {
             return "186:2: ( opUnario ID -> ^( opUnario ^( Id ID ) ) | opUnario tipo -> ^( opUnario tipo ) | tipo -> tipo | ID -> ^( Id ID ) | incOp ID -> ^( IncAntes incOp ID ) | ID incOp -> ^( IncDepois incOp ID ) | call -> call | input_ -> input_ )";
+        }
+    }
+    static final String DFA33_eotS =
+        "\62\uffff";
+    static final String DFA33_eofS =
+        "\1\1\61\uffff";
+    static final String DFA33_minS =
+        "\1\111\61\uffff";
+    static final String DFA33_maxS =
+        "\1\175\61\uffff";
+    static final String DFA33_acceptS =
+        "\1\uffff\1\2\6\uffff\2\1\50\uffff";
+    static final String DFA33_specialS =
+        "\62\uffff}>";
+    static final String[] DFA33_transitionS = {
+            "\4\1\1\10\1\11\4\uffff\13\1\1\uffff\37\1",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+    };
+
+    static final short[] DFA33_eot = DFA.unpackEncodedString(DFA33_eotS);
+    static final short[] DFA33_eof = DFA.unpackEncodedString(DFA33_eofS);
+    static final char[] DFA33_min = DFA.unpackEncodedStringToUnsignedChars(DFA33_minS);
+    static final char[] DFA33_max = DFA.unpackEncodedStringToUnsignedChars(DFA33_maxS);
+    static final short[] DFA33_accept = DFA.unpackEncodedString(DFA33_acceptS);
+    static final short[] DFA33_special = DFA.unpackEncodedString(DFA33_specialS);
+    static final short[][] DFA33_transition;
+
+    static {
+        int numStates = DFA33_transitionS.length;
+        DFA33_transition = new short[numStates][];
+        for (int i=0; i<numStates; i++) {
+            DFA33_transition[i] = DFA.unpackEncodedString(DFA33_transitionS[i]);
+        }
+    }
+
+    class DFA33 extends DFA {
+
+        public DFA33(BaseRecognizer recognizer) {
+            this.recognizer = recognizer;
+            this.decisionNumber = 33;
+            this.eot = DFA33_eot;
+            this.eof = DFA33_eof;
+            this.min = DFA33_min;
+            this.max = DFA33_max;
+            this.accept = DFA33_accept;
+            this.special = DFA33_special;
+            this.transition = DFA33_transition;
+        }
+        public String getDescription() {
+            return "()* loopback of 213:4: ( comentario )*";
         }
     }
  
