@@ -292,59 +292,6 @@ class Funcao{
 	public void incMcCabe(){
 		mcCabe++;
 	}
-
-	public String metricasHalstead(){
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("-------Métricas Halstead-------\n");
-		sb.append("Operadores distintos: ");
-		sb.append(this.operadoresDist());
-		sb.append("\nOperandos distintos: ");
-		sb.append(this.operandosDist());
-		sb.append("\nTotal de operadores: ");
-		sb.append(this.operadoresTotais());
-		sb.append("\nTotal de operandos: ");
-		sb.append(this.operandosTotais());
-		sb.append("\nVocabulário: ");
-		sb.append(this.vocabulario());
-		sb.append("\nComprimento: ");
-		sb.append(this.comprimento());
-		sb.append("\nVolume: ");
-		sb.append(this.volume());
-		sb.append("\nDificuldade: ");
-		sb.append(this.dificuldade());
-		sb.append("\nEsforço: ");
-		sb.append(this.esforco());
-		sb.append("\nTempo Necessário: ");
-		sb.append(this.tempoNecessario());
-		sb.append("s\nNº estimado de Bugs: ");
-		sb.append(this.estimateBugs());
-
-		return sb.toString();
-	}
-
-	public String complexidadeMcCabe(){
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("\n-------Complexidade Ciclomática-------\n");
-		sb.append(this.mcCabe);
-		return sb.toString();
-	}
-
-	public String toString(){
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("----------------------------------------\n");
-		sb.append(this.nome + "\n\tNúmero de argumentos: " + this.nArgs + "\n");
-		sb.append("\tNúmero de linhas: " + this.nLinhas + "\n");
-		sb.append("\tNúmero de ifs: " + this.nIfs + "\n");
-		sb.append("\tNúmero de whiles: " + this.nWhiles + "\n");
-		sb.append("\tNúmero de fors: " + this.nFors + "\n");
-		sb.append("\tNúmero de comentários: " + this.nComentarios + "\n");
-
-		return sb.toString();
-	}
 }
 
 class Programa {
@@ -456,7 +403,6 @@ class Programa {
     
     private void startRefactCondNegat(Instrucao p){
         try {
-        	System.out.println(p);
 			Instrucao p2 = tom_make_TopDown(tom_make_refactCondNeg()).visit(p);
 
 			File novo = new File(this.path);
@@ -469,15 +415,6 @@ class Programa {
 			System.out.println("the strategy failed");
 		}
     }
-	
-	public String toString(){
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("Número total de linhas: " + this.totLinhas() + "\n");
-		sb.append("Número total de funções: " + this.funcs.size() + "\n");
-
-		return sb.toString();
-	}
 
 	public void removeVariaveis(){
         try{
@@ -490,7 +427,6 @@ class Programa {
             Instrucao p=(Instrucao) iAdaptor.getTerm(b);
             try {					
 				Instrucao p2 = tom_make_TopDown(tom_make_removeVars(this.unusedVars())).visit(p);
-				//System.out.println(arvoreParaFicheiroInstrucao(p3, false));
 
 				File novo = new File(this.path);
 
@@ -922,7 +858,6 @@ aux = "void ";}}}}}
 
 
 
-                	System.out.println("Print");
                 if(tom_els!= tom_make_Exp(tom_make_Empty())){
 					return tom_make_If(tom_c1,tom_c2,tom_c3,tom_e,tom_c4,tom_c5,tom_els,tom_then);}
 				else 
@@ -1160,65 +1095,6 @@ aux = "void ";}}}}}
 			}}}}}
 
 	}
-}
-
-class Menu {
-    // variáveis de instância
-    private List<String> opcoes;
-    private int op;
-    
-    /**
-     * Constructor for objects of class Menu
-     */
-    public Menu(String[] opcoes) {
-        this.opcoes = new ArrayList<String>();
-        for (String op : opcoes) //(int i=0; i<opcoes.length; i++)
-            this.opcoes.add(op);
-        this.op = 0;
-    }
-
-    /**
-     * M�todo para apresentar o menu e ler uma op��o.
-     * 
-     */
-    public void executa() {
-        do {
-            showMenu();
-            this.op = lerOpcao();
-        } while (this.op == -1);
-    }
-    
-    /** Apresentar o menu */
-    private void showMenu() {
-        System.out.println("\n *** Menu *** ");
-        for (int i=0; i<this.opcoes.size(); i++) {
-            System.out.print(i+1);
-            System.out.print(" - ");
-            System.out.println(this.opcoes.get(i));
-        }
-        System.out.println("0 - Sair");
-    }
-    
-    /** Ler uma op��o v�lida */
-    private int lerOpcao() {
-        int op; 
-        Scanner is = new Scanner(System.in);
-        
-        System.out.print("Opção: ");
-        op = is.nextInt();
-        if (op<0 || op>this.opcoes.size()) {
-            System.out.println("Opção Inválida!!!");
-            op = -1;
-        }
-        return op;
-    }
-    
-    /**
-     * M�todo para obter a op��o lida
-     */
-    public int getOpcao() {
-        return this.op;
-    }
 }
 
 class WindowGUI extends javax.swing.JFrame {
@@ -2761,5 +2637,3 @@ class RefValues {
         this.rvFLV=repoPerc*repoFunctLocalVars+comPerc*comFunctLocalVars;
     }
 }
-
-
