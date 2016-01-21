@@ -28,4 +28,11 @@ for(num=min;num<=max;num++){
 			 print(' ');
 			 }
     }
+
+    if(!x){
+        r = 2;
+    }
+    else{
+        r = 3;
+    }
 }
